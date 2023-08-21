@@ -1,25 +1,24 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import XsdReader from './components/XsdReader';
+import BpmnDiagram from './components/BpmnDiagram';
 import './App.css';
 
-function App() {
+const App = () => {
+  const [xsdXml, setXsdXml] = useState('');
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>XML to BPMN Converter</h1>
+      <div className="container">
+        <div className="column">
+          <XsdReader onXmlChange={setXsdXml} />
+        </div>
+        <div className="column">
+          <BpmnDiagram xml={xsdXml} />
+        </div>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
