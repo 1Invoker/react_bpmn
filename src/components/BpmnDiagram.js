@@ -1,22 +1,49 @@
 import React, { useEffect, useRef } from 'react';
 import BpmnViewer from 'bpmn-js';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 const BpmnDiagram = ({ xml }) => {
   const containerRef = useRef(null);
+  const viewerRef = useRef(null);
 
   useEffect(() => {
-    const viewer = new BpmnViewer({ container: containerRef.current });
+    viewerRef.current = new BpmnViewer({ container: containerRef.current });
 
-    viewer.importXML(xml, (err) => {
-      if (err) {
+    viewerRef.current.importXML(xml)
+      .then(() => {
+        console.log('BPMN-диаграмма успешно загружена');
+      })
+      .catch((err) => {
         console.error('Ошибка при отображении BPMN-диаграммы', err);
-      }
-    });
+      });
 
-    return () => viewer.destroy();
+    return () => viewerRef.current.destroy();
   }, [xml]);
 
-  return <div ref={containerRef} style={{ width: '100%', height: '500px' }} />;
+  const zoomIn = () => {
+    const newScale = viewerRef.current.get('canvas').zoom() * 1.1;
+    viewerRef.current.get('canvas').zoom(newScale);
+  };
+
+  const zoomOut = () => {
+    const newScale = viewerRef.current.get('canvas').zoom() * 0.9;
+    viewerRef.current.get('canvas').zoom(newScale);
+  };
+
+  return (
+    <div className="bpmn-diagram-container" ref={containerRef}>
+      <Button onClick={zoomIn} variant="contained" color="primary">
+        <AddIcon />
+        Zoom In
+      </Button>
+      <Button onClick={zoomOut} variant="contained" color="primary">
+        <RemoveIcon />
+        Zoom Out
+      </Button>
+    </div>
+  );
 };
 
 export default BpmnDiagram;

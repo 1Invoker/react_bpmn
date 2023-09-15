@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
 import XsdReader from './components/XsdReader';
 import BpmnDiagram from './components/BpmnDiagram';
+// import ParentComponent from './components/ParentComponent';
 import './App.css';
+import Button from '@mui/material/Button';
+
 
 const App = () => {
   const [xsdXml, setXsdXml] = useState('');
 
   return (
     <div className="App">
-      <h1>XML to BPMN Converter</h1>
+       <Button variant="contained" color="primary">
+       XML to BPMN Converter
+      </Button>
       <div className="container">
         <div className="column">
           <XsdReader onXmlChange={setXsdXml} />

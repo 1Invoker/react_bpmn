@@ -36,3 +36,4 @@ const XsdReader = ({ onXmlChange }) => {
 };
 
 export default XsdReader;
+
