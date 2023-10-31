@@ -1,6 +1,5 @@
-/* Стили для всего приложения */
 body {
-  background-color: #66b3e7; /*  фон */
+  background-color: #66b3e7;
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
@@ -10,32 +9,33 @@ body {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #2d88c5; /*  фон контейнера */
+  background-color: #2d88c5;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень контейнера */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-  color: #2d88c5; /*  заголовок */
+  color: #2d88c5;
 }
 
 /* Стили для XsdReader компонента */
 #xsd-reader {
   margin-top: 20px;
 }
+
 h2 {
-  color:#080d0e
+  color: #080d0e;
 }
 
 textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #2d88c5; /*  рамка для текстового поля */
+  border: 1px solid #2d88c5;
   border-radius: 5px;
 }
 
 button {
-  background-color: #2dbbc5; /*  кнопка */
+  background-color: #2dbbc5;
   color: #fff;
   border: none;
   padding: 10px 20px;
@@ -45,20 +45,41 @@ button {
 }
 
 button:hover {
-  background-color: #2dc560; /*  кнопка при наведении */
+  background-color: #2dc560;
 }
 
 /* Стили для BpmnDiagram компонента */
 .bpmn-diagram-container {
   width: 100%;
   padding: 20px;
-  background-color: #f0fff6; /* Светло-зеленый фон контейнера */
-  border: 2px solid #2d88c5; /* Зеленая рамка контейнера */
+  background-color: #f0fff6;
+  border: 2px solid #2d88c5;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Тень контейнера */
-  resize: both; /* Разрешить растягивание по горизонтали и вертикали */
-  overflow: auto; /* Добавить прокрутку, если содержимое слишком большое */
-  display: flex; /* Используйте flex-контейнер */
-  flex-direction: column; /* Отображение в столбце */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  resize: both;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Медиазапрос для мобильных устройств (максимальная ширина 768px) */
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%;
+  }
+  
+  .container, .bpmn-diagram-container {
+    padding: 10px;
+  }
+  
+  textarea, button {
+    width: 100%;
+  }
+}
+
+/* Медиазапрос для планшетов (ширина 769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 90%;
+  }
+}
