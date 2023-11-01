@@ -20,13 +20,14 @@ const BpmnDiagram = ({ xml }) => {
         setCurrentScale(viewerRef.current.get('canvas').zoom());
 
         const elements = viewerRef.current.get('elementRegistry').filter((element) => {
-          return element.type === 'bpmn:UserTask';
+          return element.type === 'bpmn:UserTask' || element.type === 'bpmn:ServiceTask';
         });
 
         const taskData = elements.map((element) => {
           return {
             id: element.id,
             name: element.businessObject.name,
+            type: element.type,
           };
         });
 

@@ -4,7 +4,6 @@ import BpmnDiagram from './components/BpmnDiagram';
 import './App.css';
 import Button from '@mui/material/Button';
 
-
 const App = () => {
   const [xsdXml, setXsdXml] = useState('');
 

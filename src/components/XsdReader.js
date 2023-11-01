@@ -1,11 +1,22 @@
 import React, { useState } from 'react';
 import xmljs from 'xml-js';
+import Button from '@mui/material/Button';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const XsdReader = ({ onXmlChange }) => {
   const [xsdText, setXsdText] = useState('');
 
   const handleXsdChange = (event) => {
-    setXsdText(event.target.value);
+    const file = event.target.files[0]; // Получаем выбранный файл
+    if (file) {
+      // Читаем содержимое файла как текст
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileContent = e.target.result;
+        setXsdText(fileContent); // Обновляем состояние xsdText с содержанием файла
+      };
+      reader.readAsText(file);
+    }
   };
 
   const parseXsd = () => {
@@ -16,24 +27,29 @@ const XsdReader = ({ onXmlChange }) => {
       const xsdXml = xmljs.js2xml(xsdJson, { compact: true });
       onXmlChange(xsdXml);
     } catch (error) {
-      console.error('Ошибка при анализе XSD', error);
+      console.error('Ошибка при анализе BPMN', error);
     }
   };
 
   return (
     <div>
-      <h2>XSD Reader</h2>
-      <textarea
-        rows="10"
-        cols="50"
-        value={xsdText}
-        onChange={handleXsdChange}
-        placeholder="Вставьте сюда содержимое XSD файла..."
-      />
-      <button onClick={parseXsd}>Анализировать XSD</button>
+      <h2>BPMN Reader</h2>
+      <Button
+        variant="contained"
+        component="label"
+        startIcon={<CloudUploadIcon />}
+      >
+        Загрузить файл
+        <input
+          type="file"
+          accept=".bpmn"
+          style={{ display: 'none' }}
+          onChange={handleXsdChange}
+        />
+      </Button>
+      <button onClick={parseXsd}>Анализировать BPMN</button>
     </div>
   );
 };
 
 export default XsdReader;
-
