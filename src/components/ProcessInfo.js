@@ -36,7 +36,6 @@ const ProcessInfo = ({ tasks }) => {
     setSelectedTask(null);
   };
 
-  
   const exportTasks = () => {
     console.log('Экспорт этапов');
   };
@@ -60,13 +59,17 @@ const ProcessInfo = ({ tasks }) => {
           onChange={handleSearch}
         />
       </div>
-      <ul>
+      <div className="task-buttons">
         {searchedTasks.map((task) => (
-          <li key={task.id} onClick={() => handleTaskClick(task)}>
+          <button
+            key={task.id}
+            onClick={() => handleTaskClick(task)}
+            className="task-button" // Добавляем класс стиля для кнопки
+          >
             {task.name}
-          </li>
+          </button>
         ))}
-      </ul>
+      </div>
       <button onClick={exportTasks}>Экспорт этапов</button>
 
       {selectedTask && (

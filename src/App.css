@@ -86,3 +86,57 @@ button:hover {
   height: 500px; 
 }
 
+.task-buttons {
+  list-style-type: none; /* Убираем маркеры списка */
+  padding: 0;
+  margin: 0;
+}
+
+.task-button {
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #1397b8; /* Цвет фона кнопки */
+  color: #fff; /* Цвет текста кнопки */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Анимация при наведении */
+  display: block; /* Преобразуем кнопку в блочный элемент */
+  text-align: left; /* Выравниваем текст слева */
+
+  /* Добавьте другие стили, чтобы кнопки выглядели красиво */
+}
+
+.task-button:hover {
+  background-color: #0056b3; /* Цвет фона кнопки при наведении */
+}
+.task-details {
+  background-color: #f7f7f7; /* Цвет фона для деталей этапа */
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px; /* Закругляем углы блока */
+}
+
+.task-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #333; /* Цвет заголовка */
+}
+
+.task-details p {
+  margin: 5px 0;
+  color: #555; /* Цвет текста */
+}
+
+.task-details button {
+  background-color: #007bff; /* Цвет фона кнопки */
+  color: #fff; /* Цвет текста кнопки */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Анимация при наведении */
+  padding: 5px 10px;
+  border-radius: 5px; /* Закругляем углы кнопки */
+}
+
+.task-details button:hover {
+  background-color: #0056b3; /* Цвет фона кнопки при наведении */
+}
