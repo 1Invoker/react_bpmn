@@ -7,13 +7,13 @@ const ProcessInfo = ({ tasks }) => {
 
   const sortedTasks = tasks.slice().sort((a, b) => a.name.localeCompare(b.name));
 
-  // Фильтрация задач
+  // Фильтрация 
   const filteredTasks = sortedTasks.filter((task) => {
     if (filter === 'all') return true;
     return task.type === filter || filter === 'all';
   });
 
-  // Поиск задач
+  // Поиск 
   const searchedTasks = filteredTasks.filter((task) => {
     return task.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
@@ -26,7 +26,7 @@ const ProcessInfo = ({ tasks }) => {
     setSearchTerm(event.target.value);
   };
 
-  // Функция для обработки клика на задачу
+  // Функция для обработки клика на этап
   const handleTaskClick = (task) => {
     setSelectedTask(task); // Устанавливаем выбранный этап
   };
@@ -36,9 +36,9 @@ const ProcessInfo = ({ tasks }) => {
     setSelectedTask(null);
   };
 
-  // Функция для экспорта задач (просто пример)
+  
   const exportTasks = () => {
-    console.log('Экспорт задач');
+    console.log('Экспорт этапов');
   };
 
   return (
@@ -55,7 +55,7 @@ const ProcessInfo = ({ tasks }) => {
         </label>
         <input
           type="text"
-          placeholder="Поиск задач"
+          placeholder="Поиск этапов"
           value={searchTerm}
           onChange={handleSearch}
         />
@@ -67,11 +67,11 @@ const ProcessInfo = ({ tasks }) => {
           </li>
         ))}
       </ul>
-      <button onClick={exportTasks}>Экспорт задач</button>
+      <button onClick={exportTasks}>Экспорт этапов</button>
 
       {selectedTask && (
         <div className="task-details">
-          <h3>Детали задачи:</h3>
+          <h3>Детали этапа:</h3>
           <p>Имя: {selectedTask.name}</p>
           <p>Тип: {selectedTask.type}</p>
           <button onClick={clearSelectedTask}>Закрыть</button>
