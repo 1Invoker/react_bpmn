@@ -20,7 +20,7 @@ const BpmnDiagram = ({ xml }) => {
         setCurrentScale(viewerRef.current.get('canvas').zoom());
 
         const elements = viewerRef.current.get('elementRegistry').filter((element) => {
-          return element.type === 'bpmn:UserTask' || element.type === 'bpmn:ServiceTask';
+          return element.type === 'bpmn:UserTask' || element.type === 'bpmn:ServiceTask' || element.type === 'bpmn:formProperty';
         });
         
 
@@ -29,7 +29,7 @@ const BpmnDiagram = ({ xml }) => {
             id: element.id,
             name: element.businessObject.name,
             type: element.type,
-            additionalId: element.businessObject.id, // Добавляем поле 'additionalId' для id
+            additionalId: element.businessObject.id, 
           };
         });
 

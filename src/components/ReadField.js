@@ -1,84 +1,65 @@
-import React, {useState} from 'react';
+import React, { useEffect, useRef } from 'react';
+import BpmnJS from 'bpmn-js';
 
-const ReadField = ({ tasks, FormProperty }) => {
-  const [filter, setFilter] = useState('all');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTask, setSelectedTask] = useState(null);
+function ReadField() {
+  const bpmnModelerRef = useRef(null);
 
-  const sortedTasks = tasks.slice().sort((a, b) => a.name.localeCompare(b.name));
+  function exportDiagram() {
+    bpmnModelerRef.current.saveXML({ format: true })
+      .then((result) => {
+        const xml = result.xml;
+        alert('Diagram exported. Check the developer tools!');
+        console.log('DIAGRAM', xml);
+      })
+      .catch((error) => {
+        console.error('Could not save BPMN 2.0 diagram', error);
+      });
+  }
 
-  const filteredTasks = sortedTasks.filter((task) => {
-    if (filter === 'all') return true;
-    return task.type === filter || filter === 'all';
-  });
+  useEffect(() => {
+    const diagramUrl = 'https://raw.githubusercontent.com/bpmn-io/bpmn-js-examples/master/colors/resources/pizza-collaboration.bpmn';
 
-  const searchedTasks = filteredTasks.filter((task) => {
-    return task.name.toLowerCase().includes(searchTerm.toLowerCase());
-  });
+    bpmnModelerRef.current = new BpmnJS({
+      container: '#canvas',
+      keyboard: {
+        bindTo: window
+      }
+    });
 
-  const handleFilterChange = (event) => {
-    setFilter(event.target.value);
-  };
+    function openDiagram(bpmnXML) {
+      bpmnModelerRef.current.importXML(bpmnXML)
+        .then(() => {
+          const canvas = bpmnModelerRef.current.get('canvas');
+          const overlays = bpmnModelerRef.current.get('overlays');
 
-  const handleSearch = (event) => {
-    setSearchTerm(event.target.value);
-  };
+          // Enable zooming
+          canvas.zoom('fit-viewport');
 
-  const handleTaskClick = (task) => {
-    setSelectedTask(task);
-  };
+          // Enable panning (dragging)
+          canvas.getContainer().style.cursor = 'move';
 
-  const clearSelectedTask = () => {
-    setSelectedTask(null);
-  };
+          // Enable element creation
+          bpmnModelerRef.current.get('palette').open();
+        })
+        .catch((error) => {
+          console.error('Could not import BPMN 2.0 diagram', error);
+        });
+    }
 
-  const exportTasks = () => {
-    console.log('Экспорт этапов');
-  };
+    fetch(diagramUrl)
+      .then((response) => response.text())
+      .then((bpmnXML) => openDiagram(bpmnXML))
+      .catch((error) => {
+        console.error('Could not load diagram', error);
+      });
+  }, []);
 
   return (
-    <div className="process-info">
-      <h2>Информация о этапах BPMN:</h2>
-      <div className="filters">
-        <label>
-          Фильтр:
-          <select value={filter} onChange={handleFilterChange}>
-            <option value="all">Все</option>
-            <option value="bpmn:UserTask">User Tasks</option>
-            <option value="bpmn:ServiceTask">Service Tasks</option>
-          </select>
-        </label>
-        <input
-          type="text"
-          placeholder="Поиск этапов"
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-      </div>
-      <div className="task-buttons">
-        {searchedTasks.map((task) => (
-          <button
-            key={task.id}
-            onClick={() => handleTaskClick(task)}
-            className="task-button"
-          >
-            {task.name}
-          </button>
-        ))}
-      </div>
-      <button onClick={exportTasks}>Экспорт этапов</button>
-
-      {selectedTask && (
-        <div className="task-details">
-          <h3>Детали этапа:</h3>
-          <p>Имя: {selectedTask.name}</p>
-          <p>Тип: {selectedTask.type}</p>
-          <p>ID: {selectedTask.additionalId}</p>
-          <button onClick={clearSelectedTask}>Закрыть</button>
-        </div>
-      )}
+    <div>
+      <div id="canvas"></div>
+      <button id="save-button" onClick={exportDiagram}>Export Diagram</button>
     </div>
   );
-};
+}
 
 export default ReadField;

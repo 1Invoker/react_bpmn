@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ProcessInfo = ({ tasks, formPropertyIds }) => {
+const ProcessInfo = ({ tasks }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTask, setSelectedTask] = useState(null);
@@ -79,6 +79,7 @@ const ProcessInfo = ({ tasks, formPropertyIds }) => {
           <p>Имя: {selectedTask.name}</p>
           <p>Тип: {selectedTask.type}</p>
           <p>ID: {selectedTask.additionalId}</p>
+          <p>Поля: {selectedTask.id}</p>
           <button onClick={clearSelectedTask}>Закрыть</button>
         </div>
       )}
