@@ -22,12 +22,14 @@ const BpmnDiagram = ({ xml }) => {
         const elements = viewerRef.current.get('elementRegistry').filter((element) => {
           return element.type === 'bpmn:UserTask' || element.type === 'bpmn:ServiceTask';
         });
+        
 
         const taskData = elements.map((element) => {
           return {
             id: element.id,
             name: element.businessObject.name,
             type: element.type,
+            additionalId: element.businessObject.id, // Добавляем поле 'additionalId' для id
           };
         });
 

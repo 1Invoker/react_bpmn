@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
-const ProcessInfo = ({ tasks, formPropertyIds }) => {
+const ReadField = ({ tasks, FormProperty }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTask, setSelectedTask] = useState(null);
@@ -62,11 +62,6 @@ const ProcessInfo = ({ tasks, formPropertyIds }) => {
             onClick={() => handleTaskClick(task)}
             className="task-button"
           >
-            {task.type === 'bpmn:UserTask' ? (
-              <span role="img" aria-label="User Task">👤</span>
-            ) : (
-              <span role="img" aria-label="Service Task">🔧</span>
-            )}
             {task.name}
           </button>
         ))}
@@ -86,4 +81,4 @@ const ProcessInfo = ({ tasks, formPropertyIds }) => {
   );
 };
 
-export default ProcessInfo;
+export default ReadField;
