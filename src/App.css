@@ -11,7 +11,7 @@ body {
   padding: 20px;
   background-color: #2d88c5;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /*  размытие и тень */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); 
 }
 
 h1 {
@@ -29,16 +29,16 @@ h2 {
 
 textarea {
   width: 100%;
-  padding: 12px; /* Увеличиваем внутренний отступ для лучшей читаемости */
+  padding: 12px; 
   border: 2px solid #2d88c5;
-  border-radius: 8px; /* Увеличиваем радиус скругления углов */
+  border-radius: 8px; 
 }
 
 button {
   background-color: #2dbbc5;
   color: #fff;
   border: none;
-  padding: 12px 24px; /* отступы кнопки */
+  padding: 12px 24px; 
   cursor: pointer;
   border-radius: 8px;
   transition: background-color 0.3s;
@@ -56,7 +56,7 @@ button:hover {
   background-color: #f0fff6;
   border: 2px solid #2d88c5;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /*размытие и тень */
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); 
   resize: both;
   overflow: auto;
   display: flex;
@@ -67,7 +67,7 @@ button:hover {
 @media (max-width: 768px) {
   .container {
     max-width: 100%;
-    padding: 10px; /* Уменьшаем внутренний отступ для мобильных устройств */
+    padding: 10px; 
   }
 
   textarea, button {
@@ -96,14 +96,14 @@ button:hover {
   padding: 10px;
   margin: 5px 0;
   background-color: #1397b8; /* Цвет фона кнопки */
-  color: #fff; /* Цвет текста кнопки */
+  color: #fff; 
   border: none;
   cursor: pointer;
   transition: background-color 0.3s; /* Анимация при наведении */
   display: block; /* Преобразуем кнопку в блочный элемент */
-  text-align: left; /* Выравниваем текст слева */
+  text-align: left;
 
-  /* Добавьте другие стили, чтобы кнопки выглядели красиво */
+  
 }
 
 .task-button:hover {
@@ -119,24 +119,24 @@ button:hover {
 .task-details h3 {
   font-size: 1.2rem;
   margin-bottom: 10px;
-  color: #333; /* Цвет заголовка */
+  color: #333; 
 }
 
 .task-details p {
   margin: 5px 0;
-  color: #555; /* Цвет текста */
+  color: #555; 
 }
 
 .task-details button {
-  background-color: #007bff; /* Цвет фона кнопки */
-  color: #fff; /* Цвет текста кнопки */
+  background-color: #007bff;
+  color: #fff; 
   border: none;
   cursor: pointer;
-  transition: background-color 0.3s; /* Анимация при наведении */
+  transition: background-color 0.3s;
   padding: 5px 10px;
-  border-radius: 5px; /* Закругляем углы кнопки */
+  border-radius: 5px; 
 }
 
 .task-details button:hover {
-  background-color: #0056b3; /* Цвет фона кнопки при наведении */
+  background-color: #0056b3; 
 }
