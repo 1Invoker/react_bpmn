@@ -47,11 +47,36 @@ const BpmnDiagram = ({ xml }) => {
     });
 
     // Добавляем обработчик перемещения компонентов
-    viewerRef.current.on('element.click', (event) => {
-      const element = event.element;
-      // Здесь можно добавить логику для перемещения элементов
-      // Например, можно использовать библиотеку для перетаскивания элементов
-    });
+    let isDragging = false;
+    let startX, startY;
+
+    if (containerRef.current) {
+      containerRef.current.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        startX = e.clientX - containerRef.current.getBoundingClientRect().left;
+        startY = e.clientY - containerRef.current.getBoundingClientRect().top;
+      });
+
+      containerRef.current.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+          const newX = e.clientX - containerRef.current.getBoundingClientRect().left;
+          const newY = e.clientY - containerRef.current.getBoundingClientRect().top;
+          const deltaX = newX - startX;
+          const deltaY = newY - startY;
+          viewerRef.current.get('canvas').scroll({ dx: deltaX, dy: deltaY });
+          startX = newX;
+          startY = newY;
+        }
+      });
+
+      containerRef.current.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+
+      containerRef.current.addEventListener('mouseleave', () => {
+        isDragging = false;
+      });
+    }
 
     return () => viewerRef.current.destroy();
   }, [xml]);
@@ -69,8 +94,8 @@ const BpmnDiagram = ({ xml }) => {
   };
 
   return (
-    <div className="bpmn-container">
-      <div className="bpmn-diagram-container" ref={containerRef}>
+    <div className="bpmn-container" style={{ userSelect: 'none' }}>
+      <div className="bpmn-diagram-container" ref={containerRef} style={{ cursor: 'grab' }}>
         <div className="zoom-buttons">
           <IconButton onClick={zoomIn} color="primary" aria-label="Zoom In">
             <ZoomInIcon />
