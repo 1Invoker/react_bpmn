@@ -12,32 +12,46 @@ const BpmnDiagram = ({ xml }) => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    viewerRef.current = new BpmnViewer({ container: containerRef.current });
+    viewerRef.current = new BpmnViewer({
+      container: containerRef.current,
+    });
 
-    viewerRef.current.importXML(xml)
-      .then(() => {
-        console.log('BPMN-диаграмма успешно загружена');
-        setCurrentScale(viewerRef.current.get('canvas').zoom());
+    viewerRef.current.importXML(xml, (err) => {
+      if (!err) {
+        const canvas = viewerRef.current.get('canvas');
+        canvas.zoom('fit-viewport', 'auto');
+        setCurrentScale(canvas.zoom());
 
-        const elements = viewerRef.current.get('elementRegistry').filter((element) => {
-          return element.type === 'bpmn:UserTask' || element.type === 'bpmn:ServiceTask' || element.type === 'bpmn:formProperty';
+        const elementRegistry = viewerRef.current.get('elementRegistry');
+        const bpmnElements = elementRegistry.filter((element) => {
+          return (
+            element.type === 'bpmn:UserTask' ||
+            element.type === 'bpmn:ServiceTask' ||
+            element.type === 'bpmn:formProperty'
+          );
         });
-        
 
-        const taskData = elements.map((element) => {
+        const taskData = bpmnElements.map((element) => {
           return {
             id: element.id,
             name: element.businessObject.name,
             type: element.type,
-            additionalId: element.businessObject.id, 
+            additionalId: element.businessObject.id,
           };
         });
 
         setTasks(taskData);
-      })
-      .catch((err) => {
+      } else {
         console.error('Ошибка при отображении BPMN-диаграммы', err);
-      });
+      }
+    });
+
+    // Добавляем обработчик перемещения компонентов
+    viewerRef.current.on('element.click', (event) => {
+      const element = event.element;
+      // Здесь можно добавить логику для перемещения элементов
+      // Например, можно использовать библиотеку для перетаскивания элементов
+    });
 
     return () => viewerRef.current.destroy();
   }, [xml]);
