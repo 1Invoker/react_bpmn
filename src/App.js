@@ -3,6 +3,7 @@ import XsdReader from './components/XsdReader';
 import BpmnDiagram from './components/BpmnDiagram';
 import './App.css';
 import Button from '@mui/material/Button';
+import StageInfo from './components/StageInfo';
 
 const App = () => {
   const [xsdXml, setXsdXml] = useState('');
@@ -16,6 +17,7 @@ const App = () => {
         <div className="column">
           <XsdReader onXmlChange={setXsdXml} />
         </div>
+        <StageInfo />
         <div className="column">
           <BpmnDiagram xml={xsdXml} />
         </div>

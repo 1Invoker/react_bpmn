@@ -10,6 +10,8 @@ const BpmnDiagram = ({ xml }) => {
   const viewerRef = useRef(null);
   const [currentScale, setCurrentScale] = useState(1);
   const [tasks, setTasks] = useState([]);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [smevVersion, setSmevVersion] = useState(null); // Added SMEV version state
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -27,20 +29,26 @@ const BpmnDiagram = ({ xml }) => {
           return (
             element.type === 'bpmn:UserTask' ||
             element.type === 'bpmn:ServiceTask' ||
-            element.type === 'bpmn:formProperty'
+            element.type === 'bpmn:formProperty' ||
+            element.type === 'bpmn:StartEvent' // Добавляем обработку startEvent
           );
         });
 
         const taskData = bpmnElements.map((element) => {
+          const businessObject = element.businessObject;
           return {
             id: element.id,
-            name: element.businessObject.name,
+            name: businessObject.name,
             type: element.type,
-            additionalId: element.businessObject.id,
+            additionalId: businessObject.id,
+            processId: businessObject.$parent.id,
           };
         });
 
         setTasks(taskData);
+
+        // Extract SMEV version from the XML
+        extractSmevVersion(xml);
       } else {
         console.error('Ошибка при отображении BPMN-диаграммы', err);
       }
@@ -81,6 +89,17 @@ const BpmnDiagram = ({ xml }) => {
     return () => viewerRef.current.destroy();
   }, [xml]);
 
+  const extractSmevVersion = (xml) => {
+    // Извлечение версии СМЭВ из XML
+    const matches = xml.match(/#\{(smev\d+)\./);
+    if (matches && matches[1]) {
+      setSmevVersion(matches[1]);
+    } else {
+      setSmevVersion('smev2'); // Если версия не указана, предполагаем smev2
+    }
+  };
+  
+
   const zoomIn = () => {
     const newScale = currentScale * 1.1;
     viewerRef.current.get('canvas').zoom(newScale);
@@ -105,7 +124,8 @@ const BpmnDiagram = ({ xml }) => {
           </IconButton>
         </div>
       </div>
-      <ProcessInfo tasks={tasks} />
+      <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} />
+      <div className="smev-version">{smevVersion ? `SMEV Version: ${smevVersion}` : 'SMEV Version not found'}</div>
     </div>
   );
 };

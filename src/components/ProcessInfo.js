@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
-const ProcessInfo = ({ tasks }) => {
+const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedTask, setSelectedTask] = useState(null);
 
   const sortedTasks = tasks.slice().sort((a, b) => a.name.localeCompare(b.name));
 
@@ -24,16 +23,8 @@ const ProcessInfo = ({ tasks }) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleTaskClick = (task) => {
-    setSelectedTask(task);
-  };
-
   const clearSelectedTask = () => {
     setSelectedTask(null);
-  };
-
-  const exportTasks = () => {
-    console.log('Экспорт этапов');
   };
 
   return (
@@ -46,6 +37,7 @@ const ProcessInfo = ({ tasks }) => {
             <option value="all">Все</option>
             <option value="bpmn:UserTask">User Tasks</option>
             <option value="bpmn:ServiceTask">Service Tasks</option>
+            <option value="bpmn:StartEvent">Start Events</option>
           </select>
         </label>
         <input
@@ -59,13 +51,15 @@ const ProcessInfo = ({ tasks }) => {
         {searchedTasks.map((task) => (
           <button
             key={task.id}
-            onClick={() => handleTaskClick(task)}
-            className="task-button"
+            onClick={() => setSelectedTask(task)}
+            className={`task-button ${task.type === 'bpmn:UserTask' ? 'user-task' : task.type === 'bpmn:ServiceTask' ? 'service-task' : 'start-event'}`}
           >
             {task.type === 'bpmn:UserTask' ? (
-              <span role="img" aria-label="User Task">👤</span>
+              <span role="img" aria-label="User Task">👨🏼‍💼</span>
+            ) : task.type === 'bpmn:ServiceTask' ? (
+              <span role="img" aria-label="Service Task">⚙️</span>
             ) : (
-              <span role="img" aria-label="Service Task">🔧</span>
+              <span role="img" aria-label="Start Event">⭐</span>
             )}
             {task.name}
           </button>
@@ -79,7 +73,7 @@ const ProcessInfo = ({ tasks }) => {
           <p>Имя: {selectedTask.name}</p>
           <p>Тип: {selectedTask.type}</p>
           <p>ID: {selectedTask.additionalId}</p>
-          <p>Поля: {selectedTask.id}</p>
+          <p>Process ID: {selectedTask.processId}</p>
           <button onClick={clearSelectedTask}>Закрыть</button>
         </div>
       )}
