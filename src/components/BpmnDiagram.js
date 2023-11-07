@@ -11,7 +11,8 @@ const BpmnDiagram = ({ xml }) => {
   const [currentScale, setCurrentScale] = useState(1);
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [smevVersion, setSmevVersion] = useState(null); // Added SMEV version state
+  const [smevVersion, setSmevVersion] = useState(null);
+  const [executionTime, setExecutionTime] = useState(null); // Added execution time state
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -30,7 +31,7 @@ const BpmnDiagram = ({ xml }) => {
             element.type === 'bpmn:UserTask' ||
             element.type === 'bpmn:ServiceTask' ||
             element.type === 'bpmn:formProperty' ||
-            element.type === 'bpmn:StartEvent' // Добавляем обработку startEvent
+            element.type === 'bpmn:StartEvent'
           );
         });
 
@@ -47,14 +48,13 @@ const BpmnDiagram = ({ xml }) => {
 
         setTasks(taskData);
 
-        // Extract SMEV version from the XML
         extractSmevVersion(xml);
+        extractExecutionTime(xml);
       } else {
-        console.error('Ошибка при отображении BPMN-диаграммы', err);
+        console.error('Error displaying BPMN diagram', err);
       }
     });
 
-    // Добавляем обработчик перемещения компонентов
     let isDragging = false;
     let startX, startY;
 
@@ -90,15 +90,24 @@ const BpmnDiagram = ({ xml }) => {
   }, [xml]);
 
   const extractSmevVersion = (xml) => {
-    // Извлечение версии СМЭВ из XML
     const matches = xml.match(/#\{(smev\d+)\./);
     if (matches && matches[1]) {
       setSmevVersion(matches[1]);
     } else {
-      setSmevVersion('smev2'); // Если версия не указана, предполагаем smev2
+      setSmevVersion('smev2');
     }
   };
-  
+
+  const extractExecutionTime = (xml) => {
+    const matches = xml.match(/<activiti:formProperty id="[^"]+" name="[^"]+" expression="(\d+)\/(\d+)"/);
+    if (matches && matches.length === 3) {
+      const minDays = parseInt(matches[1]);
+      const maxDays = parseInt(matches[2]);
+      setExecutionTime(`Execution Time: ${minDays} - ${maxDays} days`);
+    } else {
+      setExecutionTime('Execution Time not found');
+    }
+  };
 
   const zoomIn = () => {
     const newScale = currentScale * 1.1;
@@ -126,6 +135,7 @@ const BpmnDiagram = ({ xml }) => {
       </div>
       <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} />
       <div className="smev-version">{smevVersion ? `SMEV Version: ${smevVersion}` : 'SMEV Version not found'}</div>
+      <div className="execution-time">{executionTime}</div>
     </div>
   );
 };
