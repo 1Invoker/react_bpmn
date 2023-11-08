@@ -142,3 +142,31 @@ button:hover {
 .task-details button:hover {
   background-color: #0056b3; 
 }
+.info-container {
+  background-color: #f7f7f7;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.info-container p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.info-container button {
+  background-color: #007bff;
+  color: #fff; 
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.info-container button:hover {
+  background-color: #0056b3;
+}

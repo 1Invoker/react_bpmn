@@ -12,7 +12,9 @@ const BpmnDiagram = ({ xml }) => {
   const [tasks, setTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [smevVersion, setSmevVersion] = useState(null);
-  const [executionTime, setExecutionTime] = useState(null); // Added execution time state
+  const [executionTime, setExecutionTime] = useState(null);
+  const [processName, setProcessName] = useState(null);
+  const [processId, setProcessId] = useState(null);
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -50,41 +52,43 @@ const BpmnDiagram = ({ xml }) => {
 
         extractSmevVersion(xml);
         extractExecutionTime(xml);
+        extractProcessName(xml);
+        extractProcessId(xml);
+
+        let isDragging = false;
+        let startX, startY;
+
+        if (containerRef.current) {
+          containerRef.current.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX - containerRef.current.getBoundingClientRect().left;
+            startY = e.clientY - containerRef.current.getBoundingClientRect().top;
+          });
+
+          containerRef.current.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+              const newX = e.clientX - containerRef.current.getBoundingClientRect().left;
+              const newY = e.clientY - containerRef.current.getBoundingClientRect().top;
+              const deltaX = newX - startX;
+              const deltaY = newY - startY;
+              viewerRef.current.get('canvas').scroll({ dx: deltaX, dy: deltaY });
+              startX = newX;
+              startY = newY;
+            }
+          });
+
+          containerRef.current.addEventListener('mouseup', () => {
+            isDragging = false;
+          });
+
+          containerRef.current.addEventListener('mouseleave', () => {
+            isDragging = false;
+          });
+        }
       } else {
         console.error('Error displaying BPMN diagram', err);
       }
     });
-
-    let isDragging = false;
-    let startX, startY;
-
-    if (containerRef.current) {
-      containerRef.current.addEventListener('mousedown', (e) => {
-        isDragging = true;
-        startX = e.clientX - containerRef.current.getBoundingClientRect().left;
-        startY = e.clientY - containerRef.current.getBoundingClientRect().top;
-      });
-
-      containerRef.current.addEventListener('mousemove', (e) => {
-        if (isDragging) {
-          const newX = e.clientX - containerRef.current.getBoundingClientRect().left;
-          const newY = e.clientY - containerRef.current.getBoundingClientRect().top;
-          const deltaX = newX - startX;
-          const deltaY = newY - startY;
-          viewerRef.current.get('canvas').scroll({ dx: deltaX, dy: deltaY });
-          startX = newX;
-          startY = newY;
-        }
-      });
-
-      containerRef.current.addEventListener('mouseup', () => {
-        isDragging = false;
-      });
-
-      containerRef.current.addEventListener('mouseleave', () => {
-        isDragging = false;
-      });
-    }
 
     return () => viewerRef.current.destroy();
   }, [xml]);
@@ -106,6 +110,24 @@ const BpmnDiagram = ({ xml }) => {
       setExecutionTime(`Execution Time: ${minDays} - ${maxDays} days`);
     } else {
       setExecutionTime('Execution Time not found');
+    }
+  };
+
+  const extractProcessName = (xml) => {
+    const matches = xml.match(/<process id="[^"]+" name="([^"]+)"/);
+    if (matches && matches[1]) {
+      setProcessName(matches[1]);
+    } else {
+      setProcessName('Process Name not found');
+    }
+  };
+
+  const extractProcessId = (xml) => {
+    const matches = xml.match(/<process id="([^"]+)"/);
+    if (matches && matches[1]) {
+      setProcessId(matches[1]);
+    } else {
+      setProcessId('Process ID not found');
     }
   };
 
@@ -133,9 +155,21 @@ const BpmnDiagram = ({ xml }) => {
           </IconButton>
         </div>
       </div>
+      <div className="info-container">
+        <div className="smev-version">
+          {smevVersion ? `SMEV Version: ${smevVersion}` : 'SMEV Version not found'}
+        </div>
+        <div className="process-name">
+          {processName ? `Process Name: ${processName}` : 'Process Name not found'}
+        </div>
+        <div className="execution-time">
+          {executionTime ? `Execution Time: ${executionTime}` : 'Execution Time not found'}
+        </div>
+        <div className="process-id">
+          {processId ? `Process ID: ${processId}` : 'Process ID not found'}
+        </div>
+      </div>
       <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} />
-      <div className="smev-version">{smevVersion ? `SMEV Version: ${smevVersion}` : 'SMEV Version not found'}</div>
-      <div className="execution-time">{executionTime}</div>
     </div>
   );
 };

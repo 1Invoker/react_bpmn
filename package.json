@@ -2,6 +2,9 @@
   "name": "list0",
   "version": "0.1.0",
   "private": true,
+  "resolutions": {
+    "timers": "timers-browserify"
+  },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
@@ -27,8 +30,10 @@
     "recharts": "^2.9.2",
     "redux": "^4.2.1",
     "stream-browserify": "^3.0.0",
+    "timers-browserify": "^2.0.12",
     "web-vitals": "^2.1.4",
-    "xml-js": "^1.6.11"
+    "xml-js": "^1.6.11",
+    "xml2js": "^0.6.2"
   },
   "scripts": {
     "start": "react-scripts start",
