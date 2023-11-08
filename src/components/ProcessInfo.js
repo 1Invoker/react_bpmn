@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks }) => {
+const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPropertyIds, processId  }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 

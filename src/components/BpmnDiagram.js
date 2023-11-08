@@ -15,6 +15,7 @@ const BpmnDiagram = ({ xml }) => {
   const [executionTime, setExecutionTime] = useState(null);
   const [processName, setProcessName] = useState(null);
   const [processId, setProcessId] = useState(null);
+  const [formPropertyIds, setFormPropertyIds] = useState([]);
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -55,6 +56,13 @@ const BpmnDiagram = ({ xml }) => {
         extractProcessName(xml);
         extractProcessId(xml);
 
+        // Используем регулярное выражение для поиска всех id переменных activiti:formProperty
+        const formPropertyIds = xml.match(/<activiti:formProperty id="([^"]+)"/g);
+        if (formPropertyIds) {
+          const ids = formPropertyIds.map((match) => match.match(/id="([^"]+)"/)[1]);
+          setFormPropertyIds(ids);
+        }
+
         let isDragging = false;
         let startX, startY;
 
@@ -83,6 +91,11 @@ const BpmnDiagram = ({ xml }) => {
 
           containerRef.current.addEventListener('mouseleave', () => {
             isDragging = false;
+          
+            containerRef.current.addEventListener('wheel', (e) => {
+              e.preventDefault();
+            });
+  
           });
         }
       } else {
@@ -145,7 +158,16 @@ const BpmnDiagram = ({ xml }) => {
 
   return (
     <div className="bpmn-container" style={{ userSelect: 'none' }}>
-      <div className="bpmn-diagram-container" ref={containerRef} style={{ cursor: 'grab' }}>
+    <div className="bpmn-diagram-container" ref={containerRef} onWheel={(e) => {
+      e.preventDefault(); 
+      const delta = e.deltaY;
+      if (delta > 0) {
+        zoomOut();
+      } else {
+        zoomIn();
+      }
+    }} style={{ cursor: 'grab' }}>
+  
         <div className="zoom-buttons">
           <IconButton onClick={zoomIn} color="primary" aria-label="Zoom In">
             <ZoomInIcon />
@@ -167,9 +189,16 @@ const BpmnDiagram = ({ xml }) => {
         </div>
         <div className="process-id">
           {processId ? `Process ID: ${processId}` : 'Process ID not found'}
+          {formPropertyIds.length > 0 && (
+            <ul>
+              {formPropertyIds.map((id) => (
+                <li key={id}>Form Property ID: {id}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
-      <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} />
+      <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} formPropertyIds={formPropertyIds} processId={processId} />
     </div>
   );
 };

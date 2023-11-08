@@ -8,6 +8,8 @@ body {
 .container {
   max-width: 8000px;
   margin: 0 auto;
+  margin-left: -150px;
+  margin-right:-100px;
   padding: 200px;
   background-color: #2d88c5;
   border-radius: 10px;
@@ -26,7 +28,7 @@ h1 {
 
 h2 {
   color: #080d0e;
-  margin-left: 10%;
+  margin-left: auto;
   
 }
 
