@@ -16,6 +16,7 @@ const BpmnDiagram = ({ xml }) => {
   const [processName, setProcessName] = useState(null);
   const [processId, setProcessId] = useState(null);
   const [formPropertyIds, setFormPropertyIds] = useState([]);
+  const [callActivityVariableIds, setCallActivityVariableIds] = useState({});
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -34,7 +35,8 @@ const BpmnDiagram = ({ xml }) => {
             element.type === 'bpmn:UserTask' ||
             element.type === 'bpmn:ServiceTask' ||
             element.type === 'bpmn:formProperty' ||
-            element.type === 'bpmn:StartEvent'
+            element.type === 'bpmn:StartEvent' ||
+            element.type === 'bpmn:CallActivity'
           );
         });
 
@@ -56,12 +58,33 @@ const BpmnDiagram = ({ xml }) => {
         extractProcessName(xml);
         extractProcessId(xml);
 
-        // Используем регулярное выражение для поиска всех id переменных activiti:formProperty
         const formPropertyIds = xml.match(/<activiti:formProperty id="([^"]+)"/g);
         if (formPropertyIds) {
           const ids = formPropertyIds.map((match) => match.match(/id="([^"]+)"/)[1]);
           setFormPropertyIds(ids);
         }
+
+        const callActivityIds = tasks
+        .filter((task) => task.type === 'bpmn:CallActivity')
+        .map((callActivity) => callActivity.id);
+
+      const CallActivityVariableIds = {};
+      callActivityIds.forEach((callActivityId) => {
+        const regex = new RegExp(`<callActivity id="${callActivityId}".*<extensionElements>(.*?)</extensionElements>`, 'gs');
+        let match;
+        while ((match = regex.exec(xml)) !== null) {
+          const variableRegex = /<activiti:in source="([^"]+)"/g;
+          let variableMatch;
+          const variables = [];
+          while ((variableMatch = variableRegex.exec(match[1])) !== null) {
+            variables.push(variableMatch[1]);
+          }
+          CallActivityVariableIds[callActivityId] = variables;
+        }
+      });
+
+      setCallActivityVariableIds(CallActivityVariableIds);
+
 
         let isDragging = false;
         let startX, startY;
@@ -185,10 +208,22 @@ const BpmnDiagram = ({ xml }) => {
           {processName ? `Process Name: ${processName}` : 'Process Name not found'}
         </div>
         <div className="execution-time">
-          {executionTime ? `Execution Time: ${executionTime}` : 'Execution Time not found'}
+          {executionTime ? `Время исполнения: ${executionTime}` : 'Время исполнения not found'}
         </div>
-        <div className="process-id">
+        <div className="execution-time">
           {processId ? `Process ID: ${processId}` : 'Process ID not found'}
+        </div>
+        <div className="call-activity-ids">
+          <h4>CallActivity:</h4>
+          {Object.entries(callActivityVariableIds).map(([callActivityId, variableIds]) => (
+            <div key={callActivityId}>
+              <p>CallActivity ID: {callActivityId}</p>
+              <p>Cписок полей отправленых в межвед: {variableIds.join(', ')}</p>
+            </div>
+          ))}
+        </div>
+        {/* <div className="process-id">
+          {processId ? `Поля этапа: ${processId}` : 'Поля этапа not found'}
           {formPropertyIds.length > 0 && (
             <ul>
               {formPropertyIds.map((id) => (
@@ -196,9 +231,9 @@ const BpmnDiagram = ({ xml }) => {
               ))}
             </ul>
           )}
-        </div>
+        </div> */}
       </div>
-      <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} formPropertyIds={formPropertyIds} processId={processId} />
+      <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} formPropertyIds={formPropertyIds} processId={processId} callActivityVariableIds={callActivityVariableIds}  />
     </div>
   );
 };

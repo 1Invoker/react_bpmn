@@ -9,7 +9,7 @@ body {
   max-width: 8000px;
   margin: 0 auto;
   margin-left: -150px;
-  margin-right:-100px;
+  margin-right:auto;
   padding: 200px;
   background-color: #2d88c5;
   border-radius: 10px;
@@ -27,10 +27,12 @@ h1 {
 }
 
 h2 {
-  color: #080d0e;
+  color: #f0f0f0; 
   margin-left: auto;
-  
+  font-family: Arial, sans-serif; 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
 }
+
 
 textarea {
   width: 100%;
@@ -100,7 +102,9 @@ button:hover {
   padding: 10px;
   margin: 5px 0;
   background-color: #1397b8; /* Цвет фона кнопки */
-  color: #fff; 
+  color: #f0f0f0;
+  font-family: Arial, sans-serif; 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
   border: none;
   cursor: pointer;
   transition: background-color 0.3s; /* Анимация при наведении */

@@ -11,7 +11,7 @@ const App = () => {
   return (
     <div className="App">
        <Button variant="contained" color="primary">
-       XSD to BPMN Converter
+       BPMN Converter
       </Button>
       <div className="container">
         <div className="column">
