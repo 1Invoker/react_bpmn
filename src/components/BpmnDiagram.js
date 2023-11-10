@@ -4,6 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ProcessInfo from './ProcessInfo';
+import FieldsExtractor from './FieldsExtractor';
 
 const BpmnDiagram = ({ xml }) => {
   const containerRef = useRef(null);
@@ -17,6 +18,7 @@ const BpmnDiagram = ({ xml }) => {
   const [processId, setProcessId] = useState(null);
   const [formPropertyIds, setFormPropertyIds] = useState([]);
   const [callActivityVariableIds, setCallActivityVariableIds] = useState({});
+  const [taskVariableIds, settaskVariableIds] = useState({});
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -58,13 +60,48 @@ const BpmnDiagram = ({ xml }) => {
         extractProcessName(xml);
         extractProcessId(xml);
 
-        const formPropertyIds = xml.match(/<activiti:formProperty id="([^"]+)"/g);
-        if (formPropertyIds) {
-          const ids = formPropertyIds.map((match) => match.match(/id="([^"]+)"/)[1]);
-          setFormPropertyIds(ids);
-        }
+        const formProperties = tasks
+        .filter((task) => task.type === 'bpmn:formProperty')
+        .map((task) => task.id);
 
-        const callActivityIds = tasks
+      const formPropertyData = [];
+      formProperties.forEach((taskId) => {
+        const regex = new RegExp(`<activiti:formProperty id="([^"]+)" name="([^"]+)"`, 'g');
+        let match;
+        while ((match = regex.exec(xml)) !== null) {
+          formPropertyData.push({ id: match[1], name: match[2] });
+        }
+      });
+
+      setFormPropertyIds(formPropertyData);
+
+
+     
+        // const taskTypes = ['bpmn:userTask', 'bpmn:serviceTask'];
+        // taskTypes.forEach((taskType) => {
+        //   const taskIds = tasks
+        //     .filter((task) => task.type === taskType)
+        //     .map((task) => task.id);
+
+        //   taskIds.forEach((taskId) => {
+        //     const regex = new RegExp(`<${taskType} id="${taskId}".*<extensionElements>(.*?)</extensionElements>`, 'gs');
+        //     let match;
+        //     while ((match = regex.exec(xml)) !== null) {
+        //       const variableRegex = /<activiti:formProperty id="([^"]+)"/g;
+        //       let variableMatch;
+        //       const variables = [];
+        //       while ((variableMatch = variableRegex.exec(match[1])) !== null) {
+        //         variables.push(variableMatch[1]);
+        //       }
+        //       taskVariableIds[taskId] = variables;
+        //     }
+        //   });
+        // });
+        // settaskVariableIds(taskVariableIds);
+
+        
+
+       const callActivityIds = tasks
         .filter((task) => task.type === 'bpmn:CallActivity')
         .map((callActivity) => callActivity.id);
 
@@ -222,18 +259,9 @@ const BpmnDiagram = ({ xml }) => {
             </div>
           ))}
         </div>
-        {/* <div className="process-id">
-          {processId ? `Поля этапа: ${processId}` : 'Поля этапа not found'}
-          {formPropertyIds.length > 0 && (
-            <ul>
-              {formPropertyIds.map((id) => (
-                <li key={id}>Form Property ID: {id}</li>
-              ))}
-            </ul>
-          )}
-        </div> */}
       </div>
-      <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} formPropertyIds={formPropertyIds} processId={processId} callActivityVariableIds={callActivityVariableIds}  />
+      <FieldsExtractor processXml={xml} />
+      <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} formPropertyIds={formPropertyIds} processId={processId} callActivityVariableIds={callActivityVariableIds} taskVariableIds={taskVariableIds }  additionalIdExtractor={(task) => task.businessObject.additionalId} />
     </div>
   );
 };

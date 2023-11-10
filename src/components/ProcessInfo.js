@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPropertyIds, processId, callActivityVariableIds  }) => {
+const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPropertyIds, processId, callActivityVariableIds, taskVariableIds, additionalIdExtractor }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -24,8 +24,12 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
   };
 
   const clearSelectedTask = () => {
+    console.log('additionalIdExtractor(selectedTask):', additionalIdExtractor(selectedTask));
     setSelectedTask(null);
   };
+  
+  console.log('formPropertyIds:', formPropertyIds);
+  console.log('selectedTask:', selectedTask);
 
   return (
     <div className="process-info">
@@ -88,10 +92,30 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
             ))}
           </div>
         )}
-          <div>
-              <h3>Form Property ID:</h3>
-              {formPropertyIds.map((id) => (
-                <p key={id}>{id}</p>
+        {/* <div className="task-variable-ids">
+            <h4>Fields:</h4>
+            {Object.entries(taskVariableIds).map(([taskId, variableIds]) => (
+              <div key={taskId}>
+                <p>Task ID: {taskId}</p>
+                <p>List of variables: {variableIds.join(', ')}</p>
+              </div>
+            ))}
+          </div> */}
+            <div>
+              <h3>Fields приходящие:</h3>
+              {searchedTasks.map((task) => (
+                <div key={task.id}>
+                  <p>{`Task ID: ${task.id}`}</p>
+                  <ul>
+                  {formPropertyIds
+                  .filter((formProperty) => additionalIdExtractor(task) === formProperty.id)
+                  .map((formProperty) => (
+                    <li key={formProperty.id}>
+                      {`Form Property ID for ${task.name}: ${formProperty.id}, Name: ${formProperty.name}`}
+                    </li>
+                  ))}
+                  </ul>
+                </div>
               ))}
             </div>
           <button onClick={clearSelectedTask}>Закрыть</button>
