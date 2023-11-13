@@ -76,29 +76,32 @@ const BpmnDiagram = ({ xml }) => {
 
         console.log('formPropertyData:', formPropertyIds);
 
-        const callActivityIds = taskData
-          .filter((task) => task.type === 'bpmn:CallActivity')
-          .map((callActivity) => callActivity.id);
+       const callActivityIds = taskData
+  .filter((task) => task.type === 'bpmn:CallActivity')
+  .map((callActivity) => callActivity.id);
 
-        const CallActivityVariableIds = {};
-        callActivityIds.forEach((callActivityId) => {
-          const regex = new RegExp(
-            `<callActivity id="${callActivityId}".*<extensionElements>(.*?)</extensionElements>`,
-            'gs'
-          );
-          let match;
-          while ((match = regex.exec(xml)) !== null) {
-            const variableRegex = /<activiti:in source="([^"]+)"/g;
-            let variableMatch;
-            const variables = [];
-            while ((variableMatch = variableRegex.exec(match[1])) !== null) {
-              variables.push(variableMatch[1]);
-            }
-            CallActivityVariableIds[callActivityId] = variables;
-          }
-        });
+const CallActivityVariableIds = {};
+callActivityIds.forEach((callActivityId) => {
+  const regex = new RegExp(
+    `<callActivity id="${callActivityId}".*<extensionElements>(.*?)<\/extensionElements>`,
+    'gs'
+  );
+  let match;
+  while ((match = regex.exec(xml)) !== null) {
+    const variableRegex = /<activiti:in\s+source="([^"]+)"\s+target="([^"]+)"/g;
+    let variableMatch;
+    const variables = [];
+    while ((variableMatch = variableRegex.exec(match[1])) !== null) {
+      const source = variableMatch[1];
+      const target = variableMatch[2];
+      variables.push({ source, target });
+    }
+    CallActivityVariableIds[callActivityId] = variables;
+  }
+});
 
-        setCallActivityVariableIds(CallActivityVariableIds);
+setCallActivityVariableIds(CallActivityVariableIds);
+
 
         // Извлекаем formProperties из startEvent
         const startEventFormProperties = extractFormPropertiesFromStartEvent(xml);

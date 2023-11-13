@@ -80,18 +80,21 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
     <p>Тип: {selectedTask.type}</p> 
     <p>ID: {selectedTask.additionalId}</p>
     <p>Process ID: {selectedTask.processId}</p>
-    {selectedTask.type === 'bpmn:CallActivity' && (
+   {selectedTask.type === 'bpmn:CallActivity' && (
       <div className="call-activity-ids">
         <h4>CallActivity:</h4>
-        {Object.entries(callActivityVariableIds).map(([callActivityId, variableIds]) => (
+        {Object.entries(callActivityVariableIds).map(([callActivityId, variableData]) => (
           <div key={callActivityId}>
             <p>CallActivity ID: {callActivityId}</p>
-            <p>Cписок полей отправленных в межвед: {variableIds.join(', ')}</p>
+            <p>
+              Список полей отправленных в межвед: {variableData.map(({ source, target }) => `${source} (target(поле межведа): ${target})`).join(', ')}
+            </p>
           </div>
         ))}
       </div>
     )}
-    {selectedTask.type !== 'bpmn:CallActivity' && (
+
+    {/* {selectedTask.type !== 'bpmn:CallActivity' && (
       <div>
         <h3>Fields приходящие:</h3>
         <div>
@@ -107,7 +110,7 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
           </ul>
         </div>
       </div>
-    )}
+    )} */}
     {startEventFormProperties.length > 0 && (
   <div className="start-event-form-properties">
     <h4>Поля:</h4>
