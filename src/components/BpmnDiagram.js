@@ -59,23 +59,6 @@ const BpmnDiagram = ({ xml }) => {
         extractProcessName(xml);
         extractProcessId(xml);
 
-        const formProperties = taskData
-          .filter((task) => task.type === 'bpmn:formProperty')
-          .map((task) => task.id);
-
-        const formPropertyIds = [];
-        formProperties.forEach((taskId) => {
-          const regex = new RegExp(`<activiti:formProperty id="([^"]+)" name="([^"]+)"`, 'g');
-          let match;
-          while ((match = regex.exec(xml)) !== null) {
-            formPropertyIds.push({ id: match[1], name: match[2] });
-          }
-        });
-
-        setFormPropertyIds(formPropertyIds);
-
-        console.log('formPropertyData:', formPropertyIds);
-
        const callActivityIds = taskData
   .filter((task) => task.type === 'bpmn:CallActivity')
   .map((callActivity) => callActivity.id);
@@ -102,8 +85,6 @@ callActivityIds.forEach((callActivityId) => {
 
 setCallActivityVariableIds(CallActivityVariableIds);
 
-
-        // Извлекаем formProperties из startEvent
         const startEventFormProperties = extractFormPropertiesFromStartEvent(xml);
         setStartEventFormProperties(startEventFormProperties);
         
@@ -203,21 +184,23 @@ setCallActivityVariableIds(CallActivityVariableIds);
     const startEventRegex = /<startEvent id="[^"]+" name="[^"]+">(.*?)<\/startEvent>/gs;
     const match = startEventRegex.exec(xml);
     const formProperties = [];
-
+  
     if (match) {
       const startEventContent = match[1];
-      const formPropertyRegex = /<activiti:formProperty id="([^"]+)" name="([^"]+)"/g;
+      const formPropertyRegex = /<activiti:formProperty id="([^"]+)" name="([^"]+)" type="([^"]+)"/g;
       let formPropertyMatch;
-
+  
       while ((formPropertyMatch = formPropertyRegex.exec(startEventContent)) !== null) {
         const id = formPropertyMatch[1];
         const name = formPropertyMatch[2];
-        formProperties.push({ id, name });
+        const type = formPropertyMatch[3];
+        formProperties.push({ id, name, type });
       }
     }
-
+  
     return formProperties;
   };
+  
 
   return (
     <div className="bpmn-container" style={{ userSelect: 'none' }}>
@@ -266,16 +249,6 @@ setCallActivityVariableIds(CallActivityVariableIds);
             </div>
           ))}
         </div>
-        {/* <div className="start-event-form-properties">
-          <h4>Поля:</h4>
-          <ul>
-            {startEventFormProperties.map((formProperty) => (
-              <li key={formProperty.id}>
-                {`ID: ${formProperty.id}, Name: ${formProperty.name}`}
-              </li>
-            ))}
-          </ul>
-        </div> */}
       </div>
       <ProcessInfo
         tasks={tasks}

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+
 const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPropertyIds, processId, callActivityVariableIds, taskVariableIds, startEventFormProperties  }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
@@ -112,17 +113,18 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
       </div>
     )} */}
     {startEventFormProperties.length > 0 && (
-  <div className="start-event-form-properties">
-    <h4>Поля:</h4>
-    <ul>
-      {startEventFormProperties.map((formProperty) => (
-        <li key={formProperty.id}>
-          {`ID: ${formProperty.id}, Name: ${formProperty.name}`}
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
+      <div className="start-event-form-properties">
+        <h4>Поля:</h4>
+        <ul>
+          {startEventFormProperties.map((formProperty) => (
+            <li key={formProperty.id}>
+              {`ID: ${formProperty.id}, Name: ${formProperty.name}, Type: ${formProperty.type}`}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
     <button onClick={clearSelectedTask}>Закрыть</button>
   </div>
 )}
