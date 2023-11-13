@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPropertyIds, processId, callActivityVariableIds, taskVariableIds, additionalIdExtractor }) => {
+const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPropertyIds, processId, callActivityVariableIds, taskVariableIds, startEventFormProperties  }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -24,7 +24,6 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
   };
 
   const clearSelectedTask = () => {
-    console.log('additionalIdExtractor(selectedTask):', additionalIdExtractor(selectedTask));
     setSelectedTask(null);
   };
   
@@ -75,52 +74,55 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
       <button onClick={exportTasks}>Экспорт этапов</button>
 
       {selectedTask && (
-        <div className="task-details">
-          <h3>Детали этапа:</h3>
-          <p>Имя: {selectedTask.name}</p>
-          <p>Тип: {selectedTask.type}</p>
-          <p>ID: {selectedTask.additionalId}</p>
-          <p>Process ID: {selectedTask.processId}</p>
-          {selectedTask.type === 'bpmn:CallActivity' && (
-          <div className="call-activity-ids">
-            <h4>CallActivity:</h4>
-            {Object.entries(callActivityVariableIds).map(([callActivityId, variableIds]) => (
-              <div key={callActivityId}>
-                <p>CallActivity ID: {callActivityId}</p>
-                <p>Cписок полей отправленых в межвед: {variableIds.join(', ')}</p>
-              </div>
-            ))}
+  <div className="task-details">
+    <h3>Детали этапа:</h3>
+    <p>Имя: {selectedTask.name}</p>
+    <p>Тип: {selectedTask.type}</p> 
+    <p>ID: {selectedTask.additionalId}</p>
+    <p>Process ID: {selectedTask.processId}</p>
+    {selectedTask.type === 'bpmn:CallActivity' && (
+      <div className="call-activity-ids">
+        <h4>CallActivity:</h4>
+        {Object.entries(callActivityVariableIds).map(([callActivityId, variableIds]) => (
+          <div key={callActivityId}>
+            <p>CallActivity ID: {callActivityId}</p>
+            <p>Cписок полей отправленных в межвед: {variableIds.join(', ')}</p>
           </div>
-        )}
-        {/* <div className="task-variable-ids">
-            <h4>Fields:</h4>
-            {Object.entries(taskVariableIds).map(([taskId, variableIds]) => (
-              <div key={taskId}>
-                <p>Task ID: {taskId}</p>
-                <p>List of variables: {variableIds.join(', ')}</p>
-              </div>
-            ))}
-          </div> */}
-            <div>
-              <h3>Fields приходящие:</h3>
-              {searchedTasks.map((task) => (
-                <div key={task.id}>
-                  <p>{`Task ID: ${task.id}`}</p>
-                  <ul>
-                  {formPropertyIds
-                  .filter((formProperty) => additionalIdExtractor(task) === formProperty.id)
-                  .map((formProperty) => (
-                    <li key={formProperty.id}>
-                      {`Form Property ID for ${task.name}: ${formProperty.id}, Name: ${formProperty.name}`}
-                    </li>
-                  ))}
-                  </ul>
-                </div>
+        ))}
+      </div>
+    )}
+    {selectedTask.type !== 'bpmn:CallActivity' && (
+      <div>
+        <h3>Fields приходящие:</h3>
+        <div>
+          <p>{`Task ID: ${selectedTask.id}`}</p>
+          <ul>
+            {formPropertyIds
+              .filter((formProperty) => selectedTask.additionalId === formProperty.taskId)
+              .map((formProperty) => (
+                <li key={formProperty.id}>
+                  {`Form Property ID for ${selectedTask.name}: ${formProperty.id}, Name: ${formProperty.name}`}
+                </li>
               ))}
-            </div>
-          <button onClick={clearSelectedTask}>Закрыть</button>
+          </ul>
         </div>
-      )}
+      </div>
+    )}
+    {startEventFormProperties.length > 0 && (
+  <div className="start-event-form-properties">
+    <h4>Поля:</h4>
+    <ul>
+      {startEventFormProperties.map((formProperty) => (
+        <li key={formProperty.id}>
+          {`ID: ${formProperty.id}, Name: ${formProperty.name}`}
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+    <button onClick={clearSelectedTask}>Закрыть</button>
+  </div>
+)}
     </div>
   );
 };

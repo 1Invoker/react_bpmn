@@ -4,7 +4,6 @@ import IconButton from '@mui/material/IconButton';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ProcessInfo from './ProcessInfo';
-import FieldsExtractor from './FieldsExtractor';
 
 const BpmnDiagram = ({ xml }) => {
   const containerRef = useRef(null);
@@ -18,7 +17,7 @@ const BpmnDiagram = ({ xml }) => {
   const [processId, setProcessId] = useState(null);
   const [formPropertyIds, setFormPropertyIds] = useState([]);
   const [callActivityVariableIds, setCallActivityVariableIds] = useState({});
-  const [taskVariableIds, settaskVariableIds] = useState({});
+  const [startEventFormProperties, setStartEventFormProperties] = useState([]);
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -60,69 +59,51 @@ const BpmnDiagram = ({ xml }) => {
         extractProcessName(xml);
         extractProcessId(xml);
 
-        const formProperties = tasks
-        .filter((task) => task.type === 'bpmn:formProperty')
-        .map((task) => task.id);
+        const formProperties = taskData
+          .filter((task) => task.type === 'bpmn:formProperty')
+          .map((task) => task.id);
 
-      const formPropertyData = [];
-      formProperties.forEach((taskId) => {
-        const regex = new RegExp(`<activiti:formProperty id="([^"]+)" name="([^"]+)"`, 'g');
-        let match;
-        while ((match = regex.exec(xml)) !== null) {
-          formPropertyData.push({ id: match[1], name: match[2] });
-        }
-      });
-
-      setFormPropertyIds(formPropertyData);
-
-
-     
-        // const taskTypes = ['bpmn:userTask', 'bpmn:serviceTask'];
-        // taskTypes.forEach((taskType) => {
-        //   const taskIds = tasks
-        //     .filter((task) => task.type === taskType)
-        //     .map((task) => task.id);
-
-        //   taskIds.forEach((taskId) => {
-        //     const regex = new RegExp(`<${taskType} id="${taskId}".*<extensionElements>(.*?)</extensionElements>`, 'gs');
-        //     let match;
-        //     while ((match = regex.exec(xml)) !== null) {
-        //       const variableRegex = /<activiti:formProperty id="([^"]+)"/g;
-        //       let variableMatch;
-        //       const variables = [];
-        //       while ((variableMatch = variableRegex.exec(match[1])) !== null) {
-        //         variables.push(variableMatch[1]);
-        //       }
-        //       taskVariableIds[taskId] = variables;
-        //     }
-        //   });
-        // });
-        // settaskVariableIds(taskVariableIds);
-
-        
-
-       const callActivityIds = tasks
-        .filter((task) => task.type === 'bpmn:CallActivity')
-        .map((callActivity) => callActivity.id);
-
-      const CallActivityVariableIds = {};
-      callActivityIds.forEach((callActivityId) => {
-        const regex = new RegExp(`<callActivity id="${callActivityId}".*<extensionElements>(.*?)</extensionElements>`, 'gs');
-        let match;
-        while ((match = regex.exec(xml)) !== null) {
-          const variableRegex = /<activiti:in source="([^"]+)"/g;
-          let variableMatch;
-          const variables = [];
-          while ((variableMatch = variableRegex.exec(match[1])) !== null) {
-            variables.push(variableMatch[1]);
+        const formPropertyIds = [];
+        formProperties.forEach((taskId) => {
+          const regex = new RegExp(`<activiti:formProperty id="([^"]+)" name="([^"]+)"`, 'g');
+          let match;
+          while ((match = regex.exec(xml)) !== null) {
+            formPropertyIds.push({ id: match[1], name: match[2] });
           }
-          CallActivityVariableIds[callActivityId] = variables;
-        }
-      });
+        });
 
-      setCallActivityVariableIds(CallActivityVariableIds);
+        setFormPropertyIds(formPropertyIds);
 
+        console.log('formPropertyData:', formPropertyIds);
 
+        const callActivityIds = taskData
+          .filter((task) => task.type === 'bpmn:CallActivity')
+          .map((callActivity) => callActivity.id);
+
+        const CallActivityVariableIds = {};
+        callActivityIds.forEach((callActivityId) => {
+          const regex = new RegExp(
+            `<callActivity id="${callActivityId}".*<extensionElements>(.*?)</extensionElements>`,
+            'gs'
+          );
+          let match;
+          while ((match = regex.exec(xml)) !== null) {
+            const variableRegex = /<activiti:in source="([^"]+)"/g;
+            let variableMatch;
+            const variables = [];
+            while ((variableMatch = variableRegex.exec(match[1])) !== null) {
+              variables.push(variableMatch[1]);
+            }
+            CallActivityVariableIds[callActivityId] = variables;
+          }
+        });
+
+        setCallActivityVariableIds(CallActivityVariableIds);
+
+        // Извлекаем formProperties из startEvent
+        const startEventFormProperties = extractFormPropertiesFromStartEvent(xml);
+        setStartEventFormProperties(startEventFormProperties);
+        
         let isDragging = false;
         let startX, startY;
 
@@ -151,11 +132,10 @@ const BpmnDiagram = ({ xml }) => {
 
           containerRef.current.addEventListener('mouseleave', () => {
             isDragging = false;
-          
+
             containerRef.current.addEventListener('wheel', (e) => {
               e.preventDefault();
             });
-  
           });
         }
       } else {
@@ -216,18 +196,42 @@ const BpmnDiagram = ({ xml }) => {
     setCurrentScale(newScale);
   };
 
+  const extractFormPropertiesFromStartEvent = (xml) => {
+    const startEventRegex = /<startEvent id="[^"]+" name="[^"]+">(.*?)<\/startEvent>/gs;
+    const match = startEventRegex.exec(xml);
+    const formProperties = [];
+
+    if (match) {
+      const startEventContent = match[1];
+      const formPropertyRegex = /<activiti:formProperty id="([^"]+)" name="([^"]+)"/g;
+      let formPropertyMatch;
+
+      while ((formPropertyMatch = formPropertyRegex.exec(startEventContent)) !== null) {
+        const id = formPropertyMatch[1];
+        const name = formPropertyMatch[2];
+        formProperties.push({ id, name });
+      }
+    }
+
+    return formProperties;
+  };
+
   return (
     <div className="bpmn-container" style={{ userSelect: 'none' }}>
-    <div className="bpmn-diagram-container" ref={containerRef} onWheel={(e) => {
-      e.preventDefault(); 
-      const delta = e.deltaY;
-      if (delta > 0) {
-        zoomOut();
-      } else {
-        zoomIn();
-      }
-    }} style={{ cursor: 'grab' }}>
-  
+      <div
+        className="bpmn-diagram-container"
+        ref={containerRef}
+        onWheel={(e) => {
+          e.preventDefault();
+          const delta = e.deltaY;
+          if (delta > 0) {
+            zoomOut();
+          } else {
+            zoomIn();
+          }
+        }}
+        style={{ cursor: 'grab' }}
+      >
         <div className="zoom-buttons">
           <IconButton onClick={zoomIn} color="primary" aria-label="Zoom In">
             <ZoomInIcon />
@@ -259,9 +263,28 @@ const BpmnDiagram = ({ xml }) => {
             </div>
           ))}
         </div>
+        {/* <div className="start-event-form-properties">
+          <h4>Поля:</h4>
+          <ul>
+            {startEventFormProperties.map((formProperty) => (
+              <li key={formProperty.id}>
+                {`ID: ${formProperty.id}, Name: ${formProperty.name}`}
+              </li>
+            ))}
+          </ul>
+        </div> */}
       </div>
-      <FieldsExtractor processXml={xml} />
-      <ProcessInfo tasks={tasks} selectedTask={selectedTask} setSelectedTask={setSelectedTask} formPropertyIds={formPropertyIds} processId={processId} callActivityVariableIds={callActivityVariableIds} taskVariableIds={taskVariableIds }  additionalIdExtractor={(task) => task.businessObject.additionalId} />
+      <ProcessInfo
+        tasks={tasks}
+        selectedTask={selectedTask}
+        setSelectedTask={setSelectedTask}
+        formPropertyIds={formPropertyIds}
+        processId={processId}
+        callActivityVariableIds={callActivityVariableIds}
+        additionalIdExtractor={(task) => task.businessObject.additionalId}
+        startEventFormProperties={startEventFormProperties}
+
+      />
     </div>
   );
 };
