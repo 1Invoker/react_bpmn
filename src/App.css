@@ -176,3 +176,12 @@ button:hover {
 .info-container button:hover {
   background-color: #0056b3;
 }
+/*разрешить выделение текста */
+.MuiTableCell-root {
+  user-select: text;
+}
+
+/*стили для обеспечения видимости таблицы */
+.MuiTableContainer-root {
+  overflow: auto; /*полосы прокрутки при необходимости */
+}
