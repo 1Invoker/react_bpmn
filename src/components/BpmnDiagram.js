@@ -59,31 +59,41 @@ const BpmnDiagram = ({ xml }) => {
         extractProcessName(xml);
         extractProcessId(xml);
 
-       const callActivityIds = taskData
-  .filter((task) => task.type === 'bpmn:CallActivity')
-  .map((callActivity) => callActivity.id);
-
-const CallActivityVariableIds = {};
-callActivityIds.forEach((callActivityId) => {
-  const regex = new RegExp(
-    `<callActivity id="${callActivityId}".*<extensionElements>(.*?)<\/extensionElements>`,
-    'gs'
-  );
-  let match;
-  while ((match = regex.exec(xml)) !== null) {
-    const variableRegex = /<activiti:in\s+source="([^"]+)"\s+target="([^"]+)"/g;
-    let variableMatch;
-    const variables = [];
-    while ((variableMatch = variableRegex.exec(match[1])) !== null) {
-      const source = variableMatch[1];
-      const target = variableMatch[2];
-      variables.push({ source, target });
-    }
-    CallActivityVariableIds[callActivityId] = variables;
-  }
-});
-
-setCallActivityVariableIds(CallActivityVariableIds);
+        const callActivityIds = taskData
+        .filter((task) => task.type === 'bpmn:CallActivity')
+        .map((callActivity) => callActivity.id);
+    
+      const CallActivityVariableIds = {};
+      callActivityIds.forEach((callActivityId) => {
+        const regex = new RegExp(
+          `<callActivity id="${callActivityId}".*<extensionElements>(.*?)<\/extensionElements>`,
+          'gs'
+        );
+        let match;
+        while ((match = regex.exec(xml)) !== null) {
+          const inVariableRegex = /<activiti:in\s+source="([^"]+)"\s+target="([^"]+)"/g;
+          let inVariableMatch;
+          const inVariables = [];
+          while ((inVariableMatch = inVariableRegex.exec(match[1])) !== null) {
+            const source = inVariableMatch[1];
+            const target = inVariableMatch[2];
+            inVariables.push({ source, target, type: 'in' });
+          }
+    
+          const outVariableRegex = /<activiti:out\s+source="([^"]+)"\s+target="([^"]+)"/g;
+          let outVariableMatch;
+          const outVariables = [];
+          while ((outVariableMatch = outVariableRegex.exec(match[1])) !== null) {
+            const source = outVariableMatch[1];
+            const target = outVariableMatch[2];
+            outVariables.push({ source, target, type: 'out' });
+          }
+    
+          CallActivityVariableIds[callActivityId] = { inVariables, outVariables };
+        }
+      });
+    
+      setCallActivityVariableIds(CallActivityVariableIds);
 
         const startEventFormProperties = extractFormPropertiesFromStartEvent(xml);
         setStartEventFormProperties(startEventFormProperties);
@@ -242,13 +252,41 @@ setCallActivityVariableIds(CallActivityVariableIds);
         </div>
         <div className="call-activity-ids">
           <h4>CallActivity:</h4>
-          {Object.entries(callActivityVariableIds).map(([callActivityId, variableIds]) => (
+          {Object.entries(callActivityVariableIds).map(([callActivityId, variableData]) => (
             <div key={callActivityId}>
               <p>CallActivity ID: {callActivityId}</p>
-              <p>Cписок полей отправленых в межвед: {variableIds.join(', ')}</p>
+              <div>
+                <p>Поля отправленные в межвед (activiti:in):</p>
+                {variableData.inVariables && variableData.inVariables.length > 0 ? (
+                  <ul>
+                    {variableData.inVariables.map((variable) => (
+                      <li key={`${variable.source}-${variable.target}`}>
+                        Источник: {variable.source}, Межвед: {variable.target}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>Нет данных</p>
+                )}
+              </div>
+              <div>
+                <p>Поля исходящие из межведа (activiti:out):</p>
+                {variableData.outVariables && variableData.outVariables.length > 0 ? (
+                  <ul>
+                    {variableData.outVariables.map((variable) => (
+                      <li key={`${variable.source}-${variable.target}`}>
+                        Межвед: {variable.source}, Текущий маршрут: {variable.target}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>Нет данных</p>
+                )}
+              </div>
             </div>
           ))}
         </div>
+
       </div>
       <ProcessInfo
         tasks={tasks}

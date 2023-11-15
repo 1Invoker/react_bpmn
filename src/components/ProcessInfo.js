@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
 
-
-const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPropertyIds, processId, callActivityVariableIds, taskVariableIds, startEventFormProperties  }) => {
+const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPropertyIds, processId, callActivityVariableIds, taskVariableIds, startEventFormProperties }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -27,9 +33,6 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
   const clearSelectedTask = () => {
     setSelectedTask(null);
   };
-  
-  console.log('formPropertyIds:', formPropertyIds);
-  console.log('selectedTask:', selectedTask);
 
   return (
     <div className="process-info">
@@ -53,81 +56,134 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
         />
       </div>
       <div className="task-buttons">
-          {searchedTasks.map((task) => (
-            <button
-              key={task.id}
-              onClick={() => setSelectedTask(task)}
-              className={`task-button ${task.type === 'bpmn:UserTask' ? 'user-task' : task.type === 'bpmn:ServiceTask' ? 'service-task' : task.type === 'bpmn:CallActivity' ? 'call-activity' : 'start-event'}`}
-            >
-              {task.type === 'bpmn:UserTask' ? (
-                <span role="img" aria-label="User Task">👨🏼‍💼</span>
-              ) : task.type === 'bpmn:ServiceTask' ? (
-                <span role="img" aria-label="Service Task">⚙️</span>
-              ) : task.type === 'bpmn:CallActivity' ? (
-                <span role="img" aria-label="Call Activity">🧠</span>
-              ) : (
-                <span role="img" aria-label="Start Event">⭐</span>
-              )}
-              {task.name}
-            </button>
-          ))}
-        </div>
+        {searchedTasks.map((task) => (
+          <button
+            key={task.id}
+            onClick={() => setSelectedTask(task)}
+            className={`task-button ${task.type === 'bpmn:UserTask' ? 'user-task' : task.type === 'bpmn:ServiceTask' ? 'service-task' : task.type === 'bpmn:CallActivity' ? 'call-activity' : 'start-event'}`}
+          >
+            {task.type === 'bpmn:UserTask' ? (
+              <span role="img" aria-label="User Task">👨🏼‍💼</span>
+            ) : task.type === 'bpmn:ServiceTask' ? (
+              <span role="img" aria-label="Service Task">⚙️</span>
+            ) : task.type === 'bpmn:CallActivity' ? (
+              <span role="img" aria-label="Call Activity">🧠</span>
+            ) : (
+              <span role="img" aria-label="Start Event">⭐</span>
+            )}
+            {task.name}
+          </button>
+        ))}
+      </div>
       <button onClick={exportTasks}>Экспорт этапов</button>
 
       {selectedTask && (
-  <div className="task-details">
-    <h3>Детали этапа:</h3>
-    <p>Имя: {selectedTask.name}</p>
-    <p>Тип: {selectedTask.type}</p> 
-    <p>ID: {selectedTask.additionalId}</p>
-    <p>Process ID: {selectedTask.processId}</p>
-   {selectedTask.type === 'bpmn:CallActivity' && (
-      <div className="call-activity-ids">
-        <h4>CallActivity:</h4>
-        {Object.entries(callActivityVariableIds).map(([callActivityId, variableData]) => (
-          <div key={callActivityId}>
-            <p>CallActivity ID: {callActivityId}</p>
-            <p>
-              Список полей отправленных в межвед: {variableData.map(({ source, target }) => `${source} (target(поле межведа): ${target})`).join(', ')}
-            </p>
-          </div>
-        ))}
-      </div>
-    )}
-
-    {/* {selectedTask.type !== 'bpmn:CallActivity' && (
-      <div>
-        <h3>Fields приходящие:</h3>
-        <div>
-          <p>{`Task ID: ${selectedTask.id}`}</p>
-          <ul>
-            {formPropertyIds
-              .filter((formProperty) => selectedTask.additionalId === formProperty.taskId)
-              .map((formProperty) => (
-                <li key={formProperty.id}>
-                  {`Form Property ID for ${selectedTask.name}: ${formProperty.id}, Name: ${formProperty.name}`}
-                </li>
+        <div className="task-details">
+          <h3>Детали этапа:</h3>
+          <p>Имя: {selectedTask.name}</p>
+          <p>Тип: {selectedTask.type}</p>
+          <p>ID: {selectedTask.additionalId}</p>
+          <p>Process ID: {selectedTask.processId}</p>
+          {selectedTask.type === 'bpmn:CallActivity' && (
+            <div className="call-activity-ids">
+              <h4>CallActivity:</h4>
+              {Object.entries(callActivityVariableIds).map(([callActivityId, variableData]) => (
+                <div key={callActivityId}>
+                  <p>CallActivity ID: {callActivityId}</p>
+                  <div>
+                    <p>Поля отправленные в межвед (activiti:in):</p>
+                    {variableData.inVariables && variableData.inVariables.length > 0 ? (
+                      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                        <TableContainer sx={{ maxHeight: 440 }}>
+                          <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Источник</TableCell>
+                                <TableCell>Межвед</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {variableData.inVariables.map((variable) => (
+                                <TableRow key={`${variable.source}-${variable.target}`}>
+                                  <TableCell>{variable.source}</TableCell>
+                                  <TableCell>{variable.target}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Paper>
+                    ) : (
+                      <p>Нет данных</p>
+                    )}
+                  </div>
+                  <div>
+                    <p>Поля исходящие из межведа (activiti:out):</p>
+                    {variableData.outVariables && variableData.outVariables.length > 0 ? (
+                      <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                        <TableContainer sx={{ maxHeight: 440 }}>
+                          <Table stickyHeader aria-label="sticky table">
+                            <TableHead>
+                              <TableRow>
+                                <TableCell>Межвед</TableCell>
+                                <TableCell>Текущий маршрут</TableCell>
+                              </TableRow>
+                            </TableHead>
+                            <TableBody>
+                              {variableData.outVariables.map((variable) => (
+                                <TableRow key={`${variable.source}-${variable.target}`}>
+                                  <TableCell>{variable.source}</TableCell>
+                                  <TableCell>{variable.target}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
+                        </TableContainer>
+                      </Paper>
+                    ) : (
+                      <p>Нет данных</p>
+                    )}
+                  </div>
+                </div>
               ))}
-          </ul>
-        </div>
-      </div>
-    )} */}
-    {startEventFormProperties.length > 0 && (
-      <div className="start-event-form-properties">
-        <h4>Поля:</h4>
-        <ul>
-          {startEventFormProperties.map((formProperty) => (
-            <li key={formProperty.id}>
-              {`ID: ${formProperty.id}, Name: ${formProperty.name}, Type: ${formProperty.type}`}
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+            </div>
+          )}
 
-    <button onClick={clearSelectedTask}>Закрыть</button>
-  </div>
-)}
+          {startEventFormProperties.length > 0 && (
+            <div className="start-event-form-properties">
+              <h4>Поля:</h4>
+              {startEventFormProperties && startEventFormProperties.length > 0 ? (
+                <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                  <TableContainer sx={{ maxHeight: 440 }}>
+                    <Table stickyHeader aria-label="sticky table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>ID</TableCell>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Type</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {startEventFormProperties.map((formProperty) => (
+                          <TableRow key={formProperty.id}>
+                            <TableCell>{formProperty.id}</TableCell>
+                            <TableCell>{formProperty.name}</TableCell>
+                            <TableCell>{formProperty.type}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Paper>
+              ) : (
+                <p>Нет данных</p>
+              )}
+            </div>
+          )}
+
+          <button onClick={clearSelectedTask}>Закрыть</button>
+        </div>
+      )}
     </div>
   );
 };
