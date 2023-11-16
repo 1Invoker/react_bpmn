@@ -15,10 +15,8 @@ const BpmnDiagram = ({ xml }) => {
   const [executionTime, setExecutionTime] = useState(null);
   const [processName, setProcessName] = useState(null);
   const [processId, setProcessId] = useState(null);
-  const [formPropertyIds, setFormPropertyIds] = useState([]);
   const [callActivityVariableIds, setCallActivityVariableIds] = useState({});
   const [startEventFormProperties, setStartEventFormProperties] = useState([]);
-  const [dayType, setDayType] = useState(null);
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -303,7 +301,6 @@ const BpmnDiagram = ({ xml }) => {
         tasks={tasks}
         selectedTask={selectedTask}
         setSelectedTask={setSelectedTask}
-        formPropertyIds={formPropertyIds}
         processId={processId}
         callActivityVariableIds={callActivityVariableIds}
         additionalIdExtractor={(task) => task.businessObject.additionalId}
