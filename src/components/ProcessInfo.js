@@ -86,7 +86,7 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, formPr
           <p>Process ID: {selectedTask.processId}</p>
           {selectedTask.type === 'bpmn:CallActivity' && (
             <div className="call-activity-ids">
-              <h4>CallActivity:</h4>
+              <h4>Межведы:</h4>
               {Object.entries(callActivityVariableIds).map(([callActivityId, variableData]) => (
                 <div key={callActivityId}>
                   <p>CallActivity ID: {callActivityId}</p>

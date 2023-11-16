@@ -18,6 +18,7 @@ const BpmnDiagram = ({ xml }) => {
   const [formPropertyIds, setFormPropertyIds] = useState([]);
   const [callActivityVariableIds, setCallActivityVariableIds] = useState({});
   const [startEventFormProperties, setStartEventFormProperties] = useState([]);
+  const [dayType, setDayType] = useState(null);
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -80,10 +81,10 @@ const BpmnDiagram = ({ xml }) => {
             inVariables.push({ source, target, type: 'in' });
           }
     
+          const outVariables = [];
           const outVariableRegex = /<activiti:out\s+source="([^"]+)"\s+target="([^"]+)"/g;
           let outVariableMatch;
-          const outVariables = [];
-          while ((outVariableMatch = outVariableRegex.exec(match[1])) !== null) {
+          while ((outVariableMatch = outVariableRegex.exec(xml)) !== null) {
             const source = outVariableMatch[1];
             const target = outVariableMatch[2];
             outVariables.push({ source, target, type: 'out' });
@@ -150,15 +151,24 @@ const BpmnDiagram = ({ xml }) => {
   };
 
   const extractExecutionTime = (xml) => {
-    const matches = xml.match(/<activiti:formProperty id="[^"]+" name="[^"]+" expression="(\d+)\/(\d+)"/);
-    if (matches && matches.length === 3) {
-      const minDays = parseInt(matches[1]);
-      const maxDays = parseInt(matches[2]);
-      setExecutionTime(`Execution Time: ${minDays} рабочих - ${maxDays} календарных дней`);
+    const matches = xml.match(/<activiti:formProperty id="[^"]+" name="([^"]+)" expression="(\d+)\/(\d+)"/);
+    if (matches && matches.length === 4) {
+      const name = matches[1];
+      const minDays = parseInt(matches[2]);
+      const maxDays = parseInt(matches[3]);
+
+      if (name === 'w') {
+        setDayType('рабочих');
+      } else if (name === 'c') {
+        setDayType('календарных');
+      }
+  
+      setExecutionTime(`Execution Time: ${minDays} - ${maxDays} ${dayType} дней`);
     } else {
       setExecutionTime('Execution Time not found');
     }
   };
+  
 
   const extractProcessName = (xml) => {
     const matches = xml.match(/<process id="[^"]+" name="([^"]+)"/);
@@ -247,11 +257,11 @@ const BpmnDiagram = ({ xml }) => {
         <div className="execution-time">
           {executionTime ? `Время исполнения: ${executionTime}` : 'Время исполнения not found'}
         </div>
-        <div className="execution-time">
+        <div className="execution-ID">
           {processId ? `Process ID: ${processId}` : 'Process ID not found'}
         </div>
-        <div className="call-activity-ids">
-          <h4>CallActivity:</h4>
+        {/* <div className="call-activity-ids">
+          <h4>Межведы:</h4>
           {Object.entries(callActivityVariableIds).map(([callActivityId, variableData]) => (
             <div key={callActivityId}>
               <p>CallActivity ID: {callActivityId}</p>
@@ -285,7 +295,7 @@ const BpmnDiagram = ({ xml }) => {
               </div>
             </div>
           ))}
-        </div>
+        </div> */}
 
       </div>
       <ProcessInfo
