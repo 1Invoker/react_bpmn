@@ -154,7 +154,7 @@ const BpmnDiagram = ({ xml }) => {
     if (matches && matches.length === 3) {
       const minDays = parseInt(matches[1]);
       const maxDays = parseInt(matches[2]);
-      setExecutionTime(`Execution Time: ${minDays} - ${maxDays} days`);
+      setExecutionTime(`Execution Time: ${minDays} рабочих - ${maxDays} календарных дней`);
     } else {
       setExecutionTime('Execution Time not found');
     }
