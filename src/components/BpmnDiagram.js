@@ -156,18 +156,19 @@ const BpmnDiagram = ({ xml }) => {
       const name = matches[1];
       const minDays = parseInt(matches[2]);
       const maxDays = parseInt(matches[3]);
-
-      if (name === 'w') {
-        setDayType('рабочих');
-      } else if (name === 'c') {
-        setDayType('календарных');
-      }
   
-      setExecutionTime(`Execution Time: ${minDays} - ${maxDays} ${dayType} дней`);
+      if (name === 'w') {
+        setExecutionTime(`Execution Time: ${minDays} - ${maxDays} рабочих дней`);
+      } else if (name === 'c') {
+        setExecutionTime(`Execution Time: ${minDays} - ${maxDays} календарных дней`);
+      } else {
+        setExecutionTime('Execution Time not found');
+      }
     } else {
       setExecutionTime('Execution Time not found');
     }
   };
+  
   
 
   const extractProcessName = (xml) => {
