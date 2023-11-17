@@ -4,28 +4,36 @@ import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const XsdReader = ({ onXmlChange }) => {
-  const [xsdText, setXsdText] = useState('');
+  const [xsdTexts, setXsdTexts] = useState([]);
 
   const handleXsdChange = (event) => {
-    const file = event.target.files[0]; // Получаем выбранный файл
-    if (file) {
-      // Читаем содержимое файла как текст
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const fileContent = e.target.result;
-        setXsdText(fileContent); // Обновляем состояние xsdText с содержанием файла
-      };
-      reader.readAsText(file);
+    const files = event.target.files;
+
+    if (files && files.length > 0) {
+      const fileReaders = Array.from(files).map((file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => resolve({ content: e.target.result, name: file.name });
+          reader.readAsText(file);
+        });
+      });
+
+      Promise.all(fileReaders).then((fileContents) => {
+        setXsdTexts(fileContents);
+      });
     }
   };
 
   const parseXsd = () => {
     try {
-      const xsdJson = xmljs.xml2js(xsdText, { compact: true });
-      console.log(xsdJson);
-
-      const xsdXml = xmljs.js2xml(xsdJson, { compact: true });
-      onXmlChange(xsdXml);
+      xsdTexts.forEach((file) => {
+        const xsdJson = xmljs.xml2js(file.content, { compact: true });
+        console.log(xsdJson);
+      
+        const xsdXml = xmljs.js2xml(xsdJson, { compact: true });
+        onXmlChange(xsdXml, file.name);
+      });
+      
     } catch (error) {
       console.error('Ошибка при анализе BPMN', error);
     }
@@ -45,6 +53,7 @@ const XsdReader = ({ onXmlChange }) => {
           accept=".bpmn"
           style={{ display: 'none' }}
           onChange={handleXsdChange}
+          multiple
         />
       </Button>
       <button onClick={parseXsd}>Анализировать BPMN</button>

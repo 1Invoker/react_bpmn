@@ -259,42 +259,6 @@ const BpmnDiagram = ({ xml }) => {
         <div className="execution-ID">
           {processId ? `Process ID: ${processId}` : 'Process ID not found'}
         </div>
-        {/* <div className="call-activity-ids">
-          <h4>Межведы:</h4>
-          {Object.entries(callActivityVariableIds).map(([callActivityId, variableData]) => (
-            <div key={callActivityId}>
-              <p>CallActivity ID: {callActivityId}</p>
-              <div>
-                <p>Поля отправленные в межвед (activiti:in):</p>
-                {variableData.inVariables && variableData.inVariables.length > 0 ? (
-                  <ul>
-                    {variableData.inVariables.map((variable) => (
-                      <li key={`${variable.source}-${variable.target}`}>
-                        Источник: {variable.source}, Межвед: {variable.target}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>Нет данных</p>
-                )}
-              </div>
-              <div>
-                <p>Поля исходящие из межведа (activiti:out):</p>
-                {variableData.outVariables && variableData.outVariables.length > 0 ? (
-                  <ul>
-                    {variableData.outVariables.map((variable) => (
-                      <li key={`${variable.source}-${variable.target}`}>
-                        Межвед: {variable.source}, Текущий маршрут: {variable.target}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p>Нет данных</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div> */}
 
       </div>
       <ProcessInfo
