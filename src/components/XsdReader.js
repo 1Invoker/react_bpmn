@@ -24,6 +24,26 @@ const XsdReader = ({ onXmlChange }) => {
     }
   };
 
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files);
+    const fileReaders = files.map((file) => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => resolve({ content: ev.target.result, name: file.name });
+        reader.readAsText(file);
+      });
+    });
+
+    Promise.all(fileReaders).then((fileContents) => {
+      setXsdTexts(fileContents);
+    });
+  };
+
   const parseXsd = () => {
     try {
       xsdTexts.forEach((file) => {
@@ -56,6 +76,15 @@ const XsdReader = ({ onXmlChange }) => {
           multiple
         />
       </Button>
+
+      <div
+        style={{ border: '2px dashed #ccc', padding: '20px', marginTop: '20px' }}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      >
+        Перетащите файлы сюда или выберите их
+      </div>
+
       <button onClick={parseXsd}>Анализировать BPMN</button>
     </div>
   );

@@ -27,7 +27,7 @@ const App = () => {
     <Router>
       <div className="App">
         <Button variant="contained" color="primary" onClick={handleConverterClick}>
-          BPMN Converter
+          BPMN Analyzer
         </Button>
         <div className="container">
           <div className="column">
