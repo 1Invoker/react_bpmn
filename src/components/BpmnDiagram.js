@@ -156,7 +156,7 @@ const BpmnDiagram = ({ xml }) => {
       const maxDays = parseInt(matches[3]);
   
       if (name === 'w') {
-        setExecutionTime(`Execution Time: ${minDays} - ${maxDays} рабочих дней`);
+        setExecutionTime(`${minDays} - ${maxDays} рабочих дней`);
       } else if (name === 'c') {
         setExecutionTime(`Execution Time: ${minDays} - ${maxDays} календарных дней`);
       } else {
@@ -248,7 +248,7 @@ const BpmnDiagram = ({ xml }) => {
       </div>
       <div className="info-container">
         <div className="smev-version">
-          {smevVersion ? `SMEV Version: ${smevVersion}` : 'SMEV Version not found'}
+          {smevVersion ? `Версия SMEV: ${smevVersion}` : 'SMEV Version not found'}
         </div>
         <div className="process-name">
           {processName ? `Process Name: ${processName}` : 'Process Name not found'}
