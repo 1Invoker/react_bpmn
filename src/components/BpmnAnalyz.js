@@ -91,6 +91,9 @@ const BpmnAnalyz = ({ xsdXmls }) => {
    
     console.log('Setting service deadline...');
   };
+  const handleActiv = () => {
+    console.log('nnnnn')
+  }
 
   const theme = createTheme({
     palette: {
@@ -133,7 +136,7 @@ const BpmnAnalyz = ({ xsdXmls }) => {
         <div style={styles.buttonGroup}>
           <div style={styles.buttonGroupTop}>
             <label style={styles.label}>
-              Show version:
+              Показать версию:
               <Select style={styles.select} onChange={(e) => handleSelectVersion(e.target.value)} value={selectedSmevVersion}>
                 <MenuItem value="all">Все версии</MenuItem>
                 <MenuItem value="smev2">SMEV2</MenuItem>
@@ -158,19 +161,23 @@ const BpmnAnalyz = ({ xsdXmls }) => {
               Показать неактивные
             </Button>
             <Button variant="contained" color="primary" style={styles.actionButton} startIcon={<ScheduleIcon />} onClick={handleServiceDeadline}>
-              Срок оказания услуги
+              Наим. из карт. прод.
+            </Button>
+            <Button variant="contained" color="primary" style={styles.actionButton} startIcon={<ScheduleIcon />} onClick={handleActiv}>
+              Актив
             </Button>
           </div>
         </div>
         <Table style={styles.fileContainer}>
           <TableHead>
             <TableRow>
-              <TableCell>File</TableCell>
+              <TableCell>Файл</TableCell>
               <TableCell>Название файла</TableCell>
-              <TableCell>SMEV Version</TableCell>
+              <TableCell>Версия SMEV</TableCell>
               <TableCell>Process Name</TableCell>
               <TableCell>Наличие межведа</TableCell>
               <TableCell>Тип процедуры</TableCell>
+              <TableCell>Срок оказания процедуры</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
