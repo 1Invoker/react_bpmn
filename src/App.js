@@ -9,7 +9,7 @@ import Button from '@mui/material/Button';
 const App = () => {
   const [xsdXmls, setXsdXmls] = useState([]);
   const [selectedXml, setSelectedXml] = useState('');
-  const [showBpmnAnalyz, setShowBpmnAnalyz] = useState(false);
+  const [showBpmnAnalyz, setShowBpmnAnalyz] = useState(true);
 
   const handleXmlChange = (xml, fileName) => {
     setXsdXmls((prevXmls) => [...prevXmls, { xml, fileName }]);
@@ -17,6 +17,11 @@ const App = () => {
 
   const handleSelectXml = (xml) => {
     setSelectedXml(xml);
+  };
+
+  const handleFileSelect = (xml) => {
+    setSelectedXml(xml);
+    setShowBpmnAnalyz(true);
   };
 
   const handleConverterClick = () => {
@@ -42,8 +47,8 @@ const App = () => {
             </ul>
           </div>
           <div className="column">
+            {showBpmnAnalyz && <BpmnAnalyz xsdXmls={xsdXmls} onFileSelect={handleFileSelect} />}
             {selectedXml && !showBpmnAnalyz && <BpmnDiagram xml={selectedXml} />}
-            {showBpmnAnalyz && <BpmnAnalyz xsdXmls={xsdXmls} />}
           </div>
         </div>
       </div>

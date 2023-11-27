@@ -6,20 +6,25 @@ import Typography from '@mui/material/Typography';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import BpmnDiagram from './BpmnDiagram'; // Подключение компонента BpmnDiagram
 
-const BpmnAnalyz = ({ xsdXmls }) => {
+const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
   const [smevVersions, setSmevVersions] = useState([]);
   const [filteredSmevVersions, setFilteredSmevVersions] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
   const [selectedSmevVersion, setSelectedSmevVersion] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedFileName, setSelectedFileName] = useState('');
+  const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false); // Добавлен state для открытия/закрытия BpmnDiagram
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
@@ -58,8 +63,7 @@ const BpmnAnalyz = ({ xsdXmls }) => {
     };
 
     const isFileGreen = (fileName) => {
-      // условие на ваше условие определения цвета
-      return fileName.length % 2 === 0; // Пример: четные номера зеленые
+      return fileName.length % 2 === 0;
     };
 
     analyzeSmevVersions();
@@ -78,22 +82,21 @@ const BpmnAnalyz = ({ xsdXmls }) => {
   };
 
   const handleExport = () => {
-    
     console.log('Exporting data...');
   };
 
   const handleShowInactive = () => {
-   
     console.log('Showing inactive data...');
   };
 
   const handleServiceDeadline = () => {
-   
     console.log('Setting service deadline...');
   };
-  const handleActiv = () => {
-    console.log('nnnnn')
-  }
+
+  const handleActiv = (fileName) => {
+    setSelectedFileName(fileName);
+    setIsBpmnDiagramOpen(true); // Открывать BpmnDiagram при выборе файла
+  };
 
   const theme = createTheme({
     palette: {
@@ -106,26 +109,31 @@ const BpmnAnalyz = ({ xsdXmls }) => {
     },
     typography: {
       h2: {
-        fontSize: '1.5rem', // размер заголовка
+        fontSize: '1.5rem',
         fontFamily: 'cursive',
         marginBottom: '10px',
       },
       h3: {
-        fontSize: '1rem', // размер заголовка внутри файла
+        fontSize: '1rem',
         fontFamily: 'cursive',
         marginBottom: '5px',
       },
       body1: {
-        fontSize: '1rem', // размер текста
+        fontSize: '1rem',
         fontFamily: 'sans-serif',
         margin: '5px 0',
       },
       button: {
-        fontSize: '1rem', // размер кнопки
+        fontSize: '1rem',
         marginBottom: '10px',
       },
     },
   });
+
+  const getXmlDataForFile = (fileName) => {
+    const selectedFile = xsdXmls.find((xsdXml) => xsdXml.fileName === fileName);
+    return selectedFile ? selectedFile.xml : '';
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -163,45 +171,54 @@ const BpmnAnalyz = ({ xsdXmls }) => {
             <Button variant="contained" color="primary" style={styles.actionButton} startIcon={<ScheduleIcon />} onClick={handleServiceDeadline}>
               Наим. из карт. прод.
             </Button>
-            <Button variant="contained" color="primary" style={styles.actionButton} startIcon={<ScheduleIcon />} onClick={handleActiv}>
-              Актив
-            </Button>
           </div>
         </div>
-        <Table style={styles.fileContainer}>
-          <TableHead>
-            <TableRow>
-              <TableCell>Файл</TableCell>
-              <TableCell>Название файла</TableCell>
-              <TableCell>Версия SMEV</TableCell>
-              <TableCell>Process Name</TableCell>
-              <TableCell>Наличие межведа</TableCell>
-              <TableCell>Тип процедуры</TableCell>
-              <TableCell>Срок оказания процедуры</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {filteredSmevVersions.map((xsdXml, index) => (
-              <TableRow key={index} style={styles.row}>
-                <TableCell>
-                  <div
-                    style={{
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      backgroundColor: xsdXml.isGreen ? 'green' : 'red',
-                      marginRight: '5px',
-                    }}
-                  ></div>
-                  {index + 1}
-                </TableCell>
-                <TableCell>{xsdXml.fileName}</TableCell>
-                <TableCell>{xsdXml.version}</TableCell>
-                <TableCell>{xsdXml.processName}</TableCell>
+        <TableContainer component={Paper} style={styles.fileContainer}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Файл</TableCell>
+                <TableCell>Название файла</TableCell>
+                <TableCell>Версия SMEV</TableCell>
+                <TableCell>Process Name</TableCell>
+                <TableCell>Наличие межведа</TableCell>
+                <TableCell>Тип процедуры</TableCell>
+                <TableCell>Срок оказания процедуры</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {filteredSmevVersions.map((xsdXml, index) => (
+                <TableRow
+                  key={index}
+                  style={styles.row}
+                  onClick={() => onFileSelect && onFileSelect(xsdXml.fileName)}
+                >
+                  <TableCell>
+                    <div
+                      style={{
+                        width: '10px',
+                        height: '10px',
+                        borderRadius: '50%',
+                        backgroundColor: xsdXml.isGreen ? 'green' : 'red',
+                        marginRight: '5px',
+                      }}
+                    ></div>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell style={{ cursor: 'pointer' }}>
+                    <div onClick={() => handleActiv(xsdXml.fileName)}>{xsdXml.fileName}</div>
+                  </TableCell>
+                  <TableCell>{xsdXml.version}</TableCell>
+                  <TableCell>{xsdXml.processName}</TableCell>
+                  {/* ... (оставшаяся часть кода) */}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        {isBpmnDiagramOpen && (
+          <BpmnDiagram xml={getXmlDataForFile(selectedFileName)} />
+        )}
       </div>
     </ThemeProvider>
   );
@@ -212,9 +229,9 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     padding: '20px',
-    borderRadius: '10px', // Закругленные углы
-    backgroundColor: '#ffffff', // Белый фон
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)', // Тень
+    borderRadius: '10px',
+    backgroundColor: '#ffffff',
+    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
   },
   header: {
     marginBottom: '10px',
@@ -246,6 +263,9 @@ const styles = {
   select: {
     marginLeft: '5px',
   },
+  input: {
+    marginLeft: '5px',
+  },
   fileContainer: {
     border: '1px solid #ccc',
     marginTop: '10px',
@@ -254,9 +274,6 @@ const styles = {
     '&:hover': {
       backgroundColor: '#f5f5f5',
     },
-  },
-  input: {
-    marginLeft: '5px',
   },
 };
 
