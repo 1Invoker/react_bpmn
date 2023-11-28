@@ -15,7 +15,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import BpmnDiagram from './BpmnDiagram'; // Подключение компонента BpmnDiagram
+import BpmnDiagram from './BpmnDiagram';
 
 const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
   const [smevVersions, setSmevVersions] = useState([]);
@@ -24,7 +24,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
   const [selectedSmevVersion, setSelectedSmevVersion] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFileName, setSelectedFileName] = useState('');
-  const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false); // Добавлен state для открытия/закрытия BpmnDiagram
+  const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
@@ -210,7 +210,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
                   </TableCell>
                   <TableCell>{xsdXml.version}</TableCell>
                   <TableCell>{xsdXml.processName}</TableCell>
-                  {/* ... (оставшаяся часть кода) */}
                 </TableRow>
               ))}
             </TableBody>
