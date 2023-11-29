@@ -6,6 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
+import './ProcessInfo.css';
 
 const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, processId, callActivityVariableIds, taskVariableIds, startEventFormProperties }) => {
   const [filter, setFilter] = useState('all');
@@ -75,7 +76,7 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, proces
           </button>
         ))}
       </div>
-      <button onClick={exportTasks}>Экспорт этапов</button>
+      <button onClick={exportTasks} className="export-button">Экспорт этапов</button>
 
       {selectedTask && (
         <div className="task-details">

@@ -16,6 +16,7 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BpmnDiagram from './BpmnDiagram';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
 const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
   const [smevVersions, setSmevVersions] = useState([]);
