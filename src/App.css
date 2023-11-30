@@ -26,14 +26,6 @@ h1 {
   margin-top: 20px;
 }
 
-h2 {
-  color: #f0f0f0; 
-  margin-left: auto;
-  font-family: Arial, sans-serif; 
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
-}
-
-
 textarea {
   width: 100%;
   padding: 12px; 
