@@ -1,11 +1,11 @@
 import React from 'react';
-import BpmnDiagram from './BpmnDiagtam';
+import BpmnDiagram from './BpmnDiagram';
 
-const BpmnAnalyzPage = ({ xsdXmls }) => {
+const BpmnAnalyzPage = ({ xmlData }) => {
   return (
     <div>
-      <h2>BPMN Analyzer Page</h2>
-      <BpmnDiagram xsdXmls={xsdXmls} />
+      <h2>BPMN Diagram</h2>
+      <BpmnDiagram xml={xmlData} />
     </div>
   );
 };
