@@ -35,6 +35,44 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, proces
     setSelectedTask(null);
   };
 
+  const mapSourceToFieldName = (source) => {
+    const sourceMappings = {
+      'executorkey_OKTMO': 'ОКТМО исполнителя',
+      'declarantType': 'Тип заявителя',
+      'organizationOPF': 'ОПФ организации',
+      'organizationINN': 'ИНН организации',
+      'organizationOGRN': 'ОГРН организации',
+      'organizationEmail': 'Email организации',
+      'organizationPhone': 'Телефон организации',
+      'declPersonFIOSurname': 'Фамилия заявителя',
+      'declPersonFIOFirst': 'Имя заявителя',
+      'declPersonFIOPatronymic': 'Отчество заявителя',
+      'declPersonEmail': 'Email заявителя',
+      'declPersonPhone': 'Телефон заявителя',
+      'declPersonSNILS': 'СНИЛС заявителя',
+      'doc_applicantIdentity_type2': 'Код документа заявителя',
+      'declPersonPDocumentSeries': 'Серия документа заявителя',
+      'declPersonPDocumentNumber': 'Номер документа заявителя',
+      'declPersonPDocumentDate': 'Дата выдачи документа заявителя',
+      'declPersonPDocumentIssueOrgan': 'Орган, выдавший документ заявителя',
+      'flagRepresentative': 'Является представителем',
+      'agentFIOSurname': 'Фамилия представителя',
+      'agentFIOFirst': 'Имя представителя',
+      'agentFIOPatronymic': 'Отчество представителя',
+      'agentPDocumentSeries': 'Серия документа представителя',
+      'agentPDocumentNumber': 'Номер документа представителя',
+      'agentPDocumentDate': 'Дата выдачи документа представителя',
+      'agentPDocumentIssueOrgan': 'Орган, выдавший документ представителя',
+      'agentPhone': 'Телефон представителя',
+      'agentEmail': 'Email представителя',
+      'agentSNILS': 'СНИЛС представителя',
+      'agentKind': 'Вид представителя',
+    };
+  
+    return sourceMappings[source] || source;
+  };
+  
+
   return (
     <div className="process-info">
       <div className="info-column">
@@ -90,7 +128,6 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, proces
         <button onClick={exportTasks} className="export-button">Экспорт этапов</button>
       </div>
 
-
       {selectedTask && (
         <div className="details-column">
           <div className="task-details">
@@ -113,18 +150,119 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, proces
                             <Table stickyHeader aria-label="sticky table">
                               <TableHead>
                                 <TableRow>
+                                  <TableCell>Наименование поля</TableCell>
                                   <TableCell>Источник</TableCell>
                                   <TableCell>Межвед</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                {variableData.inVariables.map((variable) => (
-                                  <TableRow key={`${variable.source}-${variable.target}`}>
-                                    <TableCell>{variable.source}</TableCell>
-                                    <TableCell>{variable.target}</TableCell>
-                                  </TableRow>
-                                ))}
+                                {variableData.inVariables.map((variable) => {
+                                  let fieldName;
+                                  switch (variable.source) {
+                                    case 'executorkey_OKTMO':
+                                      fieldName = 'ОКТМО исполнителя';
+                                      break;
+                                    case 'declarantType':
+                                      fieldName = 'Тип заявителя';
+                                      break;
+                                    case 'organizationOPF':
+                                      fieldName = 'ОПФ организации';
+                                      break;
+                                    case 'organizationINN':
+                                      fieldName = 'ИНН организации';
+                                      break;
+                                    case 'organizationOGRN':
+                                      fieldName = 'ОГРН организации';
+                                      break;
+                                    case 'organizationEmail':
+                                      fieldName = 'Email организации';
+                                      break;
+                                    case 'organizationPhone':
+                                      fieldName = 'Телефон организации';
+                                      break;
+                                    case 'declPersonFIOSurname':
+                                      fieldName = 'Фамилия заявителя';
+                                      break;
+                                    case 'declPersonFIOFirst':
+                                      fieldName = 'Имя заявителя';
+                                      break;
+                                    case 'declPersonFIOPatronymic':
+                                      fieldName = 'Отчество заявителя';
+                                      break;
+                                    case 'declPersonEmail':
+                                      fieldName = 'Email заявителя';
+                                      break;
+                                    case 'declPersonPhone':
+                                      fieldName = 'Телефон заявителя';
+                                      break;
+                                    case 'declPersonSNILS':
+                                      fieldName = 'СНИЛС заявителя';
+                                      break;
+                                    case 'doc_applicantIdentity_type2':
+                                      fieldName = 'Код документа заявителя';
+                                      break;
+                                    case 'declPersonPDocumentSeries':
+                                      fieldName = 'Серия документа заявителя';
+                                      break;
+                                    case 'declPersonPDocumentNumber':
+                                      fieldName = 'Номер документа заявителя';
+                                      break;
+                                    case 'declPersonPDocumentDate':
+                                      fieldName = 'Дата выдачи документа заявителя';
+                                      break;
+                                    case 'declPersonPDocumentIssueOrgan':
+                                      fieldName = 'Орган, выдавший документ заявителя';
+                                      break;
+                                    case 'flagRepresentative':
+                                      fieldName = 'Является представителем';
+                                      break;
+                                    case 'agentFIOSurname':
+                                      fieldName = 'Фамилия представителя';
+                                      break;
+                                    case 'agentFIOFirst':
+                                      fieldName = 'Имя представителя';
+                                      break;
+                                    case 'agentFIOPatronymic':
+                                      fieldName = 'Отчество представителя';
+                                      break;
+                                    case 'agentPDocumentSeries':
+                                      fieldName = 'Серия документа представителя';
+                                      break;
+                                    case 'agentPDocumentNumber':
+                                      fieldName = 'Номер документа представителя';
+                                      break;
+                                    case 'agentPDocumentDate':
+                                      fieldName = 'Дата выдачи документа представителя';
+                                      break;
+                                    case 'agentPDocumentIssueOrgan':
+                                      fieldName = 'Орган, выдавший документ представителя';
+                                      break;
+                                    case 'agentPhone':
+                                      fieldName = 'Телефон представителя';
+                                      break;
+                                    case 'agentEmail':
+                                      fieldName = 'Email представителя';
+                                      break;
+                                    case 'agentSNILS':
+                                      fieldName = 'СНИЛС представителя';
+                                      break;
+                                    case 'agentKind':
+                                      fieldName = 'Вид представителя';
+                                      break;
+                                    default:
+                                      fieldName = mapSourceToFieldName(variable.additionalField);
+                                      break;
+                                  }
+                                  return (
+                                    <TableRow key={`${variable.source}-${variable.target}`}>
+                                      <TableCell>{fieldName}</TableCell>
+                                      <TableCell>{variable.source}</TableCell>
+                                      <TableCell>{variable.target}</TableCell>
+                                    </TableRow>
+                                  );
+                                })}
                               </TableBody>
+
                             </Table>
                           </TableContainer>
                         </Paper>

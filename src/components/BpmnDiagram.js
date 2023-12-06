@@ -61,7 +61,7 @@ const BpmnDiagram = ({ xml }) => {
         const callActivityIds = taskData
         .filter((task) => task.type === 'bpmn:CallActivity')
         .map((callActivity) => callActivity.id);
-    
+
       const CallActivityVariableIds = {};
       callActivityIds.forEach((callActivityId) => {
         const regex = new RegExp(
@@ -70,29 +70,47 @@ const BpmnDiagram = ({ xml }) => {
         );
         let match;
         while ((match = regex.exec(xml)) !== null) {
+          const extensionElementsData = match[1];
+          
           const inVariableRegex = /<activiti:in\s+source="([^"]+)"\s+target="([^"]+)"/g;
           let inVariableMatch;
           const inVariables = [];
-          while ((inVariableMatch = inVariableRegex.exec(match[1])) !== null) {
+          while ((inVariableMatch = inVariableRegex.exec(extensionElementsData)) !== null) {
             const source = inVariableMatch[1];
             const target = inVariableMatch[2];
             inVariables.push({ source, target, type: 'in' });
           }
-    
-          const outVariables = [];
+
           const outVariableRegex = /<activiti:out\s+source="([^"]+)"\s+target="([^"]+)"/g;
           let outVariableMatch;
-          while ((outVariableMatch = outVariableRegex.exec(xml)) !== null) {
+          const outVariables = [];
+          while ((outVariableMatch = outVariableRegex.exec(extensionElementsData)) !== null) {
             const source = outVariableMatch[1];
             const target = outVariableMatch[2];
             outVariables.push({ source, target, type: 'out' });
           }
-    
+
           CallActivityVariableIds[callActivityId] = { inVariables, outVariables };
+
+          //  вывод в консоль данных между extensionElements и activiti:in
+          console.log(`Extension Elements Data for callActivity ${callActivityId}: ${extensionElementsData}`);
         }
       });
-    
+
+      //  код для поиска callActivity с конкретными атрибутами
+      const specificCallActivityRegex = /<callActivity\s+id="([^"]+)"\s+name="([^"]+)"\s+calledElement="([^"]+)">.*?<\/callActivity>/gs;
+      let specificCallActivityMatch;
+      while ((specificCallActivityMatch = specificCallActivityRegex.exec(xml)) !== null) {
+        const specificCallActivityId = specificCallActivityMatch[1];
+        const specificCallActivityName = specificCallActivityMatch[2];
+        const specificCallActivityCalledElement = specificCallActivityMatch[3];
+
+        // выводим в консоль
+        console.log(`Found specific callActivity with id: ${specificCallActivityId}, name: ${specificCallActivityName}, calledElement: ${specificCallActivityCalledElement}`);
+      }
+
       setCallActivityVariableIds(CallActivityVariableIds);
+
 
         const startEventFormProperties = extractFormPropertiesFromStartEvent(xml);
         setStartEventFormProperties(startEventFormProperties);
