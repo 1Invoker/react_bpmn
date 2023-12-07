@@ -11,6 +11,13 @@ import './ProcessInfo.css';
 const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, processId, callActivityVariableIds, taskVariableIds, startEventFormProperties }) => {
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [button1Active, setButton1Active] = useState(false);
+
+  const handleButtonClick = (buttonNumber) => {
+    if (buttonNumber === 1) {
+      setButton1Active(!button1Active);
+    }
+  };
 
   const sortedTasks = tasks.slice().sort((a, b) => a.name.localeCompare(b.name));
 
@@ -136,6 +143,48 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, proces
             <p>Тип: {selectedTask.type}</p>
             <p>ID: {selectedTask.additionalId}</p>
             <p>Process ID: {selectedTask.processId}</p>
+            <div class="button-container">
+            <button
+                onClick={() => handleButtonClick(1)}
+                style={{
+                  display: 'block',
+                  marginBottom: '10px',
+                  padding: '10px 20px',
+                  fontSize: '16px',
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  textDecoration: 'none',
+                  border: '1px solid #ccc',
+                  borderRadius: '5px',
+                  backgroundColor: button1Active ? '#28a745' : '#dc3545', 
+                  color: '#fff',
+                  boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.08)',
+                  transition: 'box-shadow 0.3s ease, background-color 0.3s ease',
+                  position: 'relative',
+                }}
+              >
+                Актив
+                {button1Active && (
+                  <span
+                    className="lamp"
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      borderRadius: '50%',
+                      marginLeft: '5px',
+                      backgroundColor: '#fff',
+                      boxShadow: '0 0 10px rgba(0, 255, 0, 0.5)', // Зеленая лампочка при активации
+                      transition: 'background-color 0.3s ease, box-shadow 0.3s ease',
+                      position: 'absolute',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                    }}
+                  />
+                )}
+              </button>
+              <button onClick={exportTasks} className="button2">Посмотреть МВ</button>
+            </div>
             {selectedTask.type === 'bpmn:CallActivity' && (
               <div className="call-activity-ids">
                 <h4>Межведы:</h4>
@@ -151,8 +200,8 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, proces
                               <TableHead>
                                 <TableRow>
                                   <TableCell>Наименование поля</TableCell>
-                                  <TableCell>Источник</TableCell>
-                                  <TableCell>Межвед</TableCell>
+                                  <TableCell>Источник(ID поля)</TableCell>
+                                  <TableCell>Межвед(ID поля МВ)</TableCell>
                                 </TableRow>
                               </TableHead>
                               <TableBody>
@@ -248,6 +297,24 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, proces
                                       break;
                                     case 'agentKind':
                                       fieldName = 'Вид представителя';
+                                      break;
+                                    case 'LP_data_INN':
+                                      fieldName = 'ИНН Юридического лица';
+                                      break;
+                                    case 'LP_data_OGRN':
+                                      fieldName = 'ОГРН Юридического лица';
+                                      break;
+                                      case 'rq_paymentsExportConditions':
+                                      fieldName = 'Условия экспорта платежей';
+                                      break;
+                                    case 'payerType':
+                                      fieldName = 'Тип плательщика';
+                                      break;
+                                    case 'INN':
+                                      fieldName = 'ИНН';
+                                      break;
+                                      case 'phone':
+                                      fieldName = 'Телефон';
                                       break;
                                     default:
                                       fieldName = mapSourceToFieldName(variable.additionalField);
