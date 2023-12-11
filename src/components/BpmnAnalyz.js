@@ -17,6 +17,8 @@ import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BpmnDiagram from './BpmnDiagram';
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { selectFile, unselectFile } from '../Redux/fileSlice';
 
 const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
   const [smevVersions, setSmevVersions] = useState([]);
@@ -26,6 +28,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFileName, setSelectedFileName] = useState('');
   const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
@@ -190,10 +193,13 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
             <TableBody>
               {filteredSmevVersions.map((xsdXml, index) => (
                 <TableRow
-                  key={index}
-                  style={styles.row}
-                  onClick={() => onFileSelect && onFileSelect(xsdXml.fileName)}
-                >
+                key={index}
+                style={styles.row}
+                onClick={() => {
+                  dispatch(selectFile({ fileName: xsdXml.fileName, xml: xsdXml.xml }));
+                  onFileSelect && onFileSelect(xsdXml.fileName, xsdXml.xml);
+                }}
+              >
                   <TableCell>
                     <div
                       style={{
