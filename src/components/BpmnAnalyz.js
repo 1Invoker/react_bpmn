@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -13,12 +14,11 @@ import TextField from '@mui/material/TextField';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BpmnDiagram from './BpmnDiagram';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { selectFile, unselectFile } from '../Redux/fileSlice';
+import { addFile, removeFile, selectFile, unselectFile, selectFiles, selectSelectedFile } from '../Redux/fileSlice';
 
 const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
   const [smevVersions, setSmevVersions] = useState([]);
@@ -29,6 +29,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
   const [selectedFileName, setSelectedFileName] = useState('');
   const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
   const dispatch = useDispatch();
+
+  const files = useSelector(selectFiles);
+  const selectedFile = useSelector(selectSelectedFile);
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
@@ -99,7 +102,22 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
 
   const handleActiv = (fileName) => {
     setSelectedFileName(fileName);
-    setIsBpmnDiagramOpen(true); // Открывать BpmnDiagram при выборе файла
+    setIsBpmnDiagramOpen(true);
+  };
+
+  const handleRemoveFile = (fileName) => {
+    // Отправляем действие Redux для удаления файла
+    dispatch(removeFile(fileName));
+  
+    // Обновляем локальный составленный список
+    setFilteredSmevVersions((prevVersions) =>
+      prevVersions.filter((xsdXml) => xsdXml.fileName !== fileName)
+    );
+  };
+  
+
+  const handleFileUpload = (newFile) => {
+    dispatch(addFile(newFile));
   };
 
   const theme = createTheme({
@@ -149,7 +167,11 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
           <div style={styles.buttonGroupTop}>
             <label style={styles.label}>
               Показать версию:
-              <Select style={styles.select} onChange={(e) => handleSelectVersion(e.target.value)} value={selectedSmevVersion}>
+              <Select
+                style={styles.select}
+                onChange={(e) => handleSelectVersion(e.target.value)}
+                value={selectedSmevVersion}
+              >
                 <MenuItem value="all">Все версии</MenuItem>
                 <MenuItem value="smev2">SMEV2</MenuItem>
                 <MenuItem value="smev3">SMEV3</MenuItem>
@@ -163,20 +185,44 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
             </label>
           </div>
           <div style={styles.buttonGroupBottom}>
-            <Button variant="contained" color="primary" style={styles.actionButton} onClick={toggleSortOrder}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={styles.actionButton}
+              onClick={toggleSortOrder}
+            >
               Переключить порядок сортировки ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
             </Button>
-            <Button variant="contained" color="primary" style={styles.actionButton} startIcon={<CloudDownloadIcon />} onClick={handleExport}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={styles.actionButton}
+              startIcon={<CloudDownloadIcon />}
+              onClick={handleExport}
+            >
               Выгрузить
             </Button>
-            <Button variant="contained" color="primary" style={styles.actionButton} startIcon={<VisibilityIcon />} onClick={handleShowInactive}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={styles.actionButton}
+              startIcon={<VisibilityIcon />}
+              onClick={handleShowInactive}
+            >
               Показать неактивные
             </Button>
-            <Button variant="contained" color="primary" style={styles.actionButton} startIcon={<ScheduleIcon />} onClick={handleServiceDeadline}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={styles.actionButton}
+              startIcon={<ScheduleIcon />}
+              onClick={handleServiceDeadline}
+            >
               Наим. из карт. прод.
             </Button>
           </div>
         </div>
+        {/* Таблица с данными */}
         <TableContainer component={Paper} style={styles.fileContainer}>
           <Table>
             <TableHead>
@@ -188,18 +234,19 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
                 <TableCell>Наличие межведа</TableCell>
                 <TableCell>Тип процедуры</TableCell>
                 <TableCell>Срок оказания процедуры</TableCell>
+                <TableCell>Удалить</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredSmevVersions.map((xsdXml, index) => (
                 <TableRow
-                key={index}
-                style={styles.row}
-                onClick={() => {
-                  dispatch(selectFile({ fileName: xsdXml.fileName, xml: xsdXml.xml }));
-                  onFileSelect && onFileSelect(xsdXml.fileName, xsdXml.xml);
-                }}
-              >
+                  key={index}
+                  style={styles.row}
+                  onClick={() => {
+                    dispatch(selectFile({ fileName: xsdXml.fileName, xml: xsdXml.xml }));
+                    onFileSelect && onFileSelect(xsdXml.fileName, xsdXml.xml);
+                  }}
+                >
                   <TableCell>
                     <div
                       style={{
@@ -217,6 +264,18 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
                   </TableCell>
                   <TableCell>{xsdXml.version}</TableCell>
                   <TableCell>{xsdXml.processName}</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      size="small"
+                      startIcon={<DeleteIcon />}
+                      onClick={() => handleRemoveFile(xsdXml.fileName)}
+                    >
+                      Удалить
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

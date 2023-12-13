@@ -3,11 +3,18 @@ import { createSlice } from '@reduxjs/toolkit';
 const fileSlice = createSlice({
   name: 'file',
   initialState: {
+    files: [], // Массив для хранения всех загруженных файлов
     selectedFile: null,
   },
   reducers: {
+    addFile: (state, action) => {
+      state.files.push(action.payload);
+    },
+    removeFile: (state, action) => {
+      const fileNameToRemove = action.payload;
+      state.files = state.files.filter((file) => file.fileName !== fileNameToRemove);
+    },
     selectFile: (state, action) => {
-        console.log('Selected File:', action.payload);
       state.selectedFile = action.payload;
     },
     unselectFile: (state) => {
@@ -16,7 +23,8 @@ const fileSlice = createSlice({
   },
 });
 
-export const { selectFile, unselectFile } = fileSlice.actions;
+export const { addFile, removeFile, selectFile, unselectFile } = fileSlice.actions;
+export const selectFiles = (state) => state.file.files;
 export const selectSelectedFile = (state) => state.file.selectedFile;
 
 export default fileSlice.reducer;
