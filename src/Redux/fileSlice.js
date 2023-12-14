@@ -15,7 +15,11 @@ const fileSlice = createSlice({
       state.files = state.files.filter((file) => file.fileName !== fileNameToRemove);
     },
     selectFile: (state, action) => {
-      state.selectedFile = action.payload;
+      // Обновление данных XML при выборе файла
+      state.selectedFile = {
+        fileName: action.payload.fileName,
+        xml: action.payload.xml,
+      };
     },
     unselectFile: (state) => {
       state.selectedFile = null;

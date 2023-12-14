@@ -23,7 +23,7 @@ const BpmnAnalyzPage = () => {
   const handleXmlChange = (xml, name) => {
     // Отправляем действие в Redux-хранилище
     console.log('Handle XML Change:', xml, name);
-    dispatch(selectFile({ xml, fileName: name }));
+    dispatch(selectFile({ xml: xml, fileName: name }));
   };
 
   return (
