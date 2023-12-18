@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import XsdReader from '../components/XsdReader';
 import BpmnDiagram from '../components/BpmnDiagram';
@@ -10,6 +10,17 @@ const One = ({ router }) => {
   const [xsdXmls, setXsdXmls] = useState([]);
   const [selectedXml, setSelectedXml] = useState('');
   const [showBpmnAnalyz, setShowBpmnAnalyz] = useState(true);
+  const [bpmnData, setBpmnData] = useState('');
+
+  useEffect(() => {
+    // GET-запрос к новому API-маршруту
+    fetch('/api/bpmnData')
+      .then(response => response.text())
+      .then(data => setBpmnData(data))
+      .catch(error => console.error('Ошибка при получении данных BPMN:', error));
+  }, []);
+  console.log(bpmnData);
+  
 
   const handleXmlChange = (xml, fileName) => {
     setXsdXmls((prevXmls) => [...prevXmls, { xml, fileName }]);
