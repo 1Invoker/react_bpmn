@@ -10,42 +10,81 @@ const pool = new Pool({
   user: '*',
   host: '*',
   database: '*',
-  password: '*:',
+  password: '*',
   port: 5432,
 });
+
 pool.connect((err, client, done) => {
-    if (err) {
-      console.error('Ошибка подключения к базе данных:', err);
-    } else {
-      console.log('Подключение к базе данных успешно!');
-    }
-    done();
-  });
-  
+  if (err) {
+    console.error('Ошибка подключения к базе данных:', err);
+  } else {
+    console.log('Подключение к базе данных успешно!');
+  }
+  done();
+});
 
 app.use(express.json());
 
-// API-маршрут для получения данных из PostgreSQL и BPMN-ссылки
+// API-маршрут для получения данных из таблицы "procedure"
 app.get('/api/bpmnData', async (req, res) => {
   try {
-    // Получаем данные из PostgreSQL
-    const pgResult = await pool.query('SELECT * FROM bpmn_data WHERE id = $1', [1]);
-    const bpmnData = pgResult.rows[0]?.data;
+    // Получаем данные из таблицы "procedure"
+    const procedureResult = await pool.query('SELECT * FROM public."procedure" WHERE id = $1', [1]);
+    console.log('Результат запроса из таблицы "procedure":', procedureResult.rows);
+    const procedureData = procedureResult.rows[0]?.data;
 
     // Если данные в PostgreSQL отсутствуют, получаем их из BPMN-ссылки
-    if (!bpmnData) {
-      const response = await fetch('http://siu7.kspgmu-tst.pnz.gov:8192/vaadinServlet/APP/connector/0/324/dl/test.bpmn');
-      const data = await response.text();
+    if (!procedureData) {
+      // const response = await fetch('http://siu7.kspgmu-tst.pnz.gov:8192/vaadinServlet/APP/connector/0/324/dl/test.bpmn');
+      // const data = await response.text();
 
-      // Сохраняем данные в PostgreSQL для последующих запросов
-      await pool.query('INSERT INTO bpmn_data (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2', [1, data]);
+      // Сохраняем данные в таблицу "bpmn_data" для последующих запросов
+      // await pool.query('INSERT INTO bpmn_data (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2', [1, data]);
 
-      res.send(data);
+      // Устанавливаем заголовок Content-Type как JSON
+      res.setHeader('Content-Type', 'application/json');
+      res.send("procedureData missing");
     } else {
-      res.send(bpmnData);
+      // Устанавливаем заголовок Content-Type как JSON
+      res.setHeader('Content-Type', 'application/json');
+      res.send(procedureData);
     }
   } catch (error) {
-    console.error('Ошибка при получении данных BPMN:', error);
+    console.error('Ошибка при получении данных из таблицы "procedure":', error);
+    res.status(500).send('Внутренняя ошибка сервера');
+  }
+});
+
+// Добавляем новый API-маршрут для получения данных из таблицы "act_re_procdef"
+app.get('/api/actReProcdefData', async (req, res) => {
+  try {
+    // Получаем данные из таблицы "act_re_procdef"
+    const actReProcdefResult = await pool.query('SELECT * FROM public."act_re_procdef" WHERE id = $1', [1]);
+    console.log('Результат запроса из таблицы "act_re_procdef":', actReProcdefResult.rows);
+    const actReProcdefData = actReProcdefResult.rows[0]?.data;
+
+    // Обработка данных
+
+    res.send(actReProcdefData);
+  } catch (error) {
+    console.error('Ошибка при получении данных из таблицы "act_re_procdef":', error);
+    res.status(500).send('Внутренняя ошибка сервера');
+  }
+});
+
+// Добавляем еще один API-маршрут для получения данных из таблицы "act_ge_bytearray"
+app.get('/api/actGeBytearrayData', async (req, res) => {
+  try {
+    // Получаем данные из таблицы "act_ge_bytearray"
+    const actGeBytearrayResult = await pool.query('SELECT * FROM public."act_ge_bytearray" WHERE id = $1', [1]);
+    console.log('Результат запроса из таблицы "act_ge_bytearray":', actGeBytearrayResult.rows);
+    const actGeBytearrayData = actGeBytearrayResult.rows[0]?.data;
+
+    // Обработка данных
+
+    res.send(actGeBytearrayData);
+  } catch (error) {
+    console.error('Ошибка при получении данных из таблицы "act_ge_bytearray":', error);
     res.status(500).send('Внутренняя ошибка сервера');
   }
 });

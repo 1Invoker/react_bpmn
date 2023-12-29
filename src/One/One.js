@@ -11,15 +11,38 @@ const One = ({ router }) => {
   const [selectedXml, setSelectedXml] = useState('');
   const [showBpmnAnalyz, setShowBpmnAnalyz] = useState(true);
   const [bpmnData, setBpmnData] = useState('');
+  const [actReProcdefData, setActReProcdefData] = useState(''); // Новый state для данных от /api/actReProcdefData
+  const [actGeBytearrayData, setActGeBytearrayData] = useState(''); // Новый state для данных от /api/actGeBytearrayData
+
 
   useEffect(() => {
-    // GET-запрос к новому API-маршруту
+    // GET-запрос к /api/bpmnData
     fetch('/api/bpmnData')
       .then(response => response.text())
-      .then(data => setBpmnData(data))
+      .then(data => {
+        setBpmnData(data);
+        console.log('Данные из /api/bpmnData:', data); // Вывод в консоль
+      })
       .catch(error => console.error('Ошибка при получении данных BPMN:', error));
-  }, []);
-  console.log(bpmnData);
+
+    // GET-запрос к /api/actReProcdefData
+    fetch('/api/actReProcdefData')
+      .then(response => response.text())
+      .then(data => {
+        setActReProcdefData(data);
+        console.log('Данные из /api/actReProcdefData:', data); // Вывод в консоль
+      })
+      .catch(error => console.error('Ошибка при получении данных actReProcdefData:', error));
+
+    // GET-запрос к /api/actGeBytearrayData
+    fetch('/api/actGeBytearrayData')
+      .then(response => response.text())
+      .then(data => {
+        setActGeBytearrayData(data);
+        console.log('Данные из /api/actGeBytearrayData:', data); // Вывод в консоль
+      })
+      .catch(error => console.error('Ошибка при получении данных actGeBytearrayData:', error));
+  }, []); 
   
 
   const handleXmlChange = (xml, fileName) => {
