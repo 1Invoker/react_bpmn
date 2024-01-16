@@ -41,12 +41,10 @@ app.get('/api/bpmnData', async (req, res) => {
       // Сохраняем данные в таблицу "bpmn_data" для последующих запросов
       // await pool.query('INSERT INTO bpmn_data (id, data) VALUES ($1, $2) ON CONFLICT (id) DO UPDATE SET data = $2', [1, data]);
 
-      // Устанавливаем заголовок Content-Type как JSON
-      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
       res.send("procedureData missing");
     } else {
-      // Устанавливаем заголовок Content-Type как JSON
-      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Type', 'text/plain; charset=utf-8');
       res.send(procedureData);
     }
   } catch (error) {
