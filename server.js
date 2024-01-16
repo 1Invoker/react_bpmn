@@ -23,7 +23,7 @@ pool.connect((err, client, done) => {
   done();
 });
 
-app.use(express.json());
+// app.use(express.json());
 
 // API-маршрут для получения данных из таблицы "procedure"
 app.get('/api/bpmnData', async (req, res) => {
