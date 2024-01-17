@@ -17,7 +17,7 @@ const One = ({ router }) => {
 
   useEffect(() => {
     // GET-запрос к /api/bpmnData
-    fetch('/api/bpmnData')
+    fetch((process.env.REACT_APP_API_URL || "") + '/api/bpmnData')
       .then(response => response.text())
       .then(data => {
         setBpmnData(data);
@@ -26,7 +26,7 @@ const One = ({ router }) => {
       .catch(error => console.error('Ошибка при получении данных BPMN:', error));
 
     // GET-запрос к /api/actReProcdefData
-    fetch('/api/actReProcdefData')
+    fetch((process.env.REACT_APP_API_URL || "") + '/api/actReProcdefData')
       .then(response => response.text())
       .then(data => {
         setActReProcdefData(data);
@@ -34,8 +34,8 @@ const One = ({ router }) => {
       })
       .catch(error => console.error('Ошибка при получении данных actReProcdefData:', error));
 
-    // GET-запрос к /api/actGeBytearrayData
-    fetch('/api/actGeBytearrayData')
+  //   // GET-запрос к /api/actGeBytearrayData
+    fetch((process.env.REACT_APP_API_URL || "") + '/api/actGeBytearrayData')
       .then(response => response.text())
       .then(data => {
         setActGeBytearrayData(data);

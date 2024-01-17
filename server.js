@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const fetch = require('node-fetch');
 const { Pool } = require('pg');
 
@@ -24,6 +25,7 @@ pool.connect((err, client, done) => {
 });
 
 // app.use(express.json());
+app.use(cors());
 
 // API-маршрут для получения данных из таблицы "procedure"
 app.get('/api/bpmnData', async (req, res) => {
@@ -56,14 +58,12 @@ app.get('/api/bpmnData', async (req, res) => {
 // Добавляем новый API-маршрут для получения данных из таблицы "act_re_procdef"
 app.get('/api/actReProcdefData', async (req, res) => {
   try {
-    // Получаем данные из таблицы "act_re_procdef"
-    const actReProcdefResult = await pool.query('SELECT * FROM public."act_re_procdef" WHERE id = $1', [1]);
+    // Получаем все данные из таблицы "act_re_procdef"
+    const actReProcdefResult = await pool.query('SELECT * FROM public."act_re_procdef"');
     console.log('Результат запроса из таблицы "act_re_procdef":', actReProcdefResult.rows);
-    const actReProcdefData = actReProcdefResult.rows[0]?.data;
 
-    // Обработка данных
-
-    res.send(actReProcdefData);
+    // Отправляем все данные клиенту
+    res.send(actReProcdefResult.rows);
   } catch (error) {
     console.error('Ошибка при получении данных из таблицы "act_re_procdef":', error);
     res.status(500).send('Внутренняя ошибка сервера');
@@ -74,7 +74,7 @@ app.get('/api/actReProcdefData', async (req, res) => {
 app.get('/api/actGeBytearrayData', async (req, res) => {
   try {
     // Получаем данные из таблицы "act_ge_bytearray"
-    const actGeBytearrayResult = await pool.query('SELECT * FROM public."act_ge_bytearray" WHERE id = $1', [1]);
+    const actGeBytearrayResult = await pool.query('SELECT * FROM public."act_ge_bytearray" WHERE id_ = $1', [1]);
     console.log('Результат запроса из таблицы "act_ge_bytearray":', actGeBytearrayResult.rows);
     const actGeBytearrayData = actGeBytearrayResult.rows[0]?.data;
 
