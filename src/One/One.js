@@ -13,6 +13,7 @@ const One = ({ router }) => {
   const [bpmnData, setBpmnData] = useState('');
   const [actReProcdefData, setActReProcdefData] = useState(''); // Новый state для данных от /api/actReProcdefData
   const [actGeBytearrayData, setActGeBytearrayData] = useState(''); // Новый state для данных от /api/actGeBytearrayData
+  const [procedureProcessDefinitionData, setprocedureProcessDefinitionData] = useState('');
 
 
   useEffect(() => {
@@ -42,6 +43,14 @@ const One = ({ router }) => {
         console.log('Данные из /api/actGeBytearrayData:', data); // Вывод в консоль
       })
       .catch(error => console.error('Ошибка при получении данных actGeBytearrayData:', error));
+
+    fetch((process.env.REACT_APP_API_URL || "") + '/api/procedureProcessDefinitionData')
+      .then(response => response.text())
+      .then(data => {
+        setprocedureProcessDefinitionData(data);
+        console.log('Данные из /api/procedureProcessDefinitionData:', data); // Вывод в консоль
+      })
+      .catch(error => console.error('Ошибка при получении данных procedureProcessDefinitionData:', error));  
   }, []); 
   
 

@@ -61,13 +61,26 @@ app.get('/api/actReProcdefData', async (req, res) => {
 app.get('/api/actGeBytearrayData', async (req, res) => {
   try {
     // Получаем все данные из таблицы "act_ge_bytearray"
-    const actGeBytearrayResult = await pool.query('SELECT * FROM public."procedure_process_definition"');//изменил на procedure_process_definition
-    console.log('Результат запроса из таблицы "procedure_process_definition":', actGeBytearrayResult.rows);
+    const actGeBytearrayResult = await pool.query('SELECT * FROM public."act_ge_bytearray"');
+    console.log('Результат запроса из таблицы "act_ge_bytearray":', actGeBytearrayResult.rows);
 
     // Отправляем все данные клиенту
     res.send(actGeBytearrayResult.rows);
   } catch (error) {
     console.error('Ошибка при получении данных из таблицы "act_ge_bytearray":', error);
+    res.status(500).send('Внутренняя ошибка сервера');
+  } 
+});
+
+
+app.get('/api/procedureProcessDefinitionData', async (req, res) => {
+  try {
+    const actGeBytearrayResult = await pool.query('SELECT * FROM public."procedure_process_definition"');
+    console.log('Результат запроса из таблицы "procedure_process_definition":', actGeBytearrayResult.rows);
+
+    res.send(actGeBytearrayResult.rows);
+  } catch (error) {
+    console.error('Ошибка при получении данных из таблицы "procedure_process_definition":', error);
     res.status(500).send('Внутренняя ошибка сервера');
   } 
 });
