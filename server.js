@@ -61,7 +61,7 @@ app.get('/api/actReProcdefData', async (req, res) => {
 app.get('/api/actGeBytearrayData', async (req, res) => {
   try {
     // Получаем все данные из таблицы "act_ge_bytearray"
-    const actGeBytearrayResult = await pool.query('SELECT * FROM public."act_ge_bytearray"');
+    const actGeBytearrayResult = await pool.query('SELECT * FROM public."act_ge_bytearray" LIMIT 1000');
     console.log('Результат запроса из таблицы "act_ge_bytearray":', actGeBytearrayResult.rows);
 
     // Отправляем все данные клиенту
