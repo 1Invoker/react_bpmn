@@ -22,7 +22,7 @@ const One = ({ router }) => {
       .then(response => response.text())
       .then(data => {
         setBpmnData(data);
-        console.log('Данные из /api/bpmnData:', data); // Вывод в консоль
+        console.log('Данные из /api/bpmnData:', data);
       })
       .catch(error => console.error('Ошибка при получении данных BPMN:', error));
 
@@ -31,7 +31,7 @@ const One = ({ router }) => {
       .then(response => response.text())
       .then(data => {
         setActReProcdefData(data);
-        console.log('Данные из /api/actReProcdefData:', data); // Вывод в консоль
+        console.log('Данные из /api/actReProcdefData:', data);
       })
       .catch(error => console.error('Ошибка при получении данных actReProcdefData:', error));
 
@@ -40,7 +40,7 @@ const One = ({ router }) => {
       .then(response => response.text())
       .then(data => {
         setActGeBytearrayData(data);
-        console.log('Данные из /api/actGeBytearrayData:', data); // Вывод в консоль
+        console.log('Данные из /api/actGeBytearrayData:', data);
       })
       .catch(error => console.error('Ошибка при получении данных actGeBytearrayData:', error));
 
@@ -48,7 +48,7 @@ const One = ({ router }) => {
       .then(response => response.text())
       .then(data => {
         setprocedureProcessDefinitionData(data);
-        console.log('Данные из /api/procedureProcessDefinitionData:', data); // Вывод в консоль
+        console.log('Данные из /api/procedureProcessDefinitionData:', data);
       })
       .catch(error => console.error('Ошибка при получении данных procedureProcessDefinitionData:', error));  
   }, []); 
@@ -70,7 +70,7 @@ const One = ({ router }) => {
   const handleConverterClick = () => {
     setShowBpmnAnalyz((prevShow) => !prevShow);
   };
-
+  
   return (
     <router>
       <div className="One">
@@ -79,7 +79,7 @@ const One = ({ router }) => {
         </Button>
         <div className="container">
           <div className="column">
-            <XsdReader onXmlChange={handleXmlChange} />
+            <XsdReader onXmlChange={handleXmlChange} bpmnData={bpmnData}/>
             <h3>Выбранные файлы:</h3>
             <ul>
               {xsdXmls.map(({ xml, fileName }, index) => (

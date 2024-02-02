@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import xmljs from 'xml-js';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-const XsdReader = ({ onXmlChange }) => {
+const XsdReader = ({ onXmlChange, bpmnData }) => {
   const [xsdTexts, setXsdTexts] = useState([]);
 
   const handleXsdChange = (event) => {
@@ -54,10 +54,26 @@ const XsdReader = ({ onXmlChange }) => {
         onXmlChange(xsdXml, file.name);
       });
       
+      //  анализ bpmnData, если оно передано
+      if (bpmnData) {
+        const bpmnJson = xmljs.xml2js(bpmnData, { compact: true });
+        console.log(bpmnJson);
+      
+        const bpmnXml = xmljs.js2xml(bpmnJson, { compact: true });
+        onXmlChange(bpmnXml, 'bpmnData.xml');
+      }
+      
     } catch (error) {
       console.error('Ошибка при анализе BPMN', error);
     }
   };
+
+  //  useEffect, чтобы вызывать анализ при изменении bpmnData
+  useEffect(() => {
+    if (bpmnData) {
+      parseXsd();
+    }
+  }, [bpmnData]);
 
   return (
     <div>
