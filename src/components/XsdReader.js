@@ -5,6 +5,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const XsdReader = ({ onXmlChange, bpmnData }) => {
   const [xsdTexts, setXsdTexts] = useState([]);
+  console.log('bpmnData переданный:', bpmnData)
 
   const handleXsdChange = (event) => {
     const files = event.target.files;
@@ -45,28 +46,35 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
   };
 
   const parseXsd = () => {
-    try {
-      xsdTexts.forEach((file) => {
-        const xsdJson = xmljs.xml2js(file.content, { compact: true });
-        console.log(xsdJson);
+  try {
+    xsdTexts.forEach((file) => {
+      const xsdJson = xmljs.xml2js(file.content, { compact: true });
+      console.log(xsdJson);
+    
+      const xsdXml = xmljs.js2xml(xsdJson, { compact: true });
+      onXmlChange(xsdXml, file.name);
+      console.log(xsdXml);
+    });
+    
+    if (bpmnData) {
+      // Анализ данных BPMN JSON и парсинг строки в массив обьектов(иначе выводится закодированное при const bpmnJson = bpmnData;)
+      const bpmnJson = JSON.parse(bpmnData);
+      console.log(bpmnJson);
       
-        const xsdXml = xmljs.js2xml(xsdJson, { compact: true });
-        onXmlChange(xsdXml, file.name);
-      });
+      // Преобразование JSON в XML
+      const bpmnXml = xmljs.js2xml(bpmnJson, { compact: true });
       
-      //  анализ bpmnData, если оно передано
-      if (bpmnData) {
-        const bpmnJson = xmljs.xml2js(bpmnData, { compact: true });
-        console.log(bpmnJson);
-      
-        const bpmnXml = xmljs.js2xml(bpmnJson, { compact: true });
-        onXmlChange(bpmnXml, 'bpmnData.xml');
-      }
-      
-    } catch (error) {
-      console.error('Ошибка при анализе BPMN', error);
+      // Обработка данных BPMN XML
+      onXmlChange(bpmnXml, 'bpmnData.xml');
+      console.log(bpmnXml);
     }
-  };
+    
+    
+  } catch (error) {
+    console.error('Ошибка при анализе BPMN', error);
+  }
+};
+
 
   //  useEffect, чтобы вызывать анализ при изменении bpmnData
   useEffect(() => {
