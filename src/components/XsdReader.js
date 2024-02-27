@@ -57,9 +57,13 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
     });
     
     if (bpmnData) {
-      // Анализ данных BPMN JSON и парсинг строки в массив обьектов(иначе выводится закодированное при const bpmnJson = bpmnData;)
       const bpmnJson = JSON.parse(bpmnData);
       console.log(bpmnJson[0].xml);
+
+      // const bpmnXml = xmljs.js2xml(bpmnJson, { compact: true });
+      // onXmlChange(bpmnXml, 'bpmnData');
+
+      console.log('!!!!!!!!!!!!!!!!',bpmnData);
       onXmlChange(bpmnData, 'bpmnData');
       // // Преобразование JSON в XML
       // const bpmnXml = xmljs.js2xml(bpmnJson, { compact: true });
