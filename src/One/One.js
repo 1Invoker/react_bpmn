@@ -5,6 +5,7 @@ import BpmnDiagram from '../components/BpmnDiagram';
 import BpmnAnalyz from '../components/BpmnAnalyz';
 import './One.css';
 import Button from '@mui/material/Button';
+import BpmnList from '../BpmnList/BpmnList';
 
 const One = ({ router }) => {
   const [xsdXmls, setXsdXmls] = useState([]);
@@ -74,6 +75,7 @@ const One = ({ router }) => {
   return (
     <router>
       <div className="One">
+        <BpmnList bpmnData={bpmnData} />
         <Button variant="contained" color="primary" onClick={handleConverterClick}>
           BPMN Analyzer
         </Button>

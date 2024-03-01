@@ -8,7 +8,7 @@ const Header = () => {
       <nav>
         <ul>
           <li><Link to="/">Home</Link></li>
-          <li><Link to="/bpmn-analyz-page">BPMN Analyz</Link></li>
+          <li><Link to="/bpmn-analyz-page">BPMN Analyz P</Link></li>
         </ul>
       </nav>
     </header>
