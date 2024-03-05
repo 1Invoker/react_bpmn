@@ -47,26 +47,25 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
 
   const parseXsd = () => {
   try {
-    xsdTexts.forEach((file) => {
-      const xsdJson = xmljs.xml2js(file.content, { compact: true });
-      console.log(xsdJson);
-    
-      const xsdXml = xmljs.js2xml(xsdJson, { compact: true });
-      onXmlChange(xsdXml, file.name);
-      console.log(xsdXml);
-    });
+    if (xsdTexts.length > 0) {
+      xsdTexts.forEach((file) => {
+        const xsdJson = xmljs.xml2js(file.content, { compact: true });
+        console.log(xsdJson);
+      
+        const xsdXml = xmljs.js2xml(xsdJson, { compact: true });
+        onXmlChange(xsdXml, file.name);
+        console.log(xsdXml);
+      });
+    }
     
     if (bpmnData) {
       const bpmnJson = JSON.parse(bpmnData);
-      console.log(bpmnJson[0].xml);
-
-      console.log('!!!!!!!!!!!!!!!!',bpmnData);
-      onXmlChange(bpmnJson[0].xml, 'bpmnData');
+      bpmnJson.forEach((item) => {
+        onXmlChange(item.xml, item.name);
+      });
     }
-    
-    
   } catch (error) {
-    console.error('Ошибка при анализе BPMN', error);
+    console.error('Ошибка при анализе файлов', error);
   }
 };
 

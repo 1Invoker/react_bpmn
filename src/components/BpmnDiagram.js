@@ -245,7 +245,6 @@ const BpmnDiagram = ({ xml }) => {
         className="bpmn-diagram-container"
         ref={containerRef}
         onWheel={(e) => {
-          e.preventDefault();
           const delta = e.deltaY;
           if (delta > 0) {
             zoomOut();

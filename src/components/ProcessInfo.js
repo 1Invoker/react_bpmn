@@ -143,7 +143,7 @@ const ProcessInfo = ({ tasks, selectedTask, setSelectedTask, exportTasks, proces
             <p>Тип: {selectedTask.type}</p>
             <p>ID: {selectedTask.additionalId}</p>
             <p>Process ID: {selectedTask.processId}</p>
-            <div class="button-container">
+            <div className="button-container">
             <button
                 onClick={() => handleButtonClick(1)}
                 style={{

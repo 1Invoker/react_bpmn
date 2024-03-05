@@ -3,6 +3,7 @@ import { Routes as ReactRoutes, Route } from 'react-router-dom';
 import One from './One/One';
 import BpmnAnalyzPage from './components/BpmnAnalyzPage';
 import Home from './Home/Home';
+import BpmnList from './BpmnList/BpmnList';
 
 const Routes = () => {
   return (
@@ -10,6 +11,7 @@ const Routes = () => {
       <Route path="/" element={<Home />} />
       <Route path="/one" element={<One />} />
       <Route path="/bpmn-analyz-page" element={<BpmnAnalyzPage />} />
+      <Route path="/bpmn-list" element={<BpmnList />} />
     </ReactRoutes>
   );
 };

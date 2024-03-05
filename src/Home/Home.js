@@ -27,14 +27,19 @@ const Home = () => {
 };
 
 const HomeList = ({ onItemClick }) => {
-  const homeItems = ['/', '/one', '/bpmn-analyz-page'];
+  const homeItems = [
+    { name: 'Главная', path: '/' },
+    { name: 'Анализ всех Bpmn', path: '/one' },
+    { name: 'Страница отдельного анализа BPMN', path: '/bpmn-analyz-page' },
+    { name: 'Список всех BPMN', path: '/bpmn-list'}
+  ];
 
   return (
     <ul className="home-list">
       {homeItems.map((item, index) => (
-        <li key={index} className="home-list-item" onClick={() => onItemClick(item)}>
+        <li key={index} className="home-list-item" onClick={() => onItemClick(item.path)}>
           <Button className="rounded-button" variant="contained" color="primary">
-            {item}
+            {item.name}
           </Button>
         </li>
       ))}
