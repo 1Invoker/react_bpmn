@@ -75,7 +75,6 @@ const One = ({ router }) => {
   return (
     <router>
       <div className="One">
-        <BpmnList bpmnData={bpmnData} />
         <Button variant="contained" color="primary" onClick={handleConverterClick}>
           BPMN Analyzer
         </Button>
