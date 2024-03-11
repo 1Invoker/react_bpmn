@@ -65,7 +65,7 @@ const BpmnDiagram = ({ xml }) => {
       const CallActivityVariableIds = {};
       callActivityIds.forEach((callActivityId) => {
         const regex = new RegExp(
-          `<callActivity id="${callActivityId}".*<extensionElements>(.*?)<\/extensionElements>`,
+          `<callActivity id="${callActivityId}".*<extensionElements>(.*?)</extensionElements>`,
           'gs'
         );
         let match;
