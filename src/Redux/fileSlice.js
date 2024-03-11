@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const fileSlice = createSlice({
   name: 'file',
   initialState: {
-    files: [], // Массив для хранения всех загруженных файлов
+    files: [],
     selectedFile: null,
   },
   reducers: {

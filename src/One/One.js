@@ -27,31 +27,31 @@ const One = ({ router }) => {
       })
       .catch(error => console.error('Ошибка при получении данных BPMN:', error));
 
-    // GET-запрос к /api/actReProcdefData
-    fetch((process.env.REACT_APP_API_URL || "") + '/api/actReProcdefData')
-      .then(response => response.text())
-      .then(data => {
-        setActReProcdefData(data);
-        console.log('Данные из /api/actReProcdefData:', data);
-      })
-      .catch(error => console.error('Ошибка при получении данных actReProcdefData:', error));
+  //   // GET-запрос к /api/actReProcdefData
+  //   fetch((process.env.REACT_APP_API_URL || "") + '/api/actReProcdefData')
+  //     .then(response => response.text())
+  //     .then(data => {
+  //       setActReProcdefData(data);
+  //       console.log('Данные из /api/actReProcdefData:', data);
+  //     })
+  //     .catch(error => console.error('Ошибка при получении данных actReProcdefData:', error));
 
-  //   // GET-запрос к /api/actGeBytearrayData
-    fetch((process.env.REACT_APP_API_URL || "") + '/api/actGeBytearrayData')
-      .then(response => response.text())
-      .then(data => {
-        setActGeBytearrayData(data);
-        console.log('Данные из /api/actGeBytearrayData:', data);
-      })
-      .catch(error => console.error('Ошибка при получении данных actGeBytearrayData:', error));
+  // //   // GET-запрос к /api/actGeBytearrayData
+  //   fetch((process.env.REACT_APP_API_URL || "") + '/api/actGeBytearrayData')
+  //     .then(response => response.text())
+  //     .then(data => {
+  //       setActGeBytearrayData(data);
+  //       console.log('Данные из /api/actGeBytearrayData:', data);
+  //     })
+  //     .catch(error => console.error('Ошибка при получении данных actGeBytearrayData:', error));
 
-    fetch((process.env.REACT_APP_API_URL || "") + '/api/procedureProcessDefinitionData')
-      .then(response => response.text())
-      .then(data => {
-        setprocedureProcessDefinitionData(data);
-        console.log('Данные из /api/procedureProcessDefinitionData:', data);
-      })
-      .catch(error => console.error('Ошибка при получении данных procedureProcessDefinitionData:', error));  
+  //   fetch((process.env.REACT_APP_API_URL || "") + '/api/procedureProcessDefinitionData')
+  //     .then(response => response.text())
+  //     .then(data => {
+  //       setprocedureProcessDefinitionData(data);
+  //       console.log('Данные из /api/procedureProcessDefinitionData:', data);
+  //     })
+  //     .catch(error => console.error('Ошибка при получении данных procedureProcessDefinitionData:', error));  
   }, []); 
   
 
