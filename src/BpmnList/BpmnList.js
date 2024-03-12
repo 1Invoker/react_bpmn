@@ -1,11 +1,15 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Table, TableContainer, TableHead, TableBody, TableRow, TableCell, Paper } from '@mui/material';
 import { selectFiles } from '../Redux/fileSlice';
 
 const BpmnList = () => {
-
+  const dispatch = useDispatch();
   const files = useSelector(selectFiles);
+
+  useEffect(() => {
+    dispatch(selectFiles());
+  }, [dispatch]);
 
   if (!files || !Array.isArray(files)) {
       return <div>No data available</div>;

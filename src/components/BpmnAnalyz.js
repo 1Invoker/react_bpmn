@@ -20,7 +20,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BpmnDiagram from './BpmnDiagram';
 import { addFile, removeFile, selectFile, unselectFile, selectFiles, selectSelectedFile } from '../Redux/fileSlice';
 
-const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
+const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
   const [smevVersions, setSmevVersions] = useState([]);
   const [filteredSmevVersions, setFilteredSmevVersions] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
@@ -32,6 +32,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
 
   const files = useSelector(selectFiles);
   const selectedFile = useSelector(selectSelectedFile);
+  const [selectedCalledElement, setSelectedCalledElement] = useState('all');
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
@@ -40,21 +41,26 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
         version: extractSmevVersion(xsdXml.xml),
         processName: extractProcessName(xsdXml.xml),
         isGreen: isFileGreen(xsdXml.fileName),
+        calledElement: extractCalledElement(xsdXml.xml)
       }));
-
+  
       versions.sort((a, b) => {
         const compareResult = a.version.localeCompare(b.version);
         return sortOrder === 'asc' ? compareResult : -compareResult;
       });
-
-      const filteredSmevVersions =
-        selectedSmevVersion === 'all'
-          ? versions.filter((xsdXml) => xsdXml.processName.toLowerCase().includes(searchTerm.toLowerCase()))
-          : versions.filter(
-              (xsdXml) =>
-                xsdXml.version === selectedSmevVersion && xsdXml.processName.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-
+  
+      let filteredSmevVersions = versions;
+  
+      if (selectedSmevVersion !== 'all') {
+        filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.version === selectedSmevVersion);
+      }
+  
+      if (selectedCalledElement !== 'all') {
+        filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.calledElement === selectedCalledElement);
+      }
+  
+      filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.processName.toLowerCase().includes(searchTerm.toLowerCase()));
+  
       setSmevVersions(versions);
       setFilteredSmevVersions(filteredSmevVersions);
     };
@@ -74,7 +80,20 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
     };
 
     analyzeSmevVersions();
-  }, [xsdXmls, sortOrder, selectedSmevVersion, searchTerm]);
+  },  [xsdXmls, sortOrder, selectedSmevVersion, selectedCalledElement, searchTerm]);
+
+  const extractCalledElement = (xml) => {
+    const matches = xml.match(/<callActivity id="([^"]+)" name="([^"]+)" calledElement="([^"]+)"/);
+    return matches && matches[3] ? matches[3] : '';
+  };
+
+  const handleCalledElementChange = (calledElement) => {
+    setSelectedCalledElement(calledElement);
+  };
+  
+  const handleSelectCalledElement = (calledElement) => {
+    setSelectedCalledElement(calledElement);
+  };
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
@@ -114,7 +133,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
       prevVersions.filter((xsdXml) => xsdXml.fileName !== fileName)
     );
   };
-  
 
   const handleFileUpload = (newFile) => {
     dispatch(addFile(newFile));
@@ -177,6 +195,20 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
                 <MenuItem value="smev3">SMEV3</MenuItem>
               </Select>
             </label>
+
+            <label style={styles.label}>
+              Фильтр по Called Element:
+              <Select
+                style={styles.select}
+                onChange={(e) => handleSelectCalledElement(e.target.value)}
+                value={selectedCalledElement}
+              >
+                <MenuItem value="all">Все элементы</MenuItem>
+                {[...new Set(smevVersions.map((xsdXml) => xsdXml.calledElement))].map((calledElement) => (
+                  <MenuItem key={calledElement} value={calledElement}>{calledElement}</MenuItem>
+                ))}
+              </Select>
+            </label>
           </div>
           <div style={styles.buttonGroupTop}>
             <label style={styles.label}>
@@ -224,7 +256,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
         </div>
         {/* Таблица с данными */}
         <TableContainer component={Paper} style={styles.fileContainer}>
-          <Table>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell>Файл</TableCell>
@@ -282,7 +314,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect }) => {
           </Table>
         </TableContainer>
         {isBpmnDiagramOpen && (
-          <BpmnDiagram xml={getXmlDataForFile(selectedFileName)} />
+          <BpmnDiagram xml={getXmlDataForFile(selectedFileName)} onCalledElementChange={handleCalledElementChange} />
         )}
       </div>
     </ThemeProvider>
@@ -334,6 +366,8 @@ const styles = {
   fileContainer: {
     border: '1px solid #ccc',
     marginTop: '10px',
+    maxHeight: '500px',
+    overflowY: 'auto',
   },
   row: {
     '&:hover': {

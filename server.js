@@ -31,7 +31,7 @@ app.use(cors());
 app.get('/api/bpmnData', async (req, res) => {
   try {
     const procedureResult = await pool.query(`
-    SELECT "procedure"."id", "procedure"."name", "procedure_process_definition"."processdefinitionkey",
+    SELECT "procedure"."id", "procedure"."name", "procedure_process_definition"."processdefinitionkey","procedure"."locked",
     "act_re_procdef"."deployment_id_", "act_ge_bytearray"."name_", convert_from("act_ge_bytearray"."bytes_", 'UTF8') as "xml"
     FROM "procedure"
     INNER JOIN "procedure_process_definition" ON "procedure"."id" = "procedure_process_definition"."procedure_id"
@@ -43,7 +43,6 @@ app.get('/api/bpmnData', async (req, res) => {
       SELECT "key_", MAX("deployment_id_") "lastDeployment" FROM "act_re_procdef" GROUP BY "key_"
     ) "arp" ON "procedure_process_definition"."processdefinitionkey" = "arp"."key_" AND "act_re_procdef"."deployment_id_" = "arp"."lastDeployment"
     INNER JOIN "act_ge_bytearray" "act_ge_bytearray" ON "act_ge_bytearray"."deployment_id_" = "act_re_procdef"."deployment_id_" AND "act_ge_bytearray"."name_" = "act_re_procdef"."resource_name_"
-    WHERE "procedure"."locked" = false AND "procedure"."id" = 1399
     ORDER BY "procedure"."id" ASC
     `);
     console.log('Результат запроса из таблицы "procedure":', procedureResult.rows);
@@ -51,6 +50,19 @@ app.get('/api/bpmnData', async (req, res) => {
     res.send(procedureResult.rows);
   } catch (error) {
     console.error('Ошибка при получении данных из таблицы "procedure":', error);
+    res.status(500).send('Внутренняя ошибка сервера');
+  }
+});
+app.get('/api/lockedData', async (req, res) => {
+  try {
+    const lockedDataResult = await pool.query(`
+      SELECT "locked" FROM "procedure"
+    `);
+    console.log('Результат запроса для получения данных из столбца "locked":', lockedDataResult.rows);
+
+    res.send(lockedDataResult.rows);
+  } catch (error) {
+    console.error('Ошибка при получении данных из столбца "locked":', error);
     res.status(500).send('Внутренняя ошибка сервера');
   }
 });

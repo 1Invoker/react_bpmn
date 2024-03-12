@@ -1,179 +1,167 @@
 body {
-    background-color: #2d88c5;
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
+  background-color: #2d88c5;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 8000px;
+  margin: 0 auto;
+  margin-left: -150px;
+  margin-right:auto;
+  padding: 200px;
+  background-color: #2d88c5;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  margin-top: -100px;  
+}
+
+h1 {
+  color: #fff;
+}
+
+#xsd-reader {
+  margin-top: 20px;
+}
+
+textarea {
+  width: 100%;
+  padding: 12px; 
+  border: 2px solid #2d88c5;
+  border-radius: 8px; 
+}
+
+button,
+.task-button,
+.task-details button,
+.info-container button {
+  background-color: #2dbbc5;
+  color: #fff;
+  border: none;
+  padding: 12px 24px; 
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+button:hover,
+.task-button:hover,
+.task-details button:hover,
+.info-container button:hover {
+  background-color: #2dc560;
+}
+
+.bpmn-diagram-container {
+  width: 100%;
+  height: 400px;
+  padding: 20px;
+  margin:auto;
+  background-color: #f0fff6;
+  border: 2px solid #2d88c5;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); 
+  resize: both;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Медиазапрос для мобильных устройств (максимальная ширина 768px) */
+@media (max-width: 768px) {
   .container {
-    max-width: 8000px;
-    margin: 0 auto;
-    margin-left: -150px;
-    margin-right:auto;
-    padding: 200px;
-    background-color: #2d88c5;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    margin-top: -100px;  
+    max-width: 100%;
+    padding: 10px; 
   }
-  
-  h1 {
-    color: #fff;
-  }
-  
-  
-  #xsd-reader {
-    margin-top: 20px;
-  }
-  
-  textarea {
+
+  textarea, button {
     width: 100%;
-    padding: 12px; 
-    border: 2px solid #2d88c5;
-    border-radius: 8px; 
   }
-  
-  button {
-    background-color: #2dbbc5;
-    color: #fff;
-    border: none;
-    padding: 12px 24px; 
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s;
-    
-    
+}
+
+/* Медиазапрос для планшетов (ширина 769px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 90%;
   }
-  
-  button:hover {
-    background-color: #2dc560;
-  }
-  
-  
-  .bpmn-diagram-container {
-    width: 100%;
-    height: 400px;
-    padding: 20px;
-    margin:auto;
-    background-color: #f0fff6;
-    border: 2px solid #2d88c5;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); 
-    resize: both;
-    overflow: auto;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  /* Медиазапрос для мобильных устройств (максимальная ширина 768px) */
-  @media (max-width: 768px) {
-    .container {
-      max-width: 100%;
-      padding: 10px; 
-    }
-  
-    textarea, button {
-      width: 100%;
-    }
-  }
-  
-  /* Медиазапрос для планшетов (ширина 769px - 1024px) */
-  @media (min-width: 769px) and (max-width: 1024px) {
-    .container {
-      max-width: 90%;
-    }
-  }
-  
-  .task-buttons {
-    list-style-type: none; /* Убираем маркеры списка */
-    padding: 0;
-    margin: 0;
-  }
-  
-  .task-button {
-    padding: 10px;
-    margin: 5px 0;
-    background-color: #1397b8; /* Цвет фона кнопки */
-    color: #f0f0f0;
-    font-family: Arial, sans-serif; 
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s; /* Анимация при наведении */
-    display: block; /* Преобразуем кнопку в блочный элемент */
-    text-align: left;
-  
-    
-  }
-  
-  .task-button:hover {
-    background-color: #0056b3; /* Цвет фона кнопки при наведении */
-  }
-  .task-details {
-    background-color: #f7f7f7; /* Цвет фона для деталей этапа */
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px; /* Закругляем углы блока */
-  }
-  
-  .task-details h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #333; 
-  }
-  
-  .task-details p {
-    margin: 5px 0;
-    color: #555; 
-  }
-  
-  .task-details button {
-    background-color: #007bff;
-    color: #fff; 
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    padding: 5px 10px;
-    border-radius: 5px; 
-  }
-  
-  .task-details button:hover {
-    background-color: #0056b3; 
-  }
-  .info-container {
-    background-color: #f7f7f7;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
-  .info-container p {
-    margin: 5px 0;
-    color: #555;
-  }
-  
-  .info-container button {
-    background-color: #007bff;
-    color: #fff; 
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    padding: 5px 10px;
-    border-radius: 5px;
-  }
-  
-  .info-container button:hover {
-    background-color: #0056b3;
-  }
-  /*разрешить выделение текста */
-  .MuiTableCell-root {
-    user-select: text;
-  }
-  
-  /*стили для обеспечения видимости таблицы */
-  .MuiTableContainer-root {
-    overflow: auto; /*полосы прокрутки при необходимости */
-  }
+}
+
+.task-buttons {
+  list-style-type: none; /* Убираем маркеры списка */
+  padding: 0;
+  margin: 0;
+}
+
+.task-button {
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #1397b8; /* Цвет фона кнопки */
+  color: #f0f0f0;
+  font-family: Arial, sans-serif; 
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); 
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Анимация при наведении */
+  display: block; /* Преобразуем кнопку в блочный элемент */
+  text-align: left;
+}
+
+.task-details {
+  background-color: #f7f7f7; /* Цвет фона для деталей этапа */
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px; /* Закругляем углы блока */
+}
+
+.task-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #333; 
+}
+
+.task-details p {
+  margin: 5px 0;
+  color: #555; 
+}
+
+.info-container {
+  background-color: #f7f7f7;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.info-container p {
+  margin: 5px 0;
+  color: #555;
+}
+
+/*разрешить выделение текста */
+.MuiTableCell-root {
+  user-select: text;
+}
+
+/*стили для обеспечения видимости таблицы */
+.MuiTableContainer-root {
+  overflow: auto; /*полосы прокрутки при необходимости */
+}
+
+.file-list-container {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 2px solid #2d88c5; /* добавляем границу */
+  border-radius: 10px; /* скругляем углы */
+  padding: 5px; /* добавляем небольшой внутренний отступ */
+}
+
+.file-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.file-list li {
+  margin-bottom: 5px;
+}

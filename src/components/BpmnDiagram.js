@@ -5,7 +5,7 @@ import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ProcessInfo from './ProcessInfo';
 
-const BpmnDiagram = ({ xml }) => {
+const BpmnDiagram = ({ xml,onCalledElementChange  }) => {
   const containerRef = useRef(null);
   const viewerRef = useRef(null);
   const [currentScale, setCurrentScale] = useState(1);
@@ -17,6 +17,8 @@ const BpmnDiagram = ({ xml }) => {
   const [processId, setProcessId] = useState(null);
   const [callActivityVariableIds, setCallActivityVariableIds] = useState({});
   const [startEventFormProperties, setStartEventFormProperties] = useState([]);
+  const [calledElements, setCalledElements] = useState([]);
+
 
   useEffect(() => {
     viewerRef.current = new BpmnViewer({
@@ -99,17 +101,22 @@ const BpmnDiagram = ({ xml }) => {
 
       //  код для поиска callActivity с конкретными атрибутами
       const specificCallActivityRegex = /<callActivity\s+id="([^"]+)"\s+name="([^"]+)"\s+calledElement="([^"]+)">.*?<\/callActivity>/gs;
-      let specificCallActivityMatch;
-      while ((specificCallActivityMatch = specificCallActivityRegex.exec(xml)) !== null) {
-        const specificCallActivityId = specificCallActivityMatch[1];
-        const specificCallActivityName = specificCallActivityMatch[2];
-        const specificCallActivityCalledElement = specificCallActivityMatch[3];
+        let specificCallActivityMatch;
+        const calledElements = [];
+        while ((specificCallActivityMatch = specificCallActivityRegex.exec(xml)) !== null) {
+          const specificCallActivityId = specificCallActivityMatch[1];
+          const specificCallActivityName = specificCallActivityMatch[2];
+          const specificCallActivityCalledElement = specificCallActivityMatch[3];
 
-        // выводим в консоль
-        console.log(`Found specific callActivity with id: ${specificCallActivityId}, name: ${specificCallActivityName}, calledElement: ${specificCallActivityCalledElement}`);
-      }
+          console.log(`Found specific callActivity with id: ${specificCallActivityId}, name: ${specificCallActivityName}, calledElement: ${specificCallActivityCalledElement}`);
 
-      setCallActivityVariableIds(CallActivityVariableIds);
+          calledElements.push(specificCallActivityCalledElement);
+          onCalledElementChange(specificCallActivityCalledElement);
+        }
+
+        setCallActivityVariableIds(CallActivityVariableIds);
+        setStartEventFormProperties(extractFormPropertiesFromStartEvent(xml));
+        setCalledElements(calledElements);
 
 
         const startEventFormProperties = extractFormPropertiesFromStartEvent(xml);
