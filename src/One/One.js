@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import XsdReader from '../components/XsdReader';
 import BpmnDiagram from '../components/BpmnDiagram';
 import BpmnAnalyz from '../components/BpmnAnalyz';
 import './One.css';
 import Button from '@mui/material/Button';
 // import BpmnList from '../BpmnList/BpmnList';
+import BpmnDataAnalyzer from '../Analyz/BpmnDataAnalyzer';
 
 const One = ({ router }) => {
   const [xsdXmls, setXsdXmls] = useState([]);
   const [selectedXml, setSelectedXml] = useState('');
   const [showBpmnAnalyz, setShowBpmnAnalyz] = useState(true);
   const [bpmnData, setBpmnData] = useState('');
-  // const [actReProcdefData, setActReProcdefData] = useState(''); // Новый state для данных от /api/actReProcdefData
-  // const [actGeBytearrayData, setActGeBytearrayData] = useState(''); // Новый state для данных от /api/actGeBytearrayData
-  // const [procedureProcessDefinitionData, setprocedureProcessDefinitionData] = useState('');
-  const [lockedData, setlockedData] = useState('');
 
 
   useEffect(() => {
@@ -27,40 +23,6 @@ const One = ({ router }) => {
         console.log('Данные из /api/bpmnData:', data);
       })
       .catch(error => console.error('Ошибка при получении данных BPMN:', error));
-
-      // fetch((process.env.REACT_APP_API_URL || "") + '/api/lockedData')
-      // .then(response => response.text())
-      // .then(dat => {
-      //   setlockedData(dat);
-      //   // console.log('Данные из /api/lockedData:', dat);
-      // })
-      // .catch(error => console.error('Ошибка при получении данных BPMN:', error));
-
-  //   // GET-запрос к /api/actReProcdefData
-  //   fetch((process.env.REACT_APP_API_URL || "") + '/api/actReProcdefData')
-  //     .then(response => response.text())
-  //     .then(data => {
-  //       setActReProcdefData(data);
-  //       console.log('Данные из /api/actReProcdefData:', data);
-  //     })
-  //     .catch(error => console.error('Ошибка при получении данных actReProcdefData:', error));
-
-  // //   // GET-запрос к /api/actGeBytearrayData
-  //   fetch((process.env.REACT_APP_API_URL || "") + '/api/actGeBytearrayData')
-  //     .then(response => response.text())
-  //     .then(data => {
-  //       setActGeBytearrayData(data);
-  //       console.log('Данные из /api/actGeBytearrayData:', data);
-  //     })
-  //     .catch(error => console.error('Ошибка при получении данных actGeBytearrayData:', error));
-
-  //   fetch((process.env.REACT_APP_API_URL || "") + '/api/procedureProcessDefinitionData')
-  //     .then(response => response.text())
-  //     .then(data => {
-  //       setprocedureProcessDefinitionData(data);
-  //       console.log('Данные из /api/procedureProcessDefinitionData:', data);
-  //     })
-  //     .catch(error => console.error('Ошибка при получении данных procedureProcessDefinitionData:', error));  
   }, []); 
   
 
@@ -104,6 +66,9 @@ const One = ({ router }) => {
           <div className="column">
             {showBpmnAnalyz && <BpmnAnalyz xsdXmls={xsdXmls} onFileSelect={handleFileSelect}/>}
             {selectedXml && !showBpmnAnalyz && <BpmnDiagram xml={selectedXml} />}
+          </div>
+          <div className="locked">
+            <BpmnDataAnalyzer bpmnData={bpmnData}/>       
           </div>
         </div>
       </div>

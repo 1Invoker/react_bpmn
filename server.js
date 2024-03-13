@@ -53,19 +53,6 @@ app.get('/api/bpmnData', async (req, res) => {
     res.status(500).send('Внутренняя ошибка сервера');
   }
 });
-app.get('/api/lockedData', async (req, res) => {
-  try {
-    const lockedDataResult = await pool.query(`
-      SELECT "locked" FROM "procedure"
-    `);
-    console.log('Результат запроса для получения данных из столбца "locked":', lockedDataResult.rows);
-
-    res.send(lockedDataResult.rows);
-  } catch (error) {
-    console.error('Ошибка при получении данных из столбца "locked":', error);
-    res.status(500).send('Внутренняя ошибка сервера');
-  }
-});
 
 // // Добавляем новый API-маршрут для получения данных из таблицы "act_re_procdef"
 // app.get('/api/actReProcdefData', async (req, res) => {
