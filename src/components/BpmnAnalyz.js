@@ -19,6 +19,7 @@ import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BpmnDiagram from './BpmnDiagram';
 import { addFile, removeFile, selectFile, unselectFile, selectFiles, selectSelectedFile } from '../Redux/fileSlice';
+import TablePagination from '@mui/material/TablePagination';
 
 const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
   const [smevVersions, setSmevVersions] = useState([]);
@@ -28,6 +29,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFileName, setSelectedFileName] = useState('');
   const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const dispatch = useDispatch();
 
   const files = useSelector(selectFiles);
@@ -43,24 +46,24 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
         isGreen: isFileGreen(xsdXml.fileName),
         calledElement: extractCalledElement(xsdXml.xml)
       }));
-  
+
       versions.sort((a, b) => {
         const compareResult = a.version.localeCompare(b.version);
         return sortOrder === 'asc' ? compareResult : -compareResult;
       });
-  
+
       let filteredSmevVersions = versions;
-  
+
       if (selectedSmevVersion !== 'all') {
         filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.version === selectedSmevVersion);
       }
-  
+
       if (selectedCalledElement !== 'all') {
         filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.calledElement === selectedCalledElement);
       }
-  
+
       filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.processName.toLowerCase().includes(searchTerm.toLowerCase()));
-  
+
       setSmevVersions(versions);
       setFilteredSmevVersions(filteredSmevVersions);
     };
@@ -88,10 +91,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
   };
 
   const handleCalledElementChange = (calledElement) => {
-    setSelectedCalledElement(calledElement);
-  };
-  
-  const handleSelectCalledElement = (calledElement) => {
     setSelectedCalledElement(calledElement);
   };
 
@@ -125,10 +124,10 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
   };
 
   const handleRemoveFile = (fileName) => {
-    // Отправляем действие Redux для удаления файла
+// Отправляем действие Redux для удаления файла
     dispatch(removeFile(fileName));
-  
-    // Обновляем локальный составленный список
+
+// Обновляем локальный составленный список
     setFilteredSmevVersions((prevVersions) =>
       prevVersions.filter((xsdXml) => xsdXml.fileName !== fileName)
     );
@@ -175,6 +174,15 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
     return selectedFile ? selectedFile.xml : '';
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div style={styles.container}>
@@ -200,7 +208,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
               Фильтр по Called Element:
               <Select
                 style={styles.select}
-                onChange={(e) => handleSelectCalledElement(e.target.value)}
+                onChange={(e) => handleCalledElementChange(e.target.value)}
                 value={selectedCalledElement}
               >
                 <MenuItem value="all">Все элементы</MenuItem>
@@ -254,7 +262,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
             </Button>
           </div>
         </div>
-        {/* Таблица с данными */}
         <TableContainer component={Paper} style={styles.fileContainer}>
           <Table stickyHeader>
             <TableHead>
@@ -270,49 +277,60 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredSmevVersions.map((xsdXml, index) => (
-                <TableRow
-                  key={index}
-                  style={styles.row}
-                  onClick={() => {
-                    dispatch(selectFile({ fileName: xsdXml.fileName, xml: xsdXml.xml }));
-                    onFileSelect && onFileSelect(xsdXml.fileName, xsdXml.xml);
-                  }}
-                >
-                  <TableCell>
-                    <div
-                      style={{
-                        width: '10px',
-                        height: '10px',
-                        borderRadius: '50%',
-                        backgroundColor: xsdXml.isGreen ? 'green' : 'red',
-                        marginRight: '5px',
-                      }}
-                    ></div>
-                    {index + 1}
-                  </TableCell>
-                  <TableCell style={{ cursor: 'pointer' }}>
-                    <div onClick={() => handleActiv(xsdXml.fileName)}>{xsdXml.fileName}</div>
-                  </TableCell>
-                  <TableCell>{xsdXml.version}</TableCell>
-                  <TableCell>{xsdXml.processName}</TableCell>
-                  <TableCell></TableCell>
-                  <TableCell>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      size="small"
-                      startIcon={<DeleteIcon />}
-                      onClick={() => handleRemoveFile(xsdXml.fileName)}
-                    >
-                      Удалить
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {filteredSmevVersions
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((xsdXml, index) => (
+                  <TableRow
+                    key={index}
+                    style={styles.row}
+                    onClick={() => {
+                      dispatch(selectFile({ fileName: xsdXml.fileName, xml: xsdXml.xml }));
+                      onFileSelect && onFileSelect(xsdXml.fileName, xsdXml.xml);
+                    }}
+                  >
+                    <TableCell>
+                      <div
+                        style={{
+                          width: '10px',
+                          height: '10px',
+                          borderRadius: '50%',
+                          backgroundColor: xsdXml.isGreen ? 'green' : 'red',
+                          marginRight: '5px',
+                        }}
+                      ></div>
+                      {index + 1}
+                    </TableCell>
+                    <TableCell style={{ cursor: 'pointer' }}>
+                      <div onClick={() => handleActiv(xsdXml.fileName)}>{xsdXml.fileName}</div>
+                    </TableCell>
+                    <TableCell>{xsdXml.version}</TableCell>
+                    <TableCell>{xsdXml.processName}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        size="small"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => handleRemoveFile(xsdXml.fileName)}
+                      >
+                        Удалить
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={filteredSmevVersions.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
         {isBpmnDiagramOpen && (
           <BpmnDiagram xml={getXmlDataForFile(selectedFileName)} onCalledElementChange={handleCalledElementChange} />
         )}
