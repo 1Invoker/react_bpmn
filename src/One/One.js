@@ -15,7 +15,6 @@ const One = ({ router }) => {
 
 
   useEffect(() => {
-    // GET-запрос к /api/bpmnData
     fetch((process.env.REACT_APP_API_URL || "") + '/api/bpmnData')
       .then(response => response.text())
       .then(data => {
