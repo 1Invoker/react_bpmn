@@ -64,7 +64,7 @@ const One = ({ router }) => {
             </div>
           </div>
           <div className="column">
-            {showBpmnAnalyz && <BpmnAnalyz xsdXmls={xsdXmls} onFileSelect={handleFileSelect}/>}
+            {showBpmnAnalyz && <BpmnAnalyz xsdXmls={xsdXmls} onFileSelect={handleFileSelect} bpmnData={bpmnData}/>}
             {selectedXml && !showBpmnAnalyz && <BpmnDiagram xml={selectedXml} />}
           </div>
           <div className="locked">

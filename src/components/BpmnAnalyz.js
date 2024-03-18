@@ -21,7 +21,7 @@ import BpmnDiagram from './BpmnDiagram';
 import { addFile, removeFile, selectFile, unselectFile, selectFiles, selectSelectedFile } from '../Redux/fileSlice';
 import TablePagination from '@mui/material/TablePagination';
 
-const BpmnAnalyz = ({ xsdXmls, onFileSelect, lockedData }) => {
+const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
   const [smevVersions, setSmevVersions] = useState([]);
   const [filteredSmevVersions, setFilteredSmevVersions] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
