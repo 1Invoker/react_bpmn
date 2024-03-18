@@ -8,10 +8,10 @@ const port = process.env.PORT || 3001;
 
 // Подключение к PostgreSQL
 const pool = new Pool({
-  user: 'as',
-  host: 'pg-siu7.kspgmu-tst.pnz.gov',
-  database: 'gws',
-  password: 'nVtam]ZhqW?6MC.-U/A:',
+  user: '*',
+  host: '*',
+  database: '*',
+  password: '*',
   port: 5432,
 });
 
