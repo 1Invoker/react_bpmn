@@ -2,17 +2,17 @@ const express = require('express');
 const cors = require('cors');
 const fetch = require('node-fetch');
 const { Pool } = require('pg');
-
 const app = express();
 const port = process.env.PORT || 3001;
 
-// Подключение к PostgreSQL
+require('dotenv').config();
+
 const pool = new Pool({
-  user: '*',
-  host: '*',
-  database: '*',
-  password: '*',
-  port: 5432,
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT
 });
 
 pool.connect((err, client, done) => {
