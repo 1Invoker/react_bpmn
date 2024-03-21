@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import XsdReader from '../components/XsdReader';
+import XsdReader from '../components/XsdReader';  
 import BpmnDiagram from '../components/BpmnDiagram';
 import BpmnAnalyz from '../components/BpmnAnalyz';
 import './One.css';
 import Button from '@mui/material/Button';
-// import BpmnList from '../BpmnList/BpmnList';
 import BpmnDataAnalyzer from '../Analyz/BpmnDataAnalyzer';
 
 const One = ({ router }) => {

@@ -1,19 +1,12 @@
 import React from 'react';
 import './BpmnDataAnalyzer.css';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
-const Indicator = ({ locked }) => {
+export const Indicator = ({ locked }) => {
   const indicatorClassName = locked ? 'indicator green' : 'indicator red';
 
   return <div className={indicatorClassName}></div>;
 };
-
-const DataItem = ({ id, name, locked }) => (
-  <div className="data-item">
-    <div>XML ID: {id}</div>
-    <div>Name: {name}</div>
-    <div>Locked: {locked ? 'true' : 'false'}</div>
-  </div>
-);
 
 const BpmnDataAnalyzer = ({ bpmnData }) => {
   let parsedData = [];
@@ -29,14 +22,28 @@ const BpmnDataAnalyzer = ({ bpmnData }) => {
   }
 
   return (
-    <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
-      {parsedData.map((data, index) => (
-        <div key={index} style={{ marginBottom: '10px', display: 'flex', alignItems: 'center' }}>
-          <DataItem id={data.id} name={data.name} locked={data.locked} />
-          <Indicator locked={data.locked} />
-        </div>
-      ))}
-    </div>
+    <TableContainer component={Paper} style={{ maxHeight: '200px', overflowY: 'auto' }}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>XML ID</TableCell>
+            <TableCell>Name</TableCell>
+            <TableCell>Locked</TableCell>
+            <TableCell>Indicator</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {parsedData.map((data, index) => (
+            <TableRow key={index}>
+              <TableCell>{data.id}</TableCell>
+              <TableCell>{data.name}</TableCell>
+              <TableCell>{data.locked ? 'true' : 'false'}</TableCell>
+              <TableCell><Indicator locked={data.locked} /></TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
