@@ -5,8 +5,13 @@ import BpmnAnalyz from '../components/BpmnAnalyz';
 import './One.css';
 import Button from '@mui/material/Button';
 import BpmnDataAnalyzer from '../Analyz/BpmnDataAnalyzer';
+import { useSelector } from 'react-redux';
+// import BpmnList from '../BpmnList/BpmnList';
 
 const One = ({ router }) => {
+  const files = useSelector((state) => state.file.files);
+  console.log('Содержимое store:', files);
+
   const [xsdXmls, setXsdXmls] = useState([]);
   const [selectedXml, setSelectedXml] = useState('');
   const [showBpmnAnalyz, setShowBpmnAnalyz] = useState(true);
@@ -66,7 +71,8 @@ const One = ({ router }) => {
             {selectedXml && !showBpmnAnalyz && <BpmnDiagram xml={selectedXml} />}
           </div>
           <div className="locked">
-            <BpmnDataAnalyzer bpmnData={bpmnData}/>       
+            <BpmnDataAnalyzer bpmnData={bpmnData}/>  
+            {/* <BpmnList/>      */}
           </div>
         </div>
       </div>
