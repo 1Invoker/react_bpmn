@@ -20,6 +20,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import BpmnDiagram from './BpmnDiagram';
 import { addFile, removeFile, selectFile, unselectFile, selectFiles, selectSelectedFile } from '../Redux/fileSlice';
 import TablePagination from '@mui/material/TablePagination';
+import './BpmnAnalyz.css';
+
+export const Indicator = ({ locked }) => {
+  const indicatorClassName = locked ? 'indicator green' : 'indicator red';
+
+  return <div className={indicatorClassName}></div>;
+};
 
 const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
   const [smevVersions, setSmevVersions] = useState([]);
@@ -32,6 +39,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const dispatch = useDispatch();
+  const [showInactive, setShowInactive] = useState(false);
 
   const files = useSelector(selectFiles);
   const selectedFile = useSelector(selectSelectedFile);
@@ -44,7 +52,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
         version: extractSmevVersion(xsdXml.xml),
         processName: extractProcessName(xsdXml.xml),
         isGreen: isFileGreen(xsdXml.fileName),
-        calledElement: extractCalledElement(xsdXml.xml)
+        calledElement: extractCalledElement(xsdXml.xml),
+        locked: xsdXml.locked
       }));
 
       versions.sort((a, b) => {
@@ -85,6 +94,19 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
     analyzeSmevVersions();
   },  [xsdXmls, sortOrder, selectedSmevVersion, selectedCalledElement, searchTerm]);
 
+    let parsedData = [];
+
+    try {
+      parsedData = JSON.parse(bpmnData);
+    } catch (error) {
+      console.error('Ошибка при парсинге BPMN данных:', error);
+    }
+  
+    if (!parsedData || !Array.isArray(parsedData)) {
+      return <div>No BPMN data available</div>;
+    }
+  
+
   const extractCalledElement = (xml) => {
     const matches = xml.match(/<callActivity id="([^"]+)" name="([^"]+)" calledElement="([^"]+)"/);
     return matches && matches[3] ? matches[3] : '';
@@ -111,7 +133,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
   };
 
   const handleShowInactive = () => {
-    console.log('Showing inactive data...');
+    setShowInactive(true);
   };
 
   const handleServiceDeadline = () => {
@@ -278,8 +300,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
             </TableHead>
             <TableBody>
               {filteredSmevVersions
+                // .filter((xsdXml) => xsdXml.locked === true)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((xsdXml, index) => (
+                .map((xsdXml, index, data) => (
                   <TableRow
                     key={index}
                     style={styles.row}
@@ -289,15 +312,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                     }}
                   >
                     <TableCell>
-                      <div
-                        style={{
-                          width: '10px',
-                          height: '10px',
-                          borderRadius: '50%',
-                          backgroundColor: xsdXml.isGreen ? 'green' : 'red',
-                          marginRight: '5px',
-                        }}
-                      ></div>
+                      <Indicator locked={xsdXml.isGreen} />
                       {index + 1}
                     </TableCell>
                     <TableCell style={{ cursor: 'pointer' }}>
@@ -305,6 +320,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                     </TableCell>
                     <TableCell>{xsdXml.version}</TableCell>
                     <TableCell>{xsdXml.processName}</TableCell>
+                    <TableCell></TableCell>
+                    <TableCell></TableCell>
                     <TableCell></TableCell>
                     <TableCell>
                       <Button
@@ -320,6 +337,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                   </TableRow>
                 ))}
             </TableBody>
+
           </Table>
         </TableContainer>
         <TablePagination
