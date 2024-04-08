@@ -1,6 +1,14 @@
 import React from 'react';
 import './BpmnDataAnalyzer.css';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
 
 export const Indicator = ({ locked }) => {
   const indicatorClassName = locked ? 'indicator green' : 'indicator red';
@@ -22,7 +30,10 @@ const BpmnDataAnalyzer = ({ bpmnData }) => {
   }
 
   return (
-    <TableContainer component={Paper} style={{ maxHeight: '200px', overflowY: 'auto' }}>
+    <TableContainer
+      component={Paper}
+      style={{ maxHeight: '200px', overflowY: 'auto' }}
+    >
       <Table>
         <TableHead>
           <TableRow>
@@ -38,7 +49,9 @@ const BpmnDataAnalyzer = ({ bpmnData }) => {
               <TableCell>{data.id}</TableCell>
               <TableCell>{data.name}</TableCell>
               <TableCell>{data.locked ? 'true' : 'false'}</TableCell>
-              <TableCell><Indicator locked={data.locked} /></TableCell>
+              <TableCell>
+                <Indicator locked={data.locked} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

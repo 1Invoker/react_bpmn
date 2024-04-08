@@ -11,42 +11,42 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
   console.log('bpmnData переданный:', bpmnData);
   const dispatch = useDispatch();
 
-  const handleXsdChange = (event) => {
+  const handleXsdChange = event => {
     const files = event.target.files;
 
     if (files && files.length > 0) {
-      const fileReaders = Array.from(files).map((file) => {
-        return new Promise((resolve) => {
+      const fileReaders = Array.from(files).map(file => {
+        return new Promise(resolve => {
           const reader = new FileReader();
-          reader.onload = (e) =>
+          reader.onload = e =>
             resolve({ content: e.target.result, name: file.name });
           reader.readAsText(file);
         });
       });
 
-      Promise.all(fileReaders).then((fileContents) => {
+      Promise.all(fileReaders).then(fileContents => {
         setXsdTexts(fileContents);
       });
     }
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = e => {
     e.preventDefault();
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = e => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
-    const fileReaders = files.map((file) => {
-      return new Promise((resolve) => {
+    const fileReaders = files.map(file => {
+      return new Promise(resolve => {
         const reader = new FileReader();
-        reader.onload = (ev) =>
+        reader.onload = ev =>
           resolve({ content: ev.target.result, name: file.name });
         reader.readAsText(file);
       });
     });
 
-    Promise.all(fileReaders).then((fileContents) => {
+    Promise.all(fileReaders).then(fileContents => {
       setXsdTexts(fileContents);
     });
   };
@@ -54,7 +54,7 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
   const parseXsd = () => {
     try {
       if (xsdTexts.length > 0) {
-        xsdTexts.forEach((file) => {
+        xsdTexts.forEach(file => {
           const xsdJson = xmljs.xml2js(file.content, { compact: true });
           const xsdXml = xmljs.js2xml(xsdJson, { compact: true });
           onXmlChange(xsdXml, file.name);
@@ -66,7 +66,7 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
 
       if (bpmnData) {
         const bpmnJson = JSON.parse(bpmnData);
-        bpmnJson.forEach((item) => {
+        bpmnJson.forEach(item => {
           onXmlChange(item.xml, item.name);
           dispatch(addFile({ fileName: item.name, xml: item.xml }));
           dispatch(selectFile({ fileName: item.name, xml: item.xml }));
@@ -78,11 +78,11 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
     }
   };
   // содержимое в store redux
-  const files = useSelector((state) => state.file.files);
+  const files = useSelector(state => state.file.files);
   console.log('Содержимое store:', files);
 
   //содержимое в LocalStorage
-  const hasDataInLocalStorage = localStorage.getItem("root") !== null;
+  const hasDataInLocalStorage = localStorage.getItem('root') !== null;
 
   if (hasDataInLocalStorage) {
     console.log('В Local Storage есть данные');
@@ -116,7 +116,11 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
       </Button>
 
       <div
-        style={{ border: '2px dashed #ccc', padding: '20px', marginTop: '20px' }}
+        style={{
+          border: '2px dashed #ccc',
+          padding: '20px',
+          marginTop: '20px',
+        }}
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >

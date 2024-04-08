@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import BpmnDiagram from './BpmnDiagram';
-import XsdReader from './XsdReader';
-import { selectSelectedFile, selectFile } from '../Redux/fileSlice';
+import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
+import XsdReader from '../XsdReader';
+import { selectSelectedFile, selectFile } from '../../Redux/fileSlice';
 
 const BpmnAnalyzPage = () => {
   const dispatch = useDispatch();

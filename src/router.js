@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes as ReactRoutes, Route } from 'react-router-dom';
 import One from './One/One';
-import BpmnAnalyzPage from './components/BpmnAnalyzPage';
+import BpmnAnalyzPage from './components/BpmnAnalyzPage/BpmnAnalyzPage';
 import Home from './Home/Home';
 import BpmnList from './BpmnList/BpmnList';
 

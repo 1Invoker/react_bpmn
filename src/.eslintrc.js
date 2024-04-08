@@ -27,10 +27,10 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'react'],
   rules: {
-    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'warn',
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
-    'no-undef': 'off',
+    'no-undef': 'warn',
     'comma-dangle': 'off',
     'prettier/prettier': [
       'warn',

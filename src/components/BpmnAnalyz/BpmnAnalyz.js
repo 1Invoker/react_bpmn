@@ -17,8 +17,16 @@ import ScheduleIcon from '@mui/icons-material/Schedule';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import BpmnDiagram from './BpmnDiagram';
-import { addFile, removeFile, selectFile, unselectFile, selectFiles, selectSelectedFile } from '../Redux/fileSlice';
+import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
+import '../BpmnAnalyz/BpmnAnalyz.css';
+import {
+  addFile,
+  removeFile,
+  selectFile,
+  unselectFile,
+  selectFiles,
+  selectSelectedFile,
+} from '../../Redux/fileSlice';
 import TablePagination from '@mui/material/TablePagination';
 import './BpmnAnalyz.css';
 
@@ -47,13 +55,13 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
-      const versions = xsdXmls.map((xsdXml) => ({
+      const versions = xsdXmls.map(xsdXml => ({
         fileName: xsdXml.fileName,
         version: extractSmevVersion(xsdXml.xml),
         processName: extractProcessName(xsdXml.xml),
         isGreen: isFileGreen(xsdXml.fileName),
         calledElement: extractCalledElement(xsdXml.xml),
-        locked: xsdXml.locked
+        locked: xsdXml.locked,
       }));
 
       versions.sort((a, b) => {
@@ -64,67 +72,80 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
       let filteredSmevVersions = versions;
 
       if (selectedSmevVersion !== 'all') {
-        filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.version === selectedSmevVersion);
+        filteredSmevVersions = filteredSmevVersions.filter(
+          xsdXml => xsdXml.version === selectedSmevVersion,
+        );
       }
 
       if (selectedCalledElement !== 'all') {
-        filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.calledElement === selectedCalledElement);
+        filteredSmevVersions = filteredSmevVersions.filter(
+          xsdXml => xsdXml.calledElement === selectedCalledElement,
+        );
       }
 
-      filteredSmevVersions = filteredSmevVersions.filter((xsdXml) => xsdXml.processName.toLowerCase().includes(searchTerm.toLowerCase()));
+      filteredSmevVersions = filteredSmevVersions.filter(xsdXml =>
+        xsdXml.processName.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
 
       setSmevVersions(versions);
       setFilteredSmevVersions(filteredSmevVersions);
     };
 
-    const extractSmevVersion = (xml) => {
+    const extractSmevVersion = xml => {
       const matches = xml.match(/#\{(smev\d+)\./);
       return matches && matches[1] ? matches[1] : 'smev2';
     };
 
-    const extractProcessName = (xml) => {
+    const extractProcessName = xml => {
       const matches = xml.match(/<process.*?name="(.*?)"/);
       return matches && matches[1] ? matches[1] : 'Unknown Process Name';
     };
 
-    const isFileGreen = (fileName) => {
+    const isFileGreen = fileName => {
       return fileName.length % 2 === 0;
     };
 
     analyzeSmevVersions();
-  },  [xsdXmls, sortOrder, selectedSmevVersion, selectedCalledElement, searchTerm]);
+  }, [
+    xsdXmls,
+    sortOrder,
+    selectedSmevVersion,
+    selectedCalledElement,
+    searchTerm,
+  ]);
 
-    let parsedData = [];
+  let parsedData = [];
 
-    try {
-      parsedData = JSON.parse(bpmnData);
-    } catch (error) {
-      console.error('Ошибка при парсинге BPMN данных:', error);
-    }
-  
-    if (!parsedData || !Array.isArray(parsedData)) {
-      return <div>No BPMN data available</div>;
-    }
-  
+  try {
+    parsedData = JSON.parse(bpmnData);
+  } catch (error) {
+    console.error('Ошибка при парсинге BPMN данных:', error);
+  }
 
-  const extractCalledElement = (xml) => {
-    const matches = xml.match(/<callActivity id="([^"]+)" name="([^"]+)" calledElement="([^"]+)"/);
+  if (!parsedData || !Array.isArray(parsedData)) {
+    return <div>No BPMN data available</div>;
+  }
+
+  const extractCalledElement = xml => {
+    const matches = xml.match(
+      /<callActivity id="([^"]+)" name="([^"]+)" calledElement="([^"]+)"/,
+    );
     return matches && matches[3] ? matches[3] : '';
   };
 
-  const handleCalledElementChange = (calledElement) => {
+  const handleCalledElementChange = calledElement => {
     setSelectedCalledElement(calledElement);
   };
 
   const toggleSortOrder = () => {
-    setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+    setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
   };
 
-  const handleSelectVersion = (version) => {
+  const handleSelectVersion = version => {
     setSelectedSmevVersion(version);
   };
 
-  const handleSearch = (event) => {
+  const handleSearch = event => {
     setSearchTerm(event.target.value);
   };
 
@@ -140,22 +161,22 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
     console.log('Setting service deadline...');
   };
 
-  const handleActiv = (fileName) => {
+  const handleActiv = fileName => {
     setSelectedFileName(fileName);
     setIsBpmnDiagramOpen(true);
   };
 
-  const handleRemoveFile = (fileName) => {
-// Отправляем действие Redux для удаления файла
+  const handleRemoveFile = fileName => {
+    // Отправляем действие Redux для удаления файла
     dispatch(removeFile(fileName));
 
-// Обновляем локальный составленный список
-    setFilteredSmevVersions((prevVersions) =>
-      prevVersions.filter((xsdXml) => xsdXml.fileName !== fileName)
+    // Обновляем локальный составленный список
+    setFilteredSmevVersions(prevVersions =>
+      prevVersions.filter(xsdXml => xsdXml.fileName !== fileName),
     );
   };
 
-  const handleFileUpload = (newFile) => {
+  const handleFileUpload = newFile => {
     dispatch(addFile(newFile));
   };
 
@@ -191,8 +212,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
     },
   });
 
-  const getXmlDataForFile = (fileName) => {
-    const selectedFile = xsdXmls.find((xsdXml) => xsdXml.fileName === fileName);
+  const getXmlDataForFile = fileName => {
+    const selectedFile = xsdXmls.find(xsdXml => xsdXml.fileName === fileName);
     return selectedFile ? selectedFile.xml : '';
   };
 
@@ -200,7 +221,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -217,7 +238,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
               Показать версию:
               <Select
                 style={styles.select}
-                onChange={(e) => handleSelectVersion(e.target.value)}
+                onChange={e => handleSelectVersion(e.target.value)}
                 value={selectedSmevVersion}
               >
                 <MenuItem value="all">Все версии</MenuItem>
@@ -230,12 +251,16 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
               Фильтр по Called Element:
               <Select
                 style={styles.select}
-                onChange={(e) => handleCalledElementChange(e.target.value)}
+                onChange={e => handleCalledElementChange(e.target.value)}
                 value={selectedCalledElement}
               >
                 <MenuItem value="all">Все элементы</MenuItem>
-                {[...new Set(smevVersions.map((xsdXml) => xsdXml.calledElement))].map((calledElement) => (
-                  <MenuItem key={calledElement} value={calledElement}>{calledElement}</MenuItem>
+                {[
+                  ...new Set(smevVersions.map(xsdXml => xsdXml.calledElement)),
+                ].map(calledElement => (
+                  <MenuItem key={calledElement} value={calledElement}>
+                    {calledElement}
+                  </MenuItem>
                 ))}
               </Select>
             </label>
@@ -243,7 +268,12 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
           <div style={styles.buttonGroupTop}>
             <label style={styles.label}>
               Поиск по Process name:
-              <TextField style={styles.input} type="text" value={searchTerm} onChange={handleSearch} />
+              <TextField
+                style={styles.input}
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+              />
             </label>
           </div>
           <div style={styles.buttonGroupBottom}>
@@ -253,7 +283,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
               style={styles.actionButton}
               onClick={toggleSortOrder}
             >
-              Переключить порядок сортировки ({sortOrder === 'asc' ? 'Ascending' : 'Descending'})
+              Переключить порядок сортировки (
+              {sortOrder === 'asc' ? 'Ascending' : 'Descending'})
             </Button>
             <Button
               variant="contained"
@@ -307,7 +338,12 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                     key={index}
                     style={styles.row}
                     onClick={() => {
-                      dispatch(selectFile({ fileName: xsdXml.fileName, xml: xsdXml.xml }));
+                      dispatch(
+                        selectFile({
+                          fileName: xsdXml.fileName,
+                          xml: xsdXml.xml,
+                        }),
+                      );
                       onFileSelect && onFileSelect(xsdXml.fileName, xsdXml.xml);
                     }}
                   >
@@ -316,7 +352,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                       {index + 1}
                     </TableCell>
                     <TableCell style={{ cursor: 'pointer' }}>
-                      <div onClick={() => handleActiv(xsdXml.fileName)}>{xsdXml.fileName}</div>
+                      <div onClick={() => handleActiv(xsdXml.fileName)}>
+                        {xsdXml.fileName}
+                      </div>
                     </TableCell>
                     <TableCell>{xsdXml.version}</TableCell>
                     <TableCell>{xsdXml.processName}</TableCell>
@@ -337,7 +375,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                   </TableRow>
                 ))}
             </TableBody>
-
           </Table>
         </TableContainer>
         <TablePagination
@@ -350,7 +387,10 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
         {isBpmnDiagramOpen && (
-          <BpmnDiagram xml={getXmlDataForFile(selectedFileName)} onCalledElementChange={handleCalledElementChange} />
+          <BpmnDiagram
+            xml={getXmlDataForFile(selectedFileName)}
+            onCalledElementChange={handleCalledElementChange}
+          />
         )}
       </div>
     </ThemeProvider>

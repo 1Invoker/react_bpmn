@@ -12,7 +12,9 @@ const fileSlice = createSlice({
     },
     removeFile: (state, action) => {
       const fileNameToRemove = action.payload;
-      state.files = state.files.filter((file) => file.fileName !== fileNameToRemove);
+      state.files = state.files.filter(
+        file => file.fileName !== fileNameToRemove,
+      );
     },
     selectFile: (state, action) => {
       // Обновление данных XML при выборе файла
@@ -21,14 +23,15 @@ const fileSlice = createSlice({
         xml: action.payload.xml,
       };
     },
-    unselectFile: (state) => {
+    unselectFile: state => {
       state.selectedFile = null;
     },
   },
 });
 
-export const { addFile, removeFile, selectFile, unselectFile } = fileSlice.actions;
-export const selectFiles = (state) => state.file.files;
-export const selectSelectedFile = (state) => state.file.selectedFile;
+export const { addFile, removeFile, selectFile, unselectFile } =
+  fileSlice.actions;
+export const selectFiles = state => state.file.files;
+export const selectSelectedFile = state => state.file.selectedFile;
 
 export default fileSlice.reducer;

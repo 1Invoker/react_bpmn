@@ -7,7 +7,7 @@ const Home = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
 
-  const handleItemClick = (path) => {
+  const handleItemClick = path => {
     setSelectedItem(path);
     navigate(path);
   };
@@ -31,14 +31,22 @@ const HomeList = ({ onItemClick }) => {
     { name: 'Главная', path: '/' },
     { name: 'Анализ всех Bpmn', path: '/one' },
     { name: 'Страница отдельного анализа BPMN', path: '/bpmn-analyz-page' },
-    { name: 'Список всех BPMN', path: '/bpmn-list'}
+    { name: 'Список всех BPMN', path: '/bpmn-list' },
   ];
 
   return (
     <ul className="home-list">
       {homeItems.map((item, index) => (
-        <li key={index} className="home-list-item" onClick={() => onItemClick(item.path)}>
-          <Button className="rounded-button" variant="contained" color="primary">
+        <li
+          key={index}
+          className="home-list-item"
+          onClick={() => onItemClick(item.path)}
+        >
+          <Button
+            className="rounded-button"
+            variant="contained"
+            color="primary"
+          >
             {item.name}
           </Button>
         </li>
