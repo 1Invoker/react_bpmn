@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import ZoomOutIcon from '@mui/icons-material/ZoomOut';
 import ProcessInfo from '../ProcessInfo/ProcessInfo';
-import './BpmnDiagram.css'
+import './BpmnDiagram.css';
 
 const BpmnDiagram = ({ xml, onCalledElementChange }) => {
   const containerRef = useRef(null);

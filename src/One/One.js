@@ -16,6 +16,9 @@ const One = ({ router }) => {
   const [selectedXml, setSelectedXml] = useState('');
   const [showBpmnAnalyz, setShowBpmnAnalyz] = useState(true);
   const [bpmnData, setBpmnData] = useState('');
+  const [bpmnAdministrative, setbpmnAdministrative] = useState('');
+  const [bpmnMezved, setbpmnMezved] = useState('');
+  const [bpmnMezvedCatalog, setbpmnMezvedCatalog] = useState('');
 
   useEffect(() => {
     fetch((process.env.REACT_APP_API_URL || '') + '/api/bpmnData')
@@ -23,6 +26,39 @@ const One = ({ router }) => {
       .then(data => {
         setBpmnData(data);
         console.log('Данные из /api/bpmnData:', data);
+      })
+      .catch(error =>
+        console.error('Ошибка при получении данных BPMN:', error),
+      );
+  }, []);
+  useEffect(() => {
+    fetch((process.env.REACT_APP_API_URL || '') + '/api/bpmnAdministrative')
+      .then(response => response.text())
+      .then(data => {
+        setbpmnAdministrative(data);
+        console.log('Данные из /api/bpmnAdministrative:', data);
+      })
+      .catch(error =>
+        console.error('Ошибка при получении данных BPMN:', error),
+      );
+  }, []);
+  useEffect(() => {
+    fetch((process.env.REACT_APP_API_URL || '') + '/api/bpmnMezved')
+      .then(response => response.text())
+      .then(data => {
+        setbpmnMezved(data);
+        console.log('Данные из /api/bpmnMezved:', data);
+      })
+      .catch(error =>
+        console.error('Ошибка при получении данных BPMN:', error),
+      );
+  }, []);
+  useEffect(() => {
+    fetch((process.env.REACT_APP_API_URL || '') + '/api/bpmnMezvedCatalog')
+      .then(response => response.text())
+      .then(data => {
+        setbpmnMezvedCatalog(data);
+        console.log('Данные из /api/bpmnMezvedCatalog:', data);
       })
       .catch(error =>
         console.error('Ошибка при получении данных BPMN:', error),
@@ -58,7 +94,10 @@ const One = ({ router }) => {
         </Button>
         <div className="container">
           <div className="column">
-            <XsdReader onXmlChange={handleXmlChange} bpmnData={bpmnData} />
+            <XsdReader
+              onXmlChange={handleXmlChange}
+              bpmnAdministrative={bpmnAdministrative}
+            />
             <h3>Выбранные файлы:</h3>
             <div className="file-list-container">
               <ul className="file-list">
@@ -77,7 +116,7 @@ const One = ({ router }) => {
               <BpmnAnalyz
                 xsdXmls={xsdXmls}
                 onFileSelect={handleFileSelect}
-                bpmnData={bpmnData}
+                bpmnAdministrative={bpmnAdministrative}
               />
             )}
             {selectedXml && !showBpmnAnalyz && (
@@ -85,7 +124,10 @@ const One = ({ router }) => {
             )}
           </div>
           <div className="locked">
-            <BpmnDataAnalyzer bpmnData={bpmnData} />
+            <BpmnDataAnalyzer
+              bpmnAdministrative={bpmnAdministrative}
+              bpmnMezvedCatalog={bpmnMezvedCatalog}
+            />
             {/* <BpmnList/>      */}
           </div>
         </div>

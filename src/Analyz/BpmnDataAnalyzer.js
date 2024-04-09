@@ -16,11 +16,11 @@ export const Indicator = ({ locked }) => {
   return <div className={indicatorClassName}></div>;
 };
 
-const BpmnDataAnalyzer = ({ bpmnData }) => {
+const BpmnDataAnalyzer = ({ bpmnAdministrative }) => {
   let parsedData = [];
 
   try {
-    parsedData = JSON.parse(bpmnData);
+    parsedData = JSON.parse(bpmnAdministrative);
   } catch (error) {
     console.error('Ошибка при парсинге BPMN данных:', error);
   }

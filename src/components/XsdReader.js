@@ -6,9 +6,9 @@ import { useDispatch } from 'react-redux';
 import { addFile, selectFile } from '../Redux/fileSlice';
 import { useSelector } from 'react-redux';
 
-const XsdReader = ({ onXmlChange, bpmnData }) => {
+const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
   const [xsdTexts, setXsdTexts] = useState([]);
-  console.log('bpmnData переданный:', bpmnData);
+  console.log('bpmnAdministrative переданный:', bpmnAdministrative);
   const dispatch = useDispatch();
 
   const handleXsdChange = event => {
@@ -64,8 +64,8 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
         });
       }
 
-      if (bpmnData) {
-        const bpmnJson = JSON.parse(bpmnData);
+      if (bpmnAdministrative) {
+        const bpmnJson = JSON.parse(bpmnAdministrative);
         bpmnJson.forEach(item => {
           onXmlChange(item.xml, item.name);
           dispatch(addFile({ fileName: item.name, xml: item.xml }));
@@ -92,10 +92,10 @@ const XsdReader = ({ onXmlChange, bpmnData }) => {
 
   //  useEffect, чтобы вызывать анализ при изменении bpmnData
   useEffect(() => {
-    if (bpmnData) {
+    if (bpmnAdministrative) {
       parseXsd();
     }
-  }, [bpmnData]);
+  }, [bpmnAdministrative]);
 
   return (
     <div>

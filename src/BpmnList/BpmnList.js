@@ -17,17 +17,17 @@ import './BpmnList.css';
 const BpmnList = () => {
   const dispatch = useDispatch();
   const files = useSelector(selectFiles);
-  const [bpmnData, setBpmnData] = useState('');
+  const [bpmnAdministrative, setbpmnAdministrative] = useState('');
   const [xsdXmls, setXsdXmls] = useState([]);
   const [showXsdReader, setShowXsdReader] = useState(false);
   const [showLockedOnly, setShowLockedOnly] = useState(false); // Состояние фильтрации
 
   useEffect(() => {
-    fetch((process.env.REACT_APP_API_URL || '') + '/api/bpmnData')
+    fetch((process.env.REACT_APP_API_URL || '') + '/api/bpmnAdministrative')
       .then(response => response.text())
       .then(data => {
-        setBpmnData(data);
-        console.log('Данные из /api/bpmnData:', data);
+        setbpmnAdministrative(data);
+        console.log('Данные из /api/bpmnAdministrative:', data);
       })
       .catch(error =>
         console.error('Ошибка при получении данных BPMN:', error),
@@ -50,7 +50,7 @@ const BpmnList = () => {
   const renderBpmnRows = () => {
     let parsedData = [];
     try {
-      parsedData = JSON.parse(bpmnData);
+      parsedData = JSON.parse(bpmnAdministrative);
     } catch (error) {
       console.error('Ошибка при парсинге BPMN данных:', error);
     }
@@ -109,7 +109,7 @@ const BpmnList = () => {
       </Button>
       {showXsdReader && (
         <div className="One">
-          <XsdReader onXmlChange={handleXmlChange} bpmnData={bpmnData} />
+          <XsdReader onXmlChange={handleXmlChange} bpmnAdministrative={bpmnAdministrative} />
         </div>
       )}
       <TableContainer component={Paper}>

@@ -29,6 +29,7 @@ import {
 } from '../../Redux/fileSlice';
 import TablePagination from '@mui/material/TablePagination';
 import './BpmnAnalyz.css';
+// import useExecutionTime from '../../hooks/useExecutionTime';
 
 export const Indicator = ({ locked }) => {
   const indicatorClassName = locked ? 'indicator green' : 'indicator red';
@@ -36,7 +37,7 @@ export const Indicator = ({ locked }) => {
   return <div className={indicatorClassName}></div>;
 };
 
-const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
+const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const [smevVersions, setSmevVersions] = useState([]);
   const [filteredSmevVersions, setFilteredSmevVersions] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
@@ -52,6 +53,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
   const files = useSelector(selectFiles);
   const selectedFile = useSelector(selectSelectedFile);
   const [selectedCalledElement, setSelectedCalledElement] = useState('all');
+  // const executionTime = useExecutionTime(bpmnAdministrative);
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
@@ -62,6 +64,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
         isGreen: isFileGreen(xsdXml.fileName),
         calledElement: extractCalledElement(xsdXml.xml),
         locked: xsdXml.locked,
+        dateCreated: extractDateCreated(bpmnAdministrative),
+        dateUpDated: extractdateUpDated(bpmnAdministrative),
       }));
 
       versions.sort((a, b) => {
@@ -90,6 +94,14 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
       setSmevVersions(versions);
       setFilteredSmevVersions(filteredSmevVersions);
     };
+    const extractDateCreated = xml => {
+      const matches = xml.match(/"datecreated":"([^"]+)"/);
+      return matches && matches[1] ? matches[1] : '';
+    };
+    const extractdateUpDated = xml => {
+      const matches = xml.match(/"dateupdated":"([^"]+)"/);
+      return matches && matches[1] ? matches[1] : '';
+    };
 
     const extractSmevVersion = xml => {
       const matches = xml.match(/#\{(smev\d+)\./);
@@ -117,7 +129,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
   let parsedData = [];
 
   try {
-    parsedData = JSON.parse(bpmnData);
+    parsedData = JSON.parse(bpmnAdministrative);
   } catch (error) {
     console.error('Ошибка при парсинге BPMN данных:', error);
   }
@@ -230,10 +242,10 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
     <ThemeProvider theme={theme}>
       <div style={styles.container}>
         <Typography variant="h2" style={styles.header}>
-          BPMN Analyzer
+          BPMN Анализатор
         </Typography>
         <div style={styles.buttonGroup}>
-          <div style={styles.buttonGroupTop}>
+          <div style={{ display: 'flex', marginBottom: '10px' }}>
             <label style={styles.label}>
               Показать версию:
               <Select
@@ -246,8 +258,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                 <MenuItem value="smev3">SMEV3</MenuItem>
               </Select>
             </label>
-
-            <label style={styles.label}>
+            <label style={{ ...styles.label, marginLeft: '20px' }}>
               Фильтр по Called Element:
               <Select
                 style={styles.select}
@@ -255,18 +266,14 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                 value={selectedCalledElement}
               >
                 <MenuItem value="all">Все элементы</MenuItem>
-                {[
-                  ...new Set(smevVersions.map(xsdXml => xsdXml.calledElement)),
-                ].map(calledElement => (
+                {[...new Set(smevVersions.map(xsdXml => xsdXml.calledElement))].map(calledElement => (
                   <MenuItem key={calledElement} value={calledElement}>
                     {calledElement}
                   </MenuItem>
                 ))}
               </Select>
             </label>
-          </div>
-          <div style={styles.buttonGroupTop}>
-            <label style={styles.label}>
+            <label style={{ ...styles.label, marginLeft: '20px' }}>
               Поиск по Process name:
               <TextField
                 style={styles.input}
@@ -283,8 +290,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
               style={styles.actionButton}
               onClick={toggleSortOrder}
             >
-              Переключить порядок сортировки (
-              {sortOrder === 'asc' ? 'Ascending' : 'Descending'})
+              Переключить порядок сортировки ({sortOrder === 'asc' ? 'Возрастание' : 'Убывание'})
             </Button>
             <Button
               variant="contained"
@@ -317,23 +323,24 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
         </div>
         <TableContainer component={Paper} style={styles.fileContainer}>
           <Table stickyHeader>
-            <TableHead>
+            <TableHead style={styles.tableHeader}>
               <TableRow>
                 <TableCell>Файл</TableCell>
                 <TableCell>Название файла</TableCell>
                 <TableCell>Версия SMEV</TableCell>
                 <TableCell>Process Name</TableCell>
-                <TableCell>Наличие межведа</TableCell>
-                <TableCell>Тип процедуры</TableCell>
-                <TableCell>Срок оказания процедуры</TableCell>
+                <TableCell>
+                  Статус и наименование межведомственного запроса
+                </TableCell>
+                <TableCell>Дата создания</TableCell>
+                <TableCell>Дата изменения</TableCell>
                 <TableCell>Удалить</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {filteredSmevVersions
-                // .filter((xsdXml) => xsdXml.locked === true)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((xsdXml, index, data) => (
+                .map((xsdXml, index) => (
                   <TableRow
                     key={index}
                     style={styles.row}
@@ -359,8 +366,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnData }) => {
                     <TableCell>{xsdXml.version}</TableCell>
                     <TableCell>{xsdXml.processName}</TableCell>
                     <TableCell></TableCell>
-                    <TableCell></TableCell>
-                    <TableCell></TableCell>
+                    <TableCell>{xsdXml.dateCreated}</TableCell>
+                    <TableCell>{xsdXml.dateUpDated}</TableCell>
                     <TableCell>
                       <Button
                         variant="contained"
@@ -449,6 +456,10 @@ const styles = {
     '&:hover': {
       backgroundColor: '#f5f5f5',
     },
+  },
+  tableHeader: {
+    backgroundColor: '#f0f0f0',
+    borderRadius: '10px',
   },
 };
 
