@@ -5,6 +5,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useDispatch } from 'react-redux';
 import { addFile, selectFile } from '../Redux/fileSlice';
 import { useSelector } from 'react-redux';
+import './XsdReader.css';
 
 const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
   const [xsdTexts, setXsdTexts] = useState([]);
@@ -99,13 +100,13 @@ const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
 
   return (
     <div>
-      <h2>BPMN Reader</h2>
       <Button
+        className="download"
         variant="contained"
         component="label"
         startIcon={<CloudUploadIcon />}
       >
-        Загрузить файл
+        Загрузка файла
         <input
           type="file"
           accept=".bpmn"

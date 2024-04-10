@@ -1,0 +1,74 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .header {
+    margin-bottom: 10px;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+  }
+  
+  .buttonGroupTop {
+    margin-bottom: 10px;
+  }
+  
+  .buttonGroupBottom {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .actionButton {
+    font-size: 0.8rem;
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .selectContainer {
+    display: flex;
+    align-items: center;
+  }
+  
+  .label {
+    margin-left: 10px;
+  }
+  
+  .select {
+    margin-left: 5px;
+  }
+  
+  .input {
+    margin-left: 5px;
+  }
+  
+  .fileContainer {
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    max-height: 500px;
+    overflow-y: auto;
+    background: #f5f5f5; 
+    border-radius: 20px;
+    margin: 5px 0;
+  }
+  
+  .row {
+    cursor: pointer;
+  }
+  
+  .row:hover {
+    background-color: #f5f5f5;
+  }
+  
+  .tableHeader {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+  }
+  

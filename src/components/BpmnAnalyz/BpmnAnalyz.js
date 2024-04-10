@@ -14,9 +14,12 @@ import TextField from '@mui/material/TextField';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ScheduleIcon from '@mui/icons-material/Schedule';
+import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
 import '../BpmnAnalyz/BpmnAnalyz.css';
 import {
@@ -29,6 +32,7 @@ import {
 } from '../../Redux/fileSlice';
 import TablePagination from '@mui/material/TablePagination';
 import './BpmnAnalyz.css';
+import { InputAdornment } from '@mui/material';
 // import useExecutionTime from '../../hooks/useExecutionTime';
 
 export const Indicator = ({ locked }) => {
@@ -241,13 +245,32 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   return (
     <ThemeProvider theme={theme}>
       <div style={styles.container}>
-        <Typography variant="h2" style={styles.header}>
-          BPMN Анализатор
-        </Typography>
         <div style={styles.buttonGroup}>
+          <label
+            style={{
+              ...styles.label,
+              marginLeft: '-20px',
+              marginRight: '-20px',
+            }}
+          >
+            <TextField
+              style={styles.input}
+              type="text"
+              value={searchTerm}
+              onChange={handleSearch}
+              placeholder="Наименование услуги"
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </label>
           <div style={{ display: 'flex', marginBottom: '10px' }}>
             <label style={styles.label}>
-              Показать версию:
+              Версия СМЭВ:
               <Select
                 style={styles.select}
                 onChange={e => handleSelectVersion(e.target.value)}
@@ -258,7 +281,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 <MenuItem value="smev3">SMEV3</MenuItem>
               </Select>
             </label>
-            <label style={{ ...styles.label, marginLeft: '20px' }}>
+            <label style={{ ...styles.label, marginLeft: '220px' }}>
               Фильтр по Called Element:
               <Select
                 style={styles.select}
@@ -266,59 +289,57 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 value={selectedCalledElement}
               >
                 <MenuItem value="all">Все элементы</MenuItem>
-                {[...new Set(smevVersions.map(xsdXml => xsdXml.calledElement))].map(calledElement => (
+                {[
+                  ...new Set(smevVersions.map(xsdXml => xsdXml.calledElement)),
+                ].map(calledElement => (
                   <MenuItem key={calledElement} value={calledElement}>
                     {calledElement}
                   </MenuItem>
                 ))}
               </Select>
             </label>
-            <label style={{ ...styles.label, marginLeft: '20px' }}>
-              Поиск по Process name:
+            <label
+              style={{
+                ...styles.label,
+                marginLeft: 'auto',
+                marginRight: '-20px',
+              }}
+            >
               <TextField
                 style={styles.input}
                 type="text"
                 value={searchTerm}
                 onChange={handleSearch}
+                placeholder="Код"
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                }}
               />
             </label>
           </div>
           <div style={styles.buttonGroupBottom}>
-            <Button
-              variant="contained"
-              color="primary"
-              style={styles.actionButton}
-              onClick={toggleSortOrder}
-            >
-              Переключить порядок сортировки ({sortOrder === 'asc' ? 'Возрастание' : 'Убывание'})
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              style={styles.actionButton}
-              startIcon={<CloudDownloadIcon />}
-              onClick={handleExport}
-            >
-              Выгрузить
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              style={styles.actionButton}
-              startIcon={<VisibilityIcon />}
-              onClick={handleShowInactive}
-            >
-              Показать неактивные
-            </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              style={styles.actionButton}
-              startIcon={<ScheduleIcon />}
-              onClick={handleServiceDeadline}
-            >
-              Наим. из карт. прод.
-            </Button>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={sortOrder === 'desc'}
+                  onChange={toggleSortOrder}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              }
+              label={`Переключить порядок сортировки (${sortOrder === 'asc' ? 'Возрастание' : 'Убывание'})`}
+            />
+            <FormControlLabel
+              control={<Checkbox color="primary" />}
+              label="Отображать услуги с не активными межведомственными запросами"
+            />
+            <FormControlLabel
+              control={<Checkbox color="primary" />}
+              label="Выгрузить"
+            />
           </div>
         </div>
         <TableContainer component={Paper} style={styles.fileContainer}>
@@ -444,22 +465,32 @@ const styles = {
     marginLeft: '5px',
   },
   input: {
-    marginLeft: '5px',
+    width: '100%',
   },
   fileContainer: {
     border: '1px solid #ccc',
     marginTop: '10px',
     maxHeight: '500px',
     overflowY: 'auto',
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
+    },
+    background: '#f5f5f5', // Цвет фона строки
+    borderRadius: '20px', // Радиус скругления
+    margin: '5px 0', // Отступы сверху и снизу
   },
   row: {
     '&:hover': {
       backgroundColor: '#f5f5f5',
     },
+    background: '#f5f5f5',
+    borderRadius: '20px',
+    margin: '5px 0',
   },
   tableHeader: {
     backgroundColor: '#f0f0f0',
     borderRadius: '10px',
+    backgroundRadius: '10px',
   },
 };
 

@@ -8,21 +8,31 @@
     margin: 0;
     padding: 0;
     display: flex;
+    justify-content: center;
+    margin-top: 10px;
   }
-  
-  nav li {
+  .Home{
+    margin-right: 20px;
+  }
+  .bpmn-analyz-page {
+    margin-left: 20px;
     margin-right: 20px;
   }
   
   nav a {
     text-decoration: none;
-    color: #fff; /* Цвет текста */
+    font-family: Montserrat;
+    color: #1A1B1F; /* Цвет текста */
     font-size: 18px; /* Размер шрифта */
     font-weight: bold; /* Полужирный шрифт */
     transition: color 0.3s, transform 0.3s; /* Плавное изменение цвета и размера */
+    font-weight: 500;
+    line-height: 21px;
+    text-align: left;
+
   }
   
   nav a:hover {
-    color: #ffd700; /* Цвет текста при наведении */
+    color: #6462dd; /* Цвет текста при наведении */
     transform: scale(1.1); /* Увеличение размера при наведении */
   }

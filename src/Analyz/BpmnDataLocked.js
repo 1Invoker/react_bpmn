@@ -1,5 +1,5 @@
 import React from 'react';
-import './BpmnDataAnalyzer.css';
+import './BpmnDataLocked.css';
 import {
   Table,
   TableBody,
@@ -16,7 +16,7 @@ export const Indicator = ({ locked }) => {
   return <div className={indicatorClassName}></div>;
 };
 
-const BpmnDataAnalyzer = ({ bpmnAdministrative }) => {
+const BpmnDataLocked = ({ bpmnAdministrative }) => {
   let parsedData = [];
 
   try {
@@ -60,4 +60,4 @@ const BpmnDataAnalyzer = ({ bpmnAdministrative }) => {
   );
 };
 
-export default BpmnDataAnalyzer;
+export default BpmnDataLocked;

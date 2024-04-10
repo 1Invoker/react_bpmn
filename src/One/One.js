@@ -4,9 +4,9 @@ import BpmnDiagram from '../components/BpmnDiagram/BpmnDiagram';
 import BpmnAnalyz from '../components/BpmnAnalyz/BpmnAnalyz';
 import './One.css';
 import Button from '@mui/material/Button';
-import BpmnDataAnalyzer from '../Analyz/BpmnDataAnalyzer';
+import BpmnDataLocked from '../Analyz/BpmnDataLocked';
 import { useSelector } from 'react-redux';
-// import BpmnList from '../BpmnList/BpmnList';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
 
 const One = ({ router }) => {
   const files = useSelector(state => state.file.files);
@@ -86,11 +86,13 @@ const One = ({ router }) => {
     <router>
       <div className="One">
         <Button
+          className="analyzer-button"
           variant="contained"
           color="primary"
+          startIcon={<ViewInArIcon />}
           onClick={handleConverterClick}
         >
-          BPMN Analyzer
+          Analyzer BPMN
         </Button>
         <div className="container">
           <div className="column">
@@ -98,7 +100,7 @@ const One = ({ router }) => {
               onXmlChange={handleXmlChange}
               bpmnAdministrative={bpmnAdministrative}
             />
-            <h3>Выбранные файлы:</h3>
+            {/* <h3>Выбранные файлы:</h3>
             <div className="file-list-container">
               <ul className="file-list">
                 {xsdXmls.map(({ xml, fileName }, index) => (
@@ -109,7 +111,7 @@ const One = ({ router }) => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
           </div>
           <div className="column">
             {showBpmnAnalyz && (
@@ -124,11 +126,10 @@ const One = ({ router }) => {
             )}
           </div>
           <div className="locked">
-            <BpmnDataAnalyzer
+            <BpmnDataLocked
               bpmnAdministrative={bpmnAdministrative}
               bpmnMezvedCatalog={bpmnMezvedCatalog}
             />
-            {/* <BpmnList/>      */}
           </div>
         </div>
       </div>
