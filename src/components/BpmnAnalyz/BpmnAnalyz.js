@@ -82,6 +82,11 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
       });
 
       let filteredSmevVersions = versions;
+      if (showLockedOnly) {
+        filteredSmevVersions = filteredSmevVersions.filter(
+          xsdXml => xsdXml.locked === true,
+        );
+      }
 
       if (selectedSmevVersion !== 'all') {
         filteredSmevVersions = filteredSmevVersions.filter(
@@ -348,8 +353,13 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               label={`Переключить порядок сортировки (${sortOrder === 'asc' ? 'Возрастание' : 'Убывание'})`}
             />
             <FormControlLabel
-              onClick={toggleShowLockedOnly}
-              control={<Checkbox color="primary" />}
+              control={
+                <Checkbox
+                  checked={showLockedOnly}
+                  onChange={toggleShowLockedOnly}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              }
               label="Отображать услуги с не активными межведомственными запросами"
             />
             <Grid container spacing={2}>
@@ -418,6 +428,13 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
             </TableHead>
             <TableBody>
               {filteredSmevVersions
+                .filter(xsdXml => {
+                  // Применяем фильтрацию к обоим массивам данных
+                  return (
+                    xsdXml.fileName.includes(searchTerm) && // Фильтрация по поисковому термину
+                    (showLockedOnly ? xsdXml.locked === true : true) // Фильтрация по locked, если выбрана опция показать только заблокированные
+                  );
+                })
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((xsdXml, index) => (
                   <TableRow
