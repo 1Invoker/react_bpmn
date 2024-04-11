@@ -11,12 +11,15 @@
     justify-content: center;
     margin-top: 10px;
   }
-  .Home{
+  /* .Home{
     margin-right: 20px;
-  }
-  .bpmn-analyz-page {
+  } */
+  /* .bpmn-analyz-page {
     margin-left: 20px;
     margin-right: 20px;
+  } */
+  nav li{
+    margin-left: 200px;
   }
   
   nav a {

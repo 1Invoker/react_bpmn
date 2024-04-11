@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Button from '@mui/material/Button';
+import { Grid, Button } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Typography from '@mui/material/Typography';
@@ -12,6 +12,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import IconButton from '@mui/material/IconButton';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import SearchIcon from '@mui/icons-material/Search';
@@ -19,6 +21,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Paper from '@mui/material/Paper';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { FormControl, InputLabel } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
 import '../BpmnAnalyz/BpmnAnalyz.css';
@@ -57,6 +60,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const files = useSelector(selectFiles);
   const selectedFile = useSelector(selectSelectedFile);
   const [selectedCalledElement, setSelectedCalledElement] = useState('all');
+  const [showLockedOnly, setShowLockedOnly] = useState(false);
   // const executionTime = useExecutionTime(bpmnAdministrative);
 
   useEffect(() => {
@@ -65,7 +69,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         fileName: xsdXml.fileName,
         version: extractSmevVersion(xsdXml.xml),
         processName: extractProcessName(xsdXml.xml),
-        isGreen: isFileGreen(xsdXml.fileName),
+        isGreen: isLocked(xsdXml.fileName),
         calledElement: extractCalledElement(xsdXml.xml),
         locked: xsdXml.locked,
         dateCreated: extractDateCreated(bpmnAdministrative),
@@ -117,11 +121,12 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
       return matches && matches[1] ? matches[1] : 'Unknown Process Name';
     };
 
-    const isFileGreen = fileName => {
+    const isLocked = fileName => {
       return fileName.length % 2 === 0;
     };
 
     analyzeSmevVersions();
+    setFilteredData(filteredSmevVersions);
   }, [
     xsdXmls,
     sortOrder,
@@ -137,10 +142,21 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   } catch (error) {
     console.error('Ошибка при парсинге BPMN данных:', error);
   }
+  const toggleShowLockedOnly = () => {
+    setShowLockedOnly(prevState => !prevState); // Переключение состояния фильтрации
+  };
+  let filteredData = parsedData;
+  if (showLockedOnly) {
+    // Фильтрация только для заблокированных записей, если флаг установлен
+    filteredData = parsedData.filter(data => data.locked === true);
+  }
 
   if (!parsedData || !Array.isArray(parsedData)) {
     return <div>No BPMN data available</div>;
   }
+  filteredData = filteredData.filter(xsdXml =>
+    xsdXml.processName.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
 
   const extractCalledElement = xml => {
     const matches = xml.match(
@@ -248,17 +264,21 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         <div style={styles.buttonGroup}>
           <label
             style={{
-              ...styles.label,
               marginLeft: '-20px',
               marginRight: '-20px',
             }}
           >
             <TextField
-              style={styles.input}
               type="text"
               value={searchTerm}
               onChange={handleSearch}
               placeholder="Наименование услуги"
+              sx={{
+                '& .MuiInputBase-root': {
+                  borderRadius: '30px',
+                  width: '1650px',
+                },
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -269,7 +289,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
             />
           </label>
           <div style={{ display: 'flex', marginBottom: '10px' }}>
-            <label style={styles.label}>
+            <label style={{ marginLeft: '10px' }}>
               Версия СМЭВ:
               <Select
                 style={styles.select}
@@ -281,7 +301,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 <MenuItem value="smev3">SMEV3</MenuItem>
               </Select>
             </label>
-            <label style={{ ...styles.label, marginLeft: '220px' }}>
+            <label style={{ marginLeft: '220px' }}>
               Фильтр по Called Element:
               <Select
                 style={styles.select}
@@ -300,7 +320,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
             </label>
             <label
               style={{
-                ...styles.label,
                 marginLeft: 'auto',
                 marginRight: '-20px',
               }}
@@ -333,13 +352,56 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               label={`Переключить порядок сортировки (${sortOrder === 'asc' ? 'Возрастание' : 'Убывание'})`}
             />
             <FormControlLabel
+              onClick={toggleShowLockedOnly}
               control={<Checkbox color="primary" />}
               label="Отображать услуги с не активными межведомственными запросами"
             />
-            <FormControlLabel
-              control={<Checkbox color="primary" />}
-              label="Выгрузить"
-            />
+            <Grid container spacing={2}>
+              <Grid item>
+                <Button
+                  className="apply_button"
+                  variant="outlined"
+                  sx={{
+                    bgcolor: '#F5F7FA',
+                    borderRadius: 20,
+                    color: 'black',
+                    borderColor: 'white',
+                    marginLeft: '650px',
+                    marginY: 2,
+                  }}
+                >
+                  Применить
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  className="reset_button"
+                  variant="outlined"
+                  sx={{
+                    bgcolor: '#F5F7FA',
+                    borderRadius: 20,
+                    color: 'black',
+                    borderColor: 'white',
+                    marginY: 2,
+                  }}
+                >
+                  Сбросить
+                </Button>
+              </Grid>
+              <Grid item>
+                <IconButton
+                  className="download_button"
+                  color="primary"
+                  sx={{
+                    bgcolor: '#F5F7FA',
+                    marginY: 2,
+                  }}
+                  aria-label="add to shopping cart"
+                >
+                  <SaveAltIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
           </div>
         </div>
         <TableContainer component={Paper} style={styles.fileContainer}>
@@ -376,7 +438,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                     }}
                   >
                     <TableCell>
-                      <Indicator locked={xsdXml.isGreen} />
+                      <Indicator locked={xsdXml.locked} />
                       {index + 1}
                     </TableCell>
                     <TableCell style={{ cursor: 'pointer' }}>
@@ -458,14 +520,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
   },
-  label: {
-    marginLeft: '10px',
-  },
   select: {
     marginLeft: '5px',
-  },
-  input: {
-    width: '100%',
   },
   fileContainer: {
     border: '1px solid #ccc',

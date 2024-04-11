@@ -7,9 +7,6 @@ const Header = () => {
     <header>
       <nav>
         <ul>
-          <li className="Home">
-            <Link to="/">Главная</Link>
-          </li>
           <li className="one">
             <Link to="/one">Анализ всех Bpmn</Link>
           </li>

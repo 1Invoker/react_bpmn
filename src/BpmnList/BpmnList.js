@@ -109,7 +109,10 @@ const BpmnList = () => {
       </Button>
       {showXsdReader && (
         <div className="One">
-          <XsdReader onXmlChange={handleXmlChange} bpmnAdministrative={bpmnAdministrative} />
+          <XsdReader
+            onXmlChange={handleXmlChange}
+            bpmnAdministrative={bpmnAdministrative}
+          />
         </div>
       )}
       <TableContainer component={Paper}>
