@@ -126,7 +126,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
     };
 
     analyzeSmevVersions();
-    setFilteredData(filteredSmevVersions);
   }, [
     xsdXmls,
     sortOrder,
@@ -154,9 +153,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   if (!parsedData || !Array.isArray(parsedData)) {
     return <div>No BPMN data available</div>;
   }
-  filteredData = filteredData.filter(xsdXml =>
-    xsdXml.processName.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
 
   const extractCalledElement = xml => {
     const matches = xml.match(
