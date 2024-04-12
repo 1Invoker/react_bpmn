@@ -199,15 +199,14 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
     setIsBpmnDiagramOpen(true);
   };
 
-  const handleRemoveFile = fileName => {
-    // Отправляем действие Redux для удаления файла
-    dispatch(removeFile(fileName));
+  // const handleRemoveFile = fileName => {
+  //   dispatch(removeFile(fileName));
 
-    // Обновляем локальный составленный список
-    setFilteredSmevVersions(prevVersions =>
-      prevVersions.filter(xsdXml => xsdXml.fileName !== fileName),
-    );
-  };
+  //   // Обновляем локальный составленный список
+  //   setFilteredSmevVersions(prevVersions =>
+  //     prevVersions.filter(xsdXml => xsdXml.fileName !== fileName),
+  //   );
+  // };
 
   const handleFileUpload = newFile => {
     dispatch(addFile(newFile));
@@ -423,7 +422,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 </TableCell>
                 <TableCell>Дата создания</TableCell>
                 <TableCell>Дата изменения</TableCell>
-                <TableCell>Удалить</TableCell>
+                {/* <TableCell>Удалить</TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -464,7 +463,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                     <TableCell></TableCell>
                     <TableCell>{xsdXml.dateCreated}</TableCell>
                     <TableCell>{xsdXml.dateUpDated}</TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <Button
                         variant="contained"
                         color="secondary"
@@ -474,7 +473,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                       >
                         Удалить
                       </Button>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))}
             </TableBody>

@@ -126,10 +126,10 @@ const One = ({ router }) => {
             )}
           </div>
           <div className="locked">
-            <BpmnDataLocked
+            {/* <BpmnDataLocked
               bpmnAdministrative={bpmnAdministrative}
               bpmnMezvedCatalog={bpmnMezvedCatalog}
-            />
+            /> */}
           </div>
         </div>
       </div>
