@@ -14,18 +14,25 @@
   /* .Home{
     margin-right: 20px;
   } */
+  .one{
+    color: #000000;
+  }
   /* .bpmn-analyz-page {
-    margin-left: 20px;
-    margin-right: 20px;
+    color: #FFFFFF;
+    background-color: #000000;
   } */
   nav li{
     margin-left: 200px;
   }
+  /* a:-webkit-any-link {
+    color: #000000;
+    cursor: pointer;
+} */
   
   nav a {
     text-decoration: none;
     font-family: Montserrat;
-    color: #1A1B1F; /* Цвет текста */
+    color: #000000;
     font-size: 18px; /* Размер шрифта */
     font-weight: bold; /* Полужирный шрифт */
     transition: color 0.3s, transform 0.3s; /* Плавное изменение цвета и размера */

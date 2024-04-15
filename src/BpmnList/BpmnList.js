@@ -39,7 +39,7 @@ const BpmnList = () => {
   };
 
   const Indicator = ({ locked }) => {
-    const indicatorClassName = locked ? 'indicator green' : 'indicator red';
+    const indicatorClassName = locked ? 'indicator red' : 'indicator green';
     return <div className={indicatorClassName}></div>;
   };
 

@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { addFile, selectFile } from '../Redux/fileSlice';
 import { useSelector } from 'react-redux';
 import './XsdReader.css';
+import ButtonXsdReader from './ButtonXsdReader.jsx';
 
 const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
   const [xsdTexts, setXsdTexts] = useState([]);
@@ -99,37 +100,12 @@ const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
   }, [bpmnAdministrative]);
 
   return (
-    <div>
-      <Button
-        className="download"
-        variant="contained"
-        component="label"
-        startIcon={<CloudUploadIcon />}
-      >
-        Загрузка файла
-        <input
-          type="file"
-          accept=".bpmn"
-          style={{ display: 'none' }}
-          onChange={handleXsdChange}
-          multiple
-        />
-      </Button>
-
-      <div
-        style={{
-          border: '2px dashed #ccc',
-          padding: '20px',
-          marginTop: '20px',
-        }}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      >
-        Перетащите файлы сюда или выберите их
-      </div>
-
-      <button onClick={parseXsd}>Анализировать BPMN</button>
-    </div>
+    <ButtonXsdReader
+      handleXsdChange={handleXsdChange}
+      handleDragOver={handleDragOver}
+      handleDrop={handleDrop}
+      parseXsd={parseXsd}
+    />
   );
 };
 

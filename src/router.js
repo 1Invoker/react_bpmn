@@ -8,8 +8,8 @@ import BpmnList from './BpmnList/BpmnList';
 const Routes = () => {
   return (
     <ReactRoutes>
-      <Route path="/" element={<Home />} />
-      <Route path="/one" element={<One />} />
+      {/* <Route path="/" element={<Home />} /> */}
+      <Route path="/" element={<One />} />
       <Route path="/bpmn-analyz-page" element={<BpmnAnalyzPage />} />
       <Route path="/bpmn-list" element={<BpmnList />} />
     </ReactRoutes>
