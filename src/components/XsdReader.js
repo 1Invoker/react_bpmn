@@ -28,6 +28,8 @@ const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
 
       Promise.all(fileReaders).then(fileContents => {
         setXsdTexts(fileContents);
+        // Вызываем функцию анализа после загрузки файла
+        parseXsd(fileContents);
       });
     }
   };
@@ -72,13 +74,13 @@ const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
           onXmlChange(item.xml, item.name);
           dispatch(addFile({ fileName: item.name, xml: item.xml }));
           dispatch(selectFile({ fileName: item.name, xml: item.xml }));
-          // localStorage.setItem(item.name, JSON.stringify(item.xml));
         });
       }
     } catch (error) {
       console.error('Ошибка при анализе файлов', error);
     }
   };
+
   // содержимое в store redux
   const files = useSelector(state => state.file.files);
   console.log('Содержимое store:', files);
@@ -100,12 +102,13 @@ const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
   }, [bpmnAdministrative]);
 
   return (
-    <ButtonXsdReader
-      handleXsdChange={handleXsdChange}
-      handleDragOver={handleDragOver}
-      handleDrop={handleDrop}
-      parseXsd={parseXsd}
-    />
+    // <ButtonXsdReader
+    //   handleXsdChange={handleXsdChange}
+    //   handleDragOver={handleDragOver}
+    //   handleDrop={handleDrop}
+    //   parseXsd={parseXsd}
+    // />
+    <div></div>
   );
 };
 

@@ -133,7 +133,9 @@ const BpmnDiagram = ({ xml, onCalledElementChange }) => {
           );
 
           calledElements.push(specificCallActivityCalledElement);
-          onCalledElementChange(specificCallActivityCalledElement);
+          if (typeof onCalledElementChange === 'function') {
+            onCalledElementChange(specificCallActivityCalledElement);
+          }
         }
 
         setCallActivityVariableIds(CallActivityVariableIds);

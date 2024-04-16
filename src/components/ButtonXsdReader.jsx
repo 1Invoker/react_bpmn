@@ -53,13 +53,13 @@ const ButtonXsdReader = ({
         />
       </Button>
 
-      <button
+      {/* <button
         className="analyz"
         onClick={parseXsd}
         style={{ marginTop: '20px' }}
       >
         Анализировать BPMN
-      </button>
+      </button> */}
     </div>
   );
 };
