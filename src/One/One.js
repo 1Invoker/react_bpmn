@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import BpmnDataLocked from '../Analyz/BpmnDataLocked';
 import { useSelector } from 'react-redux';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import MySvgIcon from '../components/UI/icon/MySvgIcon';
 
 const One = ({ router }) => {
   const files = useSelector(state => state.file.files);
@@ -89,7 +90,7 @@ const One = ({ router }) => {
           className="analyzer-button"
           variant="contained"
           color="primary"
-          startIcon={<ViewInArIcon />}
+          startIcon={<MySvgIcon />}
           onClick={handleConverterClick}
         >
           Analyzer BPMN

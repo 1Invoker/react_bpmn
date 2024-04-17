@@ -23,6 +23,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { FormControl, InputLabel } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
+import MySvgIcon from '../UI/icon/MySvgIcon';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
 import '../BpmnAnalyz/BpmnAnalyz.css';
 import {
@@ -48,7 +49,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const [smevVersions, setSmevVersions] = useState([]);
   const [filteredSmevVersions, setFilteredSmevVersions] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
-  const [selectedSmevVersion, setSelectedSmevVersion] = useState('all');
+  const [selectedSmevVersion, setSelectedSmevVersion] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFileName, setSelectedFileName] = useState('');
   const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
@@ -59,7 +60,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
 
   const files = useSelector(selectFiles);
   const selectedFile = useSelector(selectSelectedFile);
-  const [selectedCalledElement, setSelectedCalledElement] = useState('all');
+  const [selectedCalledElement, setSelectedCalledElement] = useState('');
   const [showLockedOnly, setShowLockedOnly] = useState(false);
   // const executionTime = useExecutionTime(bpmnAdministrative);
 
@@ -289,7 +290,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
             />
           </label>
           <div style={{ display: 'flex', marginBottom: '10px' }}>
-            <label style={{ marginLeft: '10px' }}>
+            {/* <label style={{ marginLeft: '10px' }}>
               Версия СМЭВ:
               <Select
                 style={styles.select}
@@ -300,8 +301,58 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 <MenuItem value="smev2">SMEV2</MenuItem>
                 <MenuItem value="smev3">SMEV3</MenuItem>
               </Select>
-            </label>
-            <label style={{ marginLeft: '220px' }}>
+            </label> */}
+            <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
+              <InputLabel id="demo-simple-select-standard-label">
+                Версия СМЭВ:
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={selectedSmevVersion}
+                onChange={e => handleSelectVersion(e.target.value)}
+                label="Age"
+              >
+                <MenuItem value="">
+                  <em>Версия СМЭВ:</em>
+                </MenuItem>
+                <MenuItem value="all">Все версии</MenuItem>
+                <MenuItem value="smev2">SMEV2</MenuItem>
+                <MenuItem value="smev3">SMEV3</MenuItem>
+              </Select>
+            </FormControl>
+
+            <FormControl
+              variant="standard"
+              sx={{
+                m: 1,
+                minWidth: 947,
+                marginLeft: 'auto',
+                marginRight: '-20px',
+              }}
+            >
+              <InputLabel id="demo-simple-select-standard-label">
+                Фильтр по Called Element:
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                style={styles.select}
+                onChange={e => handleCalledElementChange(e.target.value)}
+                value={selectedCalledElement}
+                label="Age"
+              >
+                <MenuItem value="">Все элементы</MenuItem>
+                {[
+                  ...new Set(smevVersions.map(xsdXml => xsdXml.calledElement)),
+                ].map(calledElement => (
+                  <MenuItem key={calledElement} value={calledElement}>
+                    {calledElement}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            {/* <label style={{ marginLeft: '220px' }}>
               Фильтр по Called Element:
               <Select
                 style={styles.select}
@@ -317,7 +368,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   </MenuItem>
                 ))}
               </Select>
-            </label>
+            </label> */}
             <label
               style={{
                 marginLeft: 'auto',
@@ -325,6 +376,20 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               }}
             >
               <TextField
+                style={{
+                  marginLeft: 'auto',
+                  marginRight: '20px',
+                  marginTop: '8.5px'
+                }}
+                id="standard-basic"
+                label="Код"
+                variant="standard"
+                type="text"
+                value={searchTerm}
+                onChange={handleSearch}
+                placeholder="Код"
+              />
+              {/* <TextField
                 style={styles.input}
                 type="text"
                 value={searchTerm}
@@ -337,7 +402,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                     </InputAdornment>
                   ),
                 }}
-              />
+              /> */}
             </label>
           </div>
           <div style={styles.buttonGroupBottom}>
@@ -415,7 +480,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               <TableRow>
                 <TableCell>Файл</TableCell>
                 <TableCell>Название файла</TableCell>
-                <TableCell>Версия SMEV</TableCell>
+                <TableCell>Версия СМЭВ</TableCell>
                 <TableCell>Process Name</TableCell>
                 <TableCell>
                   Статус и наименование межведомственного запроса
@@ -451,7 +516,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   >
                     <TableCell>
                       <Indicator locked={xsdXml.locked} />
-                      {index + 1}
                     </TableCell>
                     <TableCell style={{ cursor: 'pointer' }}>
                       <div onClick={() => handleActiv(xsdXml.fileName)}>
@@ -482,6 +546,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
+          labelRowsPerPage="Строк на странице:"
           count={filteredSmevVersions.length}
           rowsPerPage={rowsPerPage}
           page={page}
@@ -538,8 +603,8 @@ const styles = {
   fileContainer: {
     border: '1px solid #ccc',
     marginTop: '10px',
-    maxHeight: '500px',
-    overflowY: 'auto',
+    // maxHeight: '500px',
+    // overflowY: 'auto',
     '&:hover': {
       backgroundColor: '#f5f5f5',
     },

@@ -297,10 +297,24 @@ const BpmnDiagram = ({ xml, onCalledElementChange }) => {
         style={{ cursor: 'grab' }}
       >
         <div className="zoom-buttons">
-          <IconButton onClick={zoomIn} color="primary" aria-label="Zoom In">
+          <IconButton
+            onClick={zoomIn}
+            color="primary"
+            aria-label="Zoom In"
+            sx={{
+              color: 'black',
+            }}
+          >
             <ZoomInIcon />
           </IconButton>
-          <IconButton onClick={zoomOut} color="primary" aria-label="Zoom Out">
+          <IconButton
+            onClick={zoomOut}
+            color="primary"
+            aria-label="Zoom Out"
+            sx={{
+              color: 'black',
+            }}
+          >
             <ZoomOutIcon />
           </IconButton>
         </div>

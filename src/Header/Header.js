@@ -9,10 +9,10 @@ const Header = () => {
       <nav>
         <ul>
           <li className="one">
-            <Link to="/">МЕЖВЕДОМСТВЕННЫЕ ЗАПРОСЫ</Link>
+            <Link to="/bpmn-list">МЕЖВЕДОМСТВЕННЫЕ ЗАПРОСЫ</Link>
           </li>
           <li className="bpmn-list">
-            <Link to="/bpmn-list">ГОСУДАРСТВЕННЫЕ УСЛУГИ</Link>
+            <Link to="/">ГОСУДАРСТВЕННЫЕ УСЛУГИ</Link>
           </li>
           <li>
             <Button

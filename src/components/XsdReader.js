@@ -86,13 +86,13 @@ const XsdReader = ({ onXmlChange, bpmnAdministrative }) => {
   console.log('Содержимое store:', files);
 
   //содержимое в LocalStorage
-  const hasDataInLocalStorage = localStorage.getItem('root') !== null;
+  // const hasDataInLocalStorage = localStorage.getItem('root') !== null;
 
-  if (hasDataInLocalStorage) {
-    console.log('В Local Storage есть данные');
-  } else {
-    console.log('В Local Storage нет данных');
-  }
+  // if (hasDataInLocalStorage) {
+  //   console.log('В Local Storage есть данные');
+  // } else {
+  //   console.log('В Local Storage нет данных');
+  // }
 
   //  useEffect, чтобы вызывать анализ при изменении bpmnData
   useEffect(() => {
