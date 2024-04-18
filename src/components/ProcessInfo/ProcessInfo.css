@@ -88,7 +88,6 @@
   .task-details {
     margin-top: 20px;
     padding: 15px;
-    border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f0f0f0;
     position: relative;
@@ -117,24 +116,37 @@
     border-radius: 5px;
   }
   
-  .start-event-form-properties th,
   .start-event-form-properties td {
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    background-color: #F5F7FA;
+    border-bottom: 11px solid #ffffff;
     text-align: left;
   }
+  .start-event-form-properties td:first-child {
+    border-top-left-radius: 30px; /* Закругляем левый верхний угол */
+    border-bottom-left-radius: 30px; /* Закругляем левый нижний угол */
+}
+.start-event-form-properties td:last-child {
+  border-top-right-radius: 30px; /* Закругляем правый верхний угол */
+  border-bottom-right-radius: 30px; /* Закругляем правый нижний угол */
+}
   
   .start-event-form-properties th {
-    background-color: #007bff;
+    background-color: #D6D9DC;
     color: #fff;
   }
+  .start-event-form-properties thead th:first-child {
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.start-event-form-properties thead th:last-child {
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
   
   .start-event-form-properties tbody tr:hover {
     background-color: #e0e0e0;
-  }
-  
-  .start-event-form-properties tbody tr:nth-child(even) {
-    background-color: #f0f0f0;
   }
   
   .start-event-form-properties tbody tr:last-child {
@@ -187,4 +199,8 @@
   border-radius: 5px;
   background-color: #007bff;
   color: #fff;
+}
+.Closed{
+  color: #000!important;
+  background-color: #D6D9DC!important;
 }

@@ -7,6 +7,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import './ProcessInfo.css';
+import UserTask from '../UI/icon/UserTask.svg';
+import CallActivity from '../UI/icon/CallActivity.svg';
+import ServiceTask from '../UI/icon/ServiceTask.svg';
 
 const ProcessInfo = ({
   tasks,
@@ -127,19 +130,19 @@ const ProcessInfo = ({
                     <TableCell>
                       {task.type === 'bpmn:UserTask' ? (
                         <span role="img" aria-label="User Task">
-                          👨🏼‍💼
+                          <img src={UserTask} alt="UserTask" />
                         </span>
                       ) : task.type === 'bpmn:ServiceTask' ? (
                         <span role="img" aria-label="Service Task">
-                          ⚙️
+                          <img src={ServiceTask} alt="ServiceTask" />
                         </span>
                       ) : task.type === 'bpmn:CallActivity' ? (
                         <span role="img" aria-label="Call Activity">
-                          🧠
+                          <img src={CallActivity} alt="CallActivity" />
                         </span>
                       ) : (
                         <span role="img" aria-label="Start Event">
-                          ⭐
+                          ⚪️
                         </span>
                       )}
                     </TableCell>
@@ -150,9 +153,6 @@ const ProcessInfo = ({
             </Table>
           </TableContainer>
         </div>
-        <button onClick={exportTasks} className="export-button">
-          Экспорт этапов
-        </button>
       </div>
 
       {selectedTask && (
@@ -163,53 +163,6 @@ const ProcessInfo = ({
             <p>Тип: {selectedTask.type}</p>
             <p>ID: {selectedTask.additionalId}</p>
             <p>Process ID: {selectedTask.processId}</p>
-            <div className="button-container">
-              <button
-                onClick={() => handleButtonClick(1)}
-                style={{
-                  display: 'block',
-                  marginBottom: '10px',
-                  padding: '10px 20px',
-                  fontSize: '16px',
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  textDecoration: 'none',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px',
-                  backgroundColor: button1Active ? '#28a745' : '#dc3545',
-                  color: '#fff',
-                  boxShadow:
-                    '0px 4px 6px rgba(0, 0, 0, 0.1), 0px 1px 3px rgba(0, 0, 0, 0.08)',
-                  transition:
-                    'box-shadow 0.3s ease, background-color 0.3s ease',
-                  position: 'relative',
-                }}
-              >
-                Актив
-                {button1Active && (
-                  <span
-                    className="lamp"
-                    style={{
-                      display: 'inline-block',
-                      width: '10px',
-                      height: '10px',
-                      borderRadius: '50%',
-                      marginLeft: '5px',
-                      backgroundColor: '#fff',
-                      boxShadow: '0 0 10px rgba(0, 255, 0, 0.5)', // Зеленая лампочка при активации
-                      transition:
-                        'background-color 0.3s ease, box-shadow 0.3s ease',
-                      position: 'absolute',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                    }}
-                  />
-                )}
-              </button>
-              <button onClick={exportTasks} className="button2">
-                Посмотреть МВ
-              </button>
-            </div>
             {selectedTask.type === 'bpmn:CallActivity' && (
               <div className="call-activity-ids">
                 <h4>Межведы:</h4>
@@ -420,8 +373,8 @@ const ProcessInfo = ({
                         <TableHead>
                           <TableRow>
                             <TableCell>ID</TableCell>
-                            <TableCell>Name</TableCell>
-                            <TableCell>Type</TableCell>
+                            <TableCell>Наименование этапа</TableCell>
+                            <TableCell>Тип</TableCell>
                           </TableRow>
                         </TableHead>
                         <TableBody>
@@ -442,7 +395,9 @@ const ProcessInfo = ({
               </div>
             )}
 
-            <button onClick={clearSelectedTask}>Закрыть</button>
+            <button className="Closed" onClick={clearSelectedTask}>
+              Закрыть
+            </button>
           </div>
         </div>
       )}

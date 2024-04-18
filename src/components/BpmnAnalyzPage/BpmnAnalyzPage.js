@@ -89,6 +89,14 @@ const BpmnAnalyzPage = () => {
       console.error('Ошибка при анализе файлов', error);
     }
   };
+  const files = useSelector(state => state.file.files);
+  console.log('Содержимое store:', files);
+
+  const keys = Object.keys(localStorage);
+  // Вывести содержимое localStorage
+  keys.forEach(key => {
+    console.log(`${key}: ${localStorage.getItem(key)}`);
+  });
 
   return (
     <div>

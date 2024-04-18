@@ -73,7 +73,7 @@ INNER join
   (SELECT "key_", MAX("deployment_id_") "lastDeployment" FROM "act_re_procdef" GROUP BY "key_") "arp" 
 ON "procedure_process_definition"."processdefinitionkey" = "arp"."key_" AND "act_re_procdef"."deployment_id_" = "arp"."lastDeployment"
 inner join "act_ge_bytearray" "act_ge_bytearray" ON "act_ge_bytearray"."deployment_id_" = "act_re_procdef"."deployment_id_" AND "act_ge_bytearray"."name_" = "act_re_procdef"."resource_name_"
-where "procedure"."locked" = false and "procedure"."type" = 0 order by "procedure"."id" asc
+where "procedure"."locked" = false and "procedure"."type" = 0 order by "procedure"."id" asc LIMIT 50
     `);
     console.log("Результат запроса из таблицы :", procedureResult.rows);
 
