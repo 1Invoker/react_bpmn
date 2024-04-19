@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import BpmnDataLocked from '../Analyz/BpmnDataLocked';
 import { useSelector } from 'react-redux';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
-import MySvgIcon from '../components/UI/icon/MySvgIcon';
+import MySvgIcon from '../components/UI/icon/AnalyzerBpmnIcon';
 
 const One = ({ router }) => {
   const files = useSelector(state => state.file.files);

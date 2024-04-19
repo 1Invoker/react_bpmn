@@ -319,7 +319,7 @@ const BpmnDiagram = ({ xml, onCalledElementChange }) => {
           </IconButton>
         </div>
       </div>
-      <div className="info-container">
+      {/* <div className="info-container">
         <div className="smev-version">
           {smevVersion
             ? `Версия SMEV: ${smevVersion}`
@@ -338,7 +338,7 @@ const BpmnDiagram = ({ xml, onCalledElementChange }) => {
         <div className="execution-ID">
           {processId ? `Process ID: ${processId}` : 'Process ID not found'}
         </div>
-      </div>
+      </div> */}
       <ProcessInfo
         tasks={tasks}
         selectedTask={selectedTask}

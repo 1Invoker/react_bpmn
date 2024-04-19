@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import xmljs from 'xml-js'; // Импорт библиотеки xml-js
+import xmljs from 'xml-js';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
 import ButtonXsdReader from '../ButtonXsdReader';
-import { selectSelectedFile, addFile, selectFile } from '../../Redux/fileSlice'; // Импорт действий addFile и selectFile
+import { selectSelectedFile, addFile, selectFile } from '../../Redux/fileSlice';
 
 const BpmnAnalyzPage = () => {
   const dispatch = useDispatch();
@@ -99,7 +99,7 @@ const BpmnAnalyzPage = () => {
   });
 
   return (
-    <div>
+    <div className="container">
       <ButtonXsdReader
         handleXsdChange={handleXsdChange}
         handleDragOver={handleDragOver}
@@ -110,7 +110,7 @@ const BpmnAnalyzPage = () => {
 
       {xmlData && (
         <div>
-          <h3>Анализ BPMN файла: {fileName}</h3>
+          <h3>{fileName}</h3>
           <BpmnDiagram xml={xmlData} />
         </div>
       )}

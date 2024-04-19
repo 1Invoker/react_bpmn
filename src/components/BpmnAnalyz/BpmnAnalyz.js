@@ -222,32 +222,28 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   return (
     <div style={styles.container}>
       <div>
-        <label
-          style={{
-            marginLeft: '-20px',
-            marginRight: '-20px',
+        <TextField
+          type="text"
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Наименование услуги"
+          sx={{
+            width: '100%',
+            height: '100%',
+            marginBottom: '20px',
+            '& .MuiInputBase-root': {
+              borderRadius: '30px',
+              width: '100%',
+            },
           }}
-        >
-          <TextField
-            type="text"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="Наименование услуги"
-            sx={{
-              '& .MuiInputBase-root': {
-                borderRadius: '30px',
-                width: '1650px',
-              },
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </label>
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
         <div style={{ display: 'flex', marginBottom: '10px' }}>
           <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
             <InputLabel id="demo-simple-select-standard-label">
@@ -258,7 +254,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               id="demo-simple-select-standard"
               value={selectedSmevVersion}
               onChange={e => handleSelectVersion(e.target.value)}
-              label="Age"
+              label="Версия СМЭВ:"
             >
               <MenuItem value="">
                 <em>Версия СМЭВ:</em>
@@ -380,6 +376,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 sx={{
                   bgcolor: '#F5F7FA',
                   marginY: 2,
+                  color: '#000000',
                 }}
                 aria-label="add to shopping cart"
               >
@@ -390,19 +387,22 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         </div>
       </div>
       <TableContainer component={Paper} style={styles.fileContainer}>
-        <Table>
-          <TableHead
-            sx={{
-              backgroundColor: '#D6D9DC',
-              borderRadius: '10px',
-              backgroundRadius: '10px',
-              borderBottom: '11px solid #ffffff',
-            }}
-          >
+        <Table
+          sx={{
+            backgroundColor: '#D6D9DC',
+            borderTopLeftRadius: '40px',
+            borderTopRightRadius: '40px',
+            borderBottomLeftRadius: '40px',
+            borderBottomRightRadius: '40px',
+            borderBottom: '11px solid #ffffff',
+          }}
+        >
+          <TableHead>
             <TableRow>
               <TableCell>Файл</TableCell>
               <TableCell>Название файла</TableCell>
               <TableCell>Версия СМЭВ</TableCell>
+              <TableCell></TableCell>
               <TableCell>Process Name</TableCell>
               <TableCell>
                 Статус и наименование межведомственного запроса
@@ -429,8 +429,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                     '&:hover': {
                       backgroundColor: '#f5f5f5',
                     },
-                    background: '#F5F7FA',
                     borderRadius: '20px',
+                    background: '#F5F7FA',
                     borderBottom: '11px solid #ffffff',
                   }}
                   onClick={() => {
@@ -452,6 +452,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                     </div>
                   </TableCell>
                   <TableCell>{xsdXml.version}</TableCell>
+                  <TableCell>
+                    <Indicator locked={xsdXml.locked} />
+                  </TableCell>
                   <TableCell>{xsdXml.processName}</TableCell>
                   <TableCell></TableCell>
                   <TableCell>{xsdXml.dateCreated}</TableCell>
@@ -497,11 +500,7 @@ const styles = {
   fileContainer: {
     border: '1px solid #ccc',
     marginTop: '20px',
-    '&:hover': {
-      backgroundColor: '#f5f5f5',
-    },
     background: '#FFFFFF', // Цвет фона строки
-    backgroundRadius: '30px',
     borderRadius: '20px', // Радиус скругления
     margin: '5px 0', // Отступы сверху и снизу
     padding: '10px 10px',

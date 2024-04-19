@@ -10,6 +10,7 @@ import './ProcessInfo.css';
 import UserTask from '../UI/icon/UserTask.svg';
 import CallActivity from '../UI/icon/CallActivity.svg';
 import ServiceTask from '../UI/icon/ServiceTask.svg';
+import { FormControl, Select, MenuItem, InputLabel } from '@mui/material';
 
 const ProcessInfo = ({
   tasks,
@@ -98,22 +99,33 @@ const ProcessInfo = ({
       <div className="info-column">
         <h2>Информация о этапах BPMN:</h2>
         <div className="filters">
-          <label>
-            Фильтр:
-            <select value={filter} onChange={handleFilterChange}>
-              <option value="all">Все</option>
-              <option value="bpmn:UserTask">User Tasks</option>
-              <option value="bpmn:ServiceTask">Service Tasks</option>
-              <option value="bpmn:StartEvent">Start Events</option>
-              <option value="bpmn:CallActivity">call Activity</option>
-            </select>
-          </label>
-          <input
+          <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
+            <InputLabel id="demo-simple-select-standard-label">
+              Фильтр
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-standard-label"
+              id="demo-simple-select-standard"
+              value={filter}
+              onChange={handleFilterChange}
+              label="Фильтр"
+            >
+              <MenuItem value="">
+                <em>Фильтр</em>
+              </MenuItem>
+              <MenuItem value="all">Все</MenuItem>
+              <MenuItem value="bpmn:UserTask">User Tasks</MenuItem>
+              <MenuItem value="bpmn:ServiceTask">Service Tasks</MenuItem>
+              <MenuItem value="bpmn:StartEvent">Start Events</MenuItem>
+              <MenuItem value="bpmn:CallActivity">call Activity</MenuItem>
+            </Select>
+          </FormControl>
+          {/* <input
             type="text"
             placeholder="Поиск этапов"
             value={searchTerm}
             onChange={handleSearch}
-          />
+          /> */}
         </div>
         <div className="task-table">
           <TableContainer component={Paper}>
@@ -158,7 +170,7 @@ const ProcessInfo = ({
       {selectedTask && (
         <div className="details-column">
           <div className="task-details">
-            <h3>Детали этапа:</h3>
+            <h3>Детали этапа</h3>
             <p>Имя: {selectedTask.name}</p>
             <p>Тип: {selectedTask.type}</p>
             <p>ID: {selectedTask.additionalId}</p>
