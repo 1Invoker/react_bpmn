@@ -1,88 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
+  Grid,
+  Button,
+  MenuItem,
+  Select,
   Table,
+  TableBody,
+  TableCell,
   TableContainer,
   TableHead,
-  TableBody,
   TableRow,
-  TableCell,
+  TextField,
+  IconButton,
   Paper,
-  Button,
+  FormControlLabel,
+  FormControl,
+  InputLabel,
+  Checkbox,
 } from '@mui/material';
-import XsdReader from '../components/XsdReader';
+import SearchIcon from '@mui/icons-material/Search';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { InputAdornment } from '@mui/material';
 import { selectFiles } from '../Redux/fileSlice';
 import './BpmnList.css';
 
 const BpmnList = () => {
   const dispatch = useDispatch();
   const files = useSelector(selectFiles);
-  const [bpmnAdministrative, setbpmnAdministrative] = useState('');
-  const [xsdXmls, setXsdXmls] = useState([]);
-  const [showXsdReader, setShowXsdReader] = useState(false);
-  const [showLockedOnly, setShowLockedOnly] = useState(false); // Состояние фильтрации
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showLockedOnly, setShowLockedOnly] = useState(false);
 
-  useEffect(() => {
-    fetch((process.env.REACT_APP_API_URL || '') + '/api/bpmnAdministrative')
-      .then(response => response.text())
-      .then(data => {
-        setbpmnAdministrative(data);
-        console.log('Данные из /api/bpmnAdministrative:', data);
-      })
-      .catch(error =>
-        console.error('Ошибка при получении данных BPMN:', error),
-      );
-  }, [dispatch]);
-
-  const handleXmlChange = (xml, fileName) => {
-    setXsdXmls(prevXmls => [...prevXmls, { xml, fileName }]);
-  };
-
-  const Indicator = ({ locked }) => {
-    const indicatorClassName = locked ? 'indicator red' : 'indicator green';
-    return <div className={indicatorClassName}></div>;
+  const handleSearch = event => {
+    setSearchTerm(event.target.value);
   };
 
   const toggleShowLockedOnly = () => {
-    setShowLockedOnly(prevState => !prevState); // Переключение состояния фильтрации
-  };
-
-  const renderBpmnRows = () => {
-    let parsedData = [];
-    try {
-      parsedData = JSON.parse(bpmnAdministrative);
-    } catch (error) {
-      console.error('Ошибка при парсинге BPMN данных:', error);
-    }
-    if (!parsedData || !Array.isArray(parsedData)) {
-      return (
-        <TableRow>
-          <TableCell colSpan={4}>No BPMN data available</TableCell>
-        </TableRow>
-      );
-    }
-    let filteredData = parsedData;
-    if (showLockedOnly) {
-      // Фильтрация только для заблокированных записей, если флаг установлен
-      filteredData = parsedData.filter(data => data.locked === true);
-    }
-    return filteredData.map((data, index) => (
-      <TableRow key={index}>
-        <TableCell>{data.id}</TableCell>
-        <TableCell>{data.name}</TableCell>
-        <TableCell>{data.locked ? 'true' : 'false'}</TableCell>
-        <TableCell>
-          <Indicator locked={data.locked} />
-        </TableCell>
-      </TableRow>
-    ));
+    setShowLockedOnly(prevState => !prevState);
   };
 
   const renderFileRows = () => {
     if (!files || !Array.isArray(files)) {
       return (
         <TableRow>
-          <TableCell colSpan={1}>No data available</TableCell>
+          <TableCell colSpan={1}>Нет доступных данных</TableCell>
         </TableRow>
       );
     }
@@ -91,53 +53,194 @@ const BpmnList = () => {
     );
     return sortedData.map((file, index) => (
       <TableRow key={index}>
-        <TableCell>{file.fileName}</TableCell>
+        <TableCell>
+          <Indicator locked={file.locked} />
+        </TableCell>
+        <TableCell style={{ cursor: 'pointer' }}>{file.fileName}</TableCell>
+        <TableCell>{file.version}</TableCell>
+        <TableCell></TableCell>
+        <TableCell>{file.processName}</TableCell>
+        <TableCell>{file.calledElement}</TableCell>
+        <TableCell>{file.dateCreated}</TableCell>
+        <TableCell>{file.dateUpDated}</TableCell>
       </TableRow>
     ));
   };
 
+  const Indicator = ({ locked }) => {
+    const indicatorClassName = locked ? 'indicator red' : 'indicator green';
+    return <div className={indicatorClassName}></div>;
+  };
+
   return (
     <div>
-      <Button
-        onClick={toggleShowLockedOnly}
-        variant="contained"
-        color="primary"
-        className="custom-button"
-        classes={{ root: 'custom-button' }}
-      >
-        {showLockedOnly ? 'Показать все' : 'Показать только заблокированные'}
-      </Button>
-      {showXsdReader && (
-        <div className="One">
-          <XsdReader
-            onXmlChange={handleXmlChange}
-            bpmnAdministrative={bpmnAdministrative}
-          />
-        </div>
-      )}
+      <TextField
+        type="text"
+        value={searchTerm}
+        onChange={handleSearch}
+        placeholder="Наименование сервиса"
+        sx={{
+          width: '100%',
+          height: '100%',
+          marginBottom: '20px',
+          '& .MuiInputBase-root': {
+            borderRadius: '30px',
+            width: '100%',
+          },
+        }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          ),
+        }}
+      />
+      <div style={{ marginBottom: '10px' }}>
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
+          <InputLabel id="demo-simple-select-standard-label">
+            Версия СМЭВ:
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
+            value={''}
+            label="Версия СМЭВ:"
+          >
+            <MenuItem value="">
+              <em>Версия СМЭВ:</em>
+            </MenuItem>
+            <MenuItem value="all">Все версии</MenuItem>
+            <MenuItem value="smev2">СМЭВ2</MenuItem>
+            <MenuItem value="smev3">СМЭВ3</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
+          <InputLabel id="demo-simple-select-standard-label">
+            Категории
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
+            value={''}
+            label="Категории"
+          >
+            <MenuItem value="">Все элементы</MenuItem>
+            <MenuItem value="element1">Элемент 1</MenuItem>
+            <MenuItem value="element2">Элемент 2</MenuItem>
+          </Select>
+        </FormControl>
+
+        <TextField
+          style={{
+            marginLeft: 'auto',
+            marginRight: '20px',
+            marginTop: '8.5px',
+          }}
+          id="standard-basic"
+          label="Код"
+          variant="standard"
+          type="text"
+          value={''}
+          placeholder="Код"
+        />
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
+          <InputLabel id="demo-simple-select-standard-label">
+            Тип процедуры
+          </InputLabel>
+          <Select
+            labelId="demo-simple-select-standard-label"
+            id="demo-simple-select-standard"
+            value={''}
+            label="Тип процедуры"
+          >
+            <MenuItem value="">
+              <em>Тип процедуры</em>
+            </MenuItem>
+            <MenuItem value="all">Все версии</MenuItem>
+            <MenuItem value="smev2">СМЭВ2</MenuItem>
+            <MenuItem value="smev3">СМЭВ3</MenuItem>
+          </Select>
+        </FormControl>
+      </div>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={showLockedOnly}
+              onChange={toggleShowLockedOnly}
+              inputProps={{ 'aria-label': 'controlled' }}
+            />
+          }
+          label="Отображать услуги с не активными межведомственными запросами"
+        />
+        <Grid container spacing={2}>
+          <Grid item>
+            <Button
+              className="apply_button"
+              variant="outlined"
+              sx={{
+                bgcolor: '#F5F7FA',
+                borderRadius: 20,
+                color: 'black',
+                borderColor: 'white',
+                marginLeft: '650px',
+                marginY: 2,
+              }}
+            >
+              Применить
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              className="reset_button"
+              variant="outlined"
+              sx={{
+                bgcolor: '#F5F7FA',
+                borderRadius: 20,
+                color: 'black',
+                borderColor: 'white',
+                marginY: 2,
+              }}
+            >
+              Сбросить
+            </Button>
+          </Grid>
+          <Grid item>
+            <IconButton
+              className="download_button"
+              color="primary"
+              sx={{
+                bgcolor: '#F5F7FA',
+                marginY: 2,
+                color: '#000000',
+              }}
+              aria-label="add to shopping cart"
+            >
+              <SaveAltIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </div>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>XML ID</TableCell>
-              <TableCell>Name</TableCell>
-              <TableCell>Locked</TableCell>
-              <TableCell>Indicator</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderBpmnRows()}</TableBody>
-        </Table>
-      </TableContainer>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Имя файла</TableCell>
+              <TableCell>0</TableCell>
+              <TableCell>Код</TableCell>
+              <TableCell>Наименование</TableCell>
+              <TableCell>Версия СМЭВ</TableCell>
+              <TableCell>Тип процедуры</TableCell>
+              <TableCell>Дата обновления</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>{renderFileRows()}</TableBody>
         </Table>
       </TableContainer>
+      <Button variant="outlined" className="download_button">
+        <SaveAltIcon />
+      </Button>
     </div>
   );
 };
