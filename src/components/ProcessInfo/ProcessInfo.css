@@ -112,14 +112,13 @@
   .start-event-form-properties table {
     width: 100%;
     overflow: hidden;
-    border: 1px solid #ccc;
+    border-collapse: separate;
+    border-spacing: 0 10px;
     border-radius: 5px;
   }
   
   .start-event-form-properties td {
-    padding: 10px;
     background-color: #F5F7FA;
-    border-bottom: 11px solid #ffffff;
     text-align: left;
   }
   .start-event-form-properties td:first-child {
@@ -134,7 +133,8 @@
   .start-event-form-properties th {
     background-color: #D6D9DC;
     color: #fff;
-    border-bottom: 11px solid #ffffff;
+    border-collapse: separate;
+    border-spacing: 0 10px;
   }
   .start-event-form-properties thead th:first-child {
     border-top-left-radius: 30px;

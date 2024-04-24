@@ -18,6 +18,7 @@ import {
   FormControl,
   InputLabel,
   Checkbox,
+  TablePagination,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
@@ -31,6 +32,8 @@ const BpmnList = () => {
   const files = useSelector(selectFiles);
   const [searchTerm, setSearchTerm] = useState('');
   const [showLockedOnly, setShowLockedOnly] = useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
@@ -38,6 +41,16 @@ const BpmnList = () => {
 
   const toggleShowLockedOnly = () => {
     setShowLockedOnly(prevState => !prevState);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    // Обработчик изменения страницы
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
   const renderFileRows = () => {
@@ -51,7 +64,11 @@ const BpmnList = () => {
     const sortedData = [...files].sort((a, b) =>
       a.fileName.localeCompare(b.fileName),
     );
-    return sortedData.map((file, index) => (
+
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+
+    return sortedData.slice(startIndex, endIndex).map((file, index) => (
       <TableRow key={index}>
         <TableCell>
           <Indicator locked={file.locked} />
@@ -73,7 +90,7 @@ const BpmnList = () => {
   };
 
   return (
-    <div>
+    <div className="mezved">
       <TextField
         type="text"
         value={searchTerm}
@@ -86,6 +103,7 @@ const BpmnList = () => {
           '& .MuiInputBase-root': {
             borderRadius: '30px',
             width: '100%',
+            background: '#F5F7FA',
           },
         }}
         InputProps={{
@@ -96,7 +114,7 @@ const BpmnList = () => {
           ),
         }}
       />
-      <div style={{ marginBottom: '10px' }}>
+      <div className="filter" style={{ marginBottom: '10px' }}>
         <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
           <InputLabel id="demo-simple-select-standard-label">
             Версия СМЭВ:
@@ -116,7 +134,7 @@ const BpmnList = () => {
           </Select>
         </FormControl>
 
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
+        <FormControl variant="standard" sx={{ m: 1, minWidth: 666 }}>
           <InputLabel id="demo-simple-select-standard-label">
             Категории
           </InputLabel>
@@ -164,7 +182,7 @@ const BpmnList = () => {
           </Select>
         </FormControl>
       </div>
-      <div>
+      <div className="button_tab">
         <FormControlLabel
           control={
             <Checkbox
@@ -185,7 +203,7 @@ const BpmnList = () => {
                 borderRadius: 20,
                 color: 'black',
                 borderColor: 'white',
-                marginLeft: '650px',
+                marginLeft: '850px',
                 marginY: 2,
               }}
             >
@@ -223,24 +241,32 @@ const BpmnList = () => {
           </Grid>
         </Grid>
       </div>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>0</TableCell>
-              <TableCell>Код</TableCell>
-              <TableCell>Наименование</TableCell>
-              <TableCell>Версия СМЭВ</TableCell>
-              <TableCell>Тип процедуры</TableCell>
-              <TableCell>Дата обновления</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderFileRows()}</TableBody>
-        </Table>
-      </TableContainer>
-      <Button variant="outlined" className="download_button">
-        <SaveAltIcon />
-      </Button>
+      <div className="mezved_tab">
+        <TableContainer>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>0</TableCell>
+                <TableCell>Код</TableCell>
+                <TableCell>Наименование</TableCell>
+                <TableCell>Версия СМЭВ</TableCell>
+                <TableCell>Тип процедуры</TableCell>
+                <TableCell>Дата обновления</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>{renderFileRows()}</TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={files.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
     </div>
   );
 };

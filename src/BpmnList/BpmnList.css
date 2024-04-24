@@ -1,0 +1,53 @@
+.mezved {
+    max-width: 8000px;
+    margin: 0 auto;
+    margin-left: -150px;
+    margin-right: auto;
+    padding: 200px;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    margin-top: -100px;
+}
+
+.mezved_tab {
+    margin-top: 15px;
+}
+
+.mezved_tab table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.mezved_tab th {
+    background-color: #D6D9DC;
+    color: #fff;
+}
+
+.mezved_tab thead th:first-child {
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.mezved_tab thead th:last-child {
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+.mezved_tab td {
+    background-color: #F5F7FA;
+    text-align: left;
+}
+
+.mezved_tab td:first-child {
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.mezved_tab td:last-child {
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+.button_tab{
+    display: flex;
+}
