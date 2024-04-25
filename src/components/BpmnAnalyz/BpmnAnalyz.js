@@ -31,6 +31,7 @@ import {
 import TablePagination from '@mui/material/TablePagination';
 import './BpmnAnalyz.css';
 import { InputAdornment } from '@mui/material';
+import TabIndicator from '../UI/icon/TabIndicator.svg';
 
 export const Indicator = ({ locked }) => {
   const indicatorClassName = locked ? 'indicator red' : 'indicator green';
@@ -399,7 +400,18 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         >
           <TableHead>
             <TableRow>
-              <TableCell>Файл</TableCell>
+              <TableCell>
+                <img
+                  src={TabIndicator}
+                  alt="Иконка"
+                  style={{
+                    position: 'relative',
+                    top: '5px',
+                    left: '5px',
+                  }}
+                />
+              </TableCell>
+              <TableCell>Код</TableCell>
               <TableCell>Название файла</TableCell>
               <TableCell>Версия СМЭВ</TableCell>
               <TableCell></TableCell>
@@ -446,6 +458,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   <TableCell>
                     <Indicator locked={xsdXml.locked} />
                   </TableCell>
+                  <TableCell></TableCell>
                   <TableCell style={{ cursor: 'pointer' }}>
                     <div onClick={() => handleActiv(xsdXml.fileName)}>
                       {xsdXml.fileName}

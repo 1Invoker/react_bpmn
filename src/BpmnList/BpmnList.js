@@ -26,6 +26,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { InputAdornment } from '@mui/material';
 import { selectFiles } from '../Redux/fileSlice';
 import './BpmnList.css';
+import TabIndicator from '../components/UI/icon/TabIndicator.svg';
 
 const BpmnList = () => {
   const dispatch = useDispatch();
@@ -44,7 +45,6 @@ const BpmnList = () => {
   };
 
   const handleChangePage = (event, newPage) => {
-    // Обработчик изменения страницы
     setPage(newPage);
   };
 
@@ -95,7 +95,7 @@ const BpmnList = () => {
         type="text"
         value={searchTerm}
         onChange={handleSearch}
-        placeholder="Наименование сервиса"
+        placeholder="Наименование межведомственного запроса"
         sx={{
           width: '100%',
           height: '100%',
@@ -246,7 +246,17 @@ const BpmnList = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>0</TableCell>
+                <TableCell>
+                  <img
+                    src={TabIndicator}
+                    alt="Иконка"
+                    style={{
+                      position: 'relative',
+                      top: '5px',
+                      left: '5px',
+                    }}
+                  />
+                </TableCell>
                 <TableCell>Код</TableCell>
                 <TableCell>Наименование</TableCell>
                 <TableCell>Версия СМЭВ</TableCell>
