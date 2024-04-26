@@ -20,6 +20,7 @@ import { FormControl, InputLabel } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
 import '../BpmnAnalyz/BpmnAnalyz.css';
+import BpmnAnalyzContent from '../BpmnAnalyz/BpmnAnalyzContent';
 import {
   addFile,
   removeFile,
@@ -513,9 +514,9 @@ const styles = {
   fileContainer: {
     border: '1px solid #ccc',
     marginTop: '20px',
-    background: '#FFFFFF', // Цвет фона строки
-    borderRadius: '20px', // Радиус скругления
-    margin: '5px 0', // Отступы сверху и снизу
+    background: '#FFFFFF',
+    borderRadius: '20px',
+    margin: '5px 0',
     padding: '10px 10px',
     marginLeft: '-10px',
   },

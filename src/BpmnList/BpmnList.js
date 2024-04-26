@@ -13,7 +13,6 @@ import {
   TableRow,
   TextField,
   IconButton,
-  Paper,
   FormControlLabel,
   FormControl,
   InputLabel,
@@ -22,7 +21,6 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { InputAdornment } from '@mui/material';
 import { selectFiles } from '../Redux/fileSlice';
 import './BpmnList.css';
@@ -269,6 +267,7 @@ const BpmnList = () => {
         </TableContainer>
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
+          labelRowsPerPage="Строк на странице:"
           component="div"
           count={files.length}
           rowsPerPage={rowsPerPage}
