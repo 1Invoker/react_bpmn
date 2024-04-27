@@ -1,6 +1,13 @@
 .header {
-    background-color: #333; /* Цвет фона */
-    padding: 10px; /* Отступы */
+    background-color: #333;
+    padding: 10px;
+  }
+  .header-list {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style-type: none;
+    padding: 0;
   }
   
   nav ul {
@@ -17,10 +24,10 @@
   .one{
     color: #000000;
   }
-  /* .bpmn-analyz-page {
-    color: #FFFFFF;
-    background-color: #000000;
-  } */
+  .bpmn-analyz-page:hover {
+  background-color: #333333; 
+  color: #CCCCCC; 
+}
   nav li{
     margin-left: 200px;
   }
@@ -43,5 +50,14 @@
   
   nav a:hover {
     color: #6462dd; /* Цвет текста при наведении */
-    transform: scale(1.1); /* Увеличение размера при наведении */
   }
+
+  .icon-container {
+    display: flex;
+    align-items: center;
+    font-weight: bold; 
+}
+
+.text {
+    margin-left: 5px; 
+}

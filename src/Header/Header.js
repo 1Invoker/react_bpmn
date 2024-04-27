@@ -2,12 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import Button from '@mui/material/Button';
+import MySvgIcon from '../components/UI/icon/AnalyzerBpmnIcon';
 
 const Header = () => {
   return (
     <header>
       <nav>
-        <ul>
+        <ul className="header-list">
+          <div className="icon-container">
+            <MySvgIcon />
+            <span className="text">Analyzer BPMN</span>
+          </div>
           <li className="one">
             <Link to="/bpmn-list">МЕЖВЕДОМСТВЕННЫЕ ЗАПРОСЫ</Link>
           </li>

@@ -73,10 +73,8 @@ const BpmnList = () => {
         </TableCell>
         <TableCell style={{ cursor: 'pointer' }}>{file.fileName}</TableCell>
         <TableCell>{file.version}</TableCell>
-        <TableCell></TableCell>
         <TableCell>{file.processName}</TableCell>
         <TableCell>{file.calledElement}</TableCell>
-        <TableCell>{file.dateCreated}</TableCell>
         <TableCell>{file.dateUpDated}</TableCell>
       </TableRow>
     ));

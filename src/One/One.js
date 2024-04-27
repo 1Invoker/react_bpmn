@@ -86,7 +86,7 @@ const One = ({ router }) => {
   return (
     <router>
       <div className="One">
-        <Button
+        {/* <Button
           className="analyzer-button"
           variant="contained"
           color="primary"
@@ -94,25 +94,13 @@ const One = ({ router }) => {
           onClick={handleConverterClick}
         >
           Analyzer BPMN
-        </Button>
+        </Button> */}
         <div className="container">
           <div className="column">
             <XsdReader
               onXmlChange={handleXmlChange}
               bpmnAdministrative={bpmnAdministrative}
             />
-            {/* <h3>Выбранные файлы:</h3>
-            <div className="file-list-container">
-              <ul className="file-list">
-                {xsdXmls.map(({ xml, fileName }, index) => (
-                  <li key={index}>
-                    <button onClick={() => handleSelectXml(xml)}>
-                      {fileName}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div> */}
           </div>
           <div className="column">
             {showBpmnAnalyz && (
@@ -125,12 +113,6 @@ const One = ({ router }) => {
             {selectedXml && !showBpmnAnalyz && (
               <BpmnDiagram xml={selectedXml} />
             )}
-          </div>
-          <div className="locked">
-            {/* <BpmnDataLocked
-              bpmnAdministrative={bpmnAdministrative}
-              bpmnMezvedCatalog={bpmnMezvedCatalog}
-            /> */}
           </div>
         </div>
       </div>
