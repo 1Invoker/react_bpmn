@@ -1,7 +1,7 @@
 .mezved {
-    max-width: 8000px;
+    width: 1176px;
     margin: 0 auto;
-    margin-left: -150px;
+    margin-left: auto;
     margin-right: auto;
     padding: 200px;
     background-color: #FFFFFF;
@@ -9,7 +9,11 @@
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     margin-top: -100px;
 }
-
+.mezved__bpmn{
+    width: 1176px;
+    margin-left: auto;
+    margin-right: auto;
+}
 .mezved_tab {
     margin-top: 15px;
 }
@@ -49,5 +53,4 @@
     border-bottom-right-radius: 30px;
 }
 .button_tab{
-    display: flex;
 }

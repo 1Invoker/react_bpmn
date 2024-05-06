@@ -2,14 +2,14 @@ import React, { useState, useEffect } from 'react';
 import XsdReader from '../components/XsdReader';
 import BpmnDiagram from '../components/BpmnDiagram/BpmnDiagram';
 import BpmnAnalyz from '../components/BpmnAnalyz/BpmnAnalyz';
-import './One.css';
+import './BazePage.css';
 import Button from '@mui/material/Button';
 import BpmnDataLocked from '../Analyz/BpmnDataLocked';
 import { useSelector } from 'react-redux';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import MySvgIcon from '../components/UI/icon/AnalyzerBpmnIcon';
 
-const One = ({ router }) => {
+const BazePage = ({ router }) => {
   const files = useSelector(state => state.file.files);
   console.log('Содержимое store:', files);
 
@@ -120,4 +120,4 @@ const One = ({ router }) => {
   );
 };
 
-export default One;
+export default BazePage;
