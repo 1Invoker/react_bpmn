@@ -87,192 +87,209 @@ const BpmnList = () => {
 
   return (
     <div className="mezved">
-      <TextField
-        type="text"
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Наименование межведомственного запроса"
-        sx={{
-          width: '100%',
-          height: '100%',
-          marginBottom: '20px',
-          '& .MuiInputBase-root': {
-            borderRadius: '30px',
-            width: '100%',
-            background: '#F5F7FA',
-          },
-        }}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
-      <div className="filter" style={{ marginBottom: '10px' }}>
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
-          <InputLabel id="demo-simple-select-standard-label">
-            Версия СМЭВ:
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            value={''}
-            label="Версия СМЭВ:"
-          >
-            <MenuItem value="">
-              <em>Версия СМЭВ:</em>
-            </MenuItem>
-            <MenuItem value="all">Все версии</MenuItem>
-            <MenuItem value="smev2">СМЭВ2</MenuItem>
-            <MenuItem value="smev3">СМЭВ3</MenuItem>
-          </Select>
-        </FormControl>
-
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 666 }}>
-          <InputLabel id="demo-simple-select-standard-label">
-            Категории
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            value={''}
-            label="Категории"
-          >
-            <MenuItem value="">Все элементы</MenuItem>
-            <MenuItem value="element1">Элемент 1</MenuItem>
-            <MenuItem value="element2">Элемент 2</MenuItem>
-          </Select>
-        </FormControl>
-
+      <div className="mezved__bpmn">
         <TextField
-          style={{
-            marginLeft: 'auto',
-            marginRight: '20px',
-            marginTop: '8.5px',
-          }}
-          id="standard-basic"
-          label="Код"
-          variant="standard"
           type="text"
-          value={''}
-          placeholder="Код"
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Наименование межведомственного запроса"
+          sx={{
+            width: '100%',
+            height: '100%',
+            marginBottom: '20px',
+            '& .MuiInputBase-root': {
+              borderRadius: '30px',
+              width: '100%',
+              background: '#F5F7FA',
+            },
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
         />
-        <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
-          <InputLabel id="demo-simple-select-standard-label">
-            Тип процедуры
-          </InputLabel>
-          <Select
-            labelId="demo-simple-select-standard-label"
-            id="demo-simple-select-standard"
-            value={''}
-            label="Тип процедуры"
-          >
-            <MenuItem value="">
-              <em>Тип процедуры</em>
-            </MenuItem>
-            <MenuItem value="all">Все версии</MenuItem>
-            <MenuItem value="smev2">СМЭВ2</MenuItem>
-            <MenuItem value="smev3">СМЭВ3</MenuItem>
-          </Select>
-        </FormControl>
-      </div>
-      <div className="button_tab">
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={showLockedOnly}
-              onChange={toggleShowLockedOnly}
-              inputProps={{ 'aria-label': 'controlled' }}
+        <div className="filter">
+          <div className="filter__item">
+            <FormControl variant="standard" sx={{ m: 1, width: 223 }}>
+              <InputLabel id="demo-simple-select-standard-label">
+                Версия СМЭВ:
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={''}
+                label="Версия СМЭВ:"
+              >
+                <MenuItem value="">
+                  <em>Версия СМЭВ:</em>
+                </MenuItem>
+                <MenuItem value="all">Все версии</MenuItem>
+                <MenuItem value="smev2">СМЭВ2</MenuItem>
+                <MenuItem value="smev3">СМЭВ3</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+
+          <div className="filter__item">
+            <FormControl variant="standard" sx={{ m: 1, width: 577 }}>
+              <InputLabel id="demo-simple-select-standard-label">
+                Категории
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={''}
+                label="Категории"
+              >
+                <MenuItem value="">Все элементы</MenuItem>
+                <MenuItem value="element1">Элемент 1</MenuItem>
+                <MenuItem value="element2">Элемент 2</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+
+          <div className="filter__item">
+            <TextField
+              style={{
+                marginTop: '7px',
+              }}
+              id="standard-basic"
+              label="Код"
+              variant="standard"
+              type="text"
+              value={''}
+              placeholder="Код"
             />
-          }
-          label="Отображать услуги с не активными межведомственными запросами"
-        />
-        <Grid container spacing={2}>
-          <Grid item>
-            <Button
-              className="apply_button"
-              variant="outlined"
-              sx={{
-                bgcolor: '#F5F7FA',
-                borderRadius: 20,
-                color: 'black',
-                borderColor: 'white',
-                marginLeft: '850px',
-                marginY: 2,
+          </div>
+
+          <div className="filter__item">
+            <FormControl variant="standard" sx={{ m: 1, width: 223 }}>
+              <InputLabel id="demo-simple-select-standard-label">
+                Тип процедуры
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-standard-label"
+                id="demo-simple-select-standard"
+                value={''}
+                label="Тип процедуры"
+              >
+                <MenuItem value="">
+                  <em>Тип процедуры</em>
+                </MenuItem>
+                <MenuItem value="all">Все версии</MenuItem>
+                <MenuItem value="smev2">СМЭВ2</MenuItem>
+                <MenuItem value="smev3">СМЭВ3</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+
+          <div className="filter__item">
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={showLockedOnly}
+                  onChange={toggleShowLockedOnly}
+                  inputProps={{ 'aria-label': 'controlled' }}
+                />
+              }
+              label="Отображать услуги с не активными межведомственными запросами"
+              style={{
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                marginTop: '25px',
               }}
-            >
-              Применить
-            </Button>
+            />
+          </div>
+        </div>
+        <div className="button_tab">
+          <Grid container spacing={2}>
+            <Grid item>
+              <Button
+                className="apply_button"
+                variant="outlined"
+                sx={{
+                  bgcolor: '#F5F7FA',
+                  borderRadius: 20,
+                  color: 'black',
+                  borderColor: 'white',
+                  marginLeft: '850px',
+                  marginY: 2,
+                }}
+              >
+                Применить
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                className="reset_button"
+                variant="outlined"
+                sx={{
+                  bgcolor: '#F5F7FA',
+                  borderRadius: 20,
+                  color: 'black',
+                  borderColor: 'white',
+                  marginY: 2,
+                }}
+              >
+                Сбросить
+              </Button>
+            </Grid>
+            <Grid item>
+              <IconButton
+                className="download_button"
+                color="primary"
+                sx={{
+                  bgcolor: '#F5F7FA',
+                  marginY: 2,
+                  color: '#000000',
+                }}
+                aria-label="add to shopping cart"
+              >
+                <SaveAltIcon />
+              </IconButton>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button
-              className="reset_button"
-              variant="outlined"
-              sx={{
-                bgcolor: '#F5F7FA',
-                borderRadius: 20,
-                color: 'black',
-                borderColor: 'white',
-                marginY: 2,
-              }}
-            >
-              Сбросить
-            </Button>
-          </Grid>
-          <Grid item>
-            <IconButton
-              className="download_button"
-              color="primary"
-              sx={{
-                bgcolor: '#F5F7FA',
-                marginY: 2,
-                color: '#000000',
-              }}
-              aria-label="add to shopping cart"
-            >
-              <SaveAltIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </div>
-      <div className="mezved_tab">
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>
-                  <img
-                    src={TabIndicator}
-                    alt="Иконка"
-                    style={{
-                      position: 'relative',
-                      top: '5px',
-                      left: '5px',
-                    }}
-                  />
-                </TableCell>
-                <TableCell>Код</TableCell>
-                <TableCell>Наименование</TableCell>
-                <TableCell>Версия СМЭВ</TableCell>
-                <TableCell>Тип процедуры</TableCell>
-                <TableCell>Дата обновления</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>{renderFileRows()}</TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          labelRowsPerPage="Строк на странице:"
-          component="div"
-          count={files.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        </div>
+        <div className="mezved_tab">
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>
+                    <img
+                      src={TabIndicator}
+                      alt="Иконка"
+                      style={{
+                        position: 'relative',
+                        top: '5px',
+                        left: '5px',
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>Код</TableCell>
+                  <TableCell>Наименование</TableCell>
+                  <TableCell>Версия СМЭВ</TableCell>
+                  <TableCell>Тип процедуры</TableCell>
+                  <TableCell>Дата обновления</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{renderFileRows()}</TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            labelRowsPerPage="Строк на странице:"
+            component="div"
+            count={files.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </div>
       </div>
     </div>
   );

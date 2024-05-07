@@ -1,14 +1,18 @@
 .mezved {
-    width: 1176px;
     margin: 0 auto;
     margin-left: auto;
     margin-right: auto;
-    padding: 200px;
+    padding: 31px;
     background-color: #FFFFFF;
     border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    margin-top: -100px;
 }
+.filter{
+    display: flex;
+    flex-wrap:wrap;
+}
+.filter__item {
+    margin-right: 40px; 
+  }
 .mezved__bpmn{
     width: 1176px;
     margin-left: auto;
@@ -51,6 +55,4 @@
 .mezved_tab td:last-child {
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px;
-}
-.button_tab{
 }

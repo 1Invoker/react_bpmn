@@ -24,3 +24,4 @@ yarn-error.log*
 
 # Environmental variables
 .env
+eslint.config.mjs
