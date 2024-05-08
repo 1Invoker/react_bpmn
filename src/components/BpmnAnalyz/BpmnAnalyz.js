@@ -245,7 +245,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
           }}
         />
         <div style={{ display: 'flex', marginBottom: '10px' }}>
-          <FormControl variant="standard" sx={{ m: 1, minWidth: 367 }}>
+          <FormControl variant="standard" sx={{ m: 1, minWidth: 223 }}>
             <InputLabel id="demo-simple-select-standard-label">
               Версия СМЭВ:
             </InputLabel>
@@ -269,7 +269,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
             variant="standard"
             sx={{
               m: 1,
-              minWidth: 947,
+              minWidth: 577,
               marginLeft: 'auto',
               marginRight: '-20px',
             }}
