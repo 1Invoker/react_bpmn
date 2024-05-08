@@ -14,13 +14,11 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Paper from '@mui/material/Paper';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { FormControl, InputLabel } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
 import '../BpmnAnalyz/BpmnAnalyz.css';
-import BpmnAnalyzContent from '../BpmnAnalyz/BpmnAnalyzContent';
 import {
   addFile,
   removeFile,
@@ -222,8 +220,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   };
 
   return (
-    <div style={styles.container}>
-      <div>
+    <div className="gosuslugi">
+      <div className="gosuslugi__filter">
         <TextField
           type="text"
           value={searchTerm}
@@ -318,7 +316,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
             />
           </label>
         </div>
-        <div style={styles.buttonGroupBottom}>
+        <div className="gosuslugi__button-group">
           <FormControlLabel
             control={
               <Checkbox
@@ -388,7 +386,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
           </Grid>
         </div>
       </div>
-      <TableContainer component={Paper} style={styles.fileContainer}>
+      <TableContainer className="gosuslugi_table-container">
         <Table
           sx={{
             backgroundColor: '#D6D9DC',
@@ -496,30 +494,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
       )}
     </div>
   );
-};
-
-const styles = {
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    padding: '20px',
-    borderRadius: '10px',
-    backgroundColor: '#ffffff',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-  },
-  buttonGroupBottom: {
-    display: 'flex',
-    justifyContent: 'space-between',
-  },
-  fileContainer: {
-    border: '1px solid #ccc',
-    marginTop: '20px',
-    background: '#FFFFFF',
-    borderRadius: '20px',
-    margin: '5px 0',
-    padding: '10px 10px',
-    marginLeft: '-10px',
-  },
 };
 
 export default BpmnAnalyz;
