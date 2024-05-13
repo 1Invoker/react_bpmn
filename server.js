@@ -1,11 +1,11 @@
-const express = require("express");
-const cors = require("cors");
-const fetch = require("node-fetch");
-const { Pool } = require("pg");
+const express = require('express');
+const cors = require('cors');
+const fetch = require('node-fetch');
+const { Pool } = require('pg');
 const app = express();
 const port = process.env.PORT || 3001;
 
-require("dotenv").config();
+require('dotenv').config();
 
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -17,9 +17,9 @@ const pool = new Pool({
 
 pool.connect((err, client, done) => {
   if (err) {
-    console.error("Ошибка подключения к базе данных:", err);
+    console.error('Ошибка подключения к базе данных:', err);
   } else {
-    console.log("Подключение к базе данных успешно!");
+    console.log('Подключение к базе данных успешно!');
   }
   done();
 });
@@ -28,7 +28,7 @@ pool.connect((err, client, done) => {
 app.use(cors());
 
 // API-маршрут для получения данных из таблицы "procedure"
-app.get("/api/bpmnData", async (req, res) => {
+app.get('/api/bpmnData', async (req, res) => {
   try {
     const procedureResult = await pool.query(`
     SELECT "procedure"."id", "procedure"."name", "procedure_process_definition"."processdefinitionkey","procedure"."locked",
@@ -47,17 +47,17 @@ app.get("/api/bpmnData", async (req, res) => {
     `);
     console.log(
       'Результат запроса из таблицы "procedure":',
-      procedureResult.rows
+      procedureResult.rows,
     );
 
     res.send(procedureResult.rows);
   } catch (error) {
     console.error('Ошибка при получении данных из таблицы "procedure":', error);
-    res.status(500).send("Внутренняя ошибка сервера");
+    res.status(500).send('Внутренняя ошибка сервера');
   }
 });
 
-app.get("/api/bpmnAdministrative", async (req, res) => {
+app.get('/api/bpmnAdministrative', async (req, res) => {
   try {
     const procedureResult = await pool.query(`
     select "procedure"."id", "procedure"."name",
@@ -75,16 +75,16 @@ ON "procedure_process_definition"."processdefinitionkey" = "arp"."key_" AND "act
 inner join "act_ge_bytearray" "act_ge_bytearray" ON "act_ge_bytearray"."deployment_id_" = "act_re_procdef"."deployment_id_" AND "act_ge_bytearray"."name_" = "act_re_procdef"."resource_name_"
 where "procedure"."locked" = false and "procedure"."type" = 0 order by "procedure"."id" asc LIMIT 50
     `);
-    console.log("Результат запроса из таблицы :", procedureResult.rows);
+    console.log('Результат запроса из таблицы :', procedureResult.rows);
 
     res.send(procedureResult.rows);
   } catch (error) {
-    console.error("Ошибка при получении данных из таблицы :", error);
-    res.status(500).send("Внутренняя ошибка сервера");
+    console.error('Ошибка при получении данных из таблицы :', error);
+    res.status(500).send('Внутренняя ошибка сервера');
   }
 });
 
-app.get("/api/bpmnMezved", async (req, res) => {
+app.get('/api/bpmnMezved', async (req, res) => {
   try {
     const procedureResult = await pool.query(`
     select "procedure"."id", "procedure"."name", "procedure_process_definition"."processdefinitionkey",
@@ -101,15 +101,15 @@ ON "procedure_process_definition"."processdefinitionkey" = "arp"."key_" AND "act
 inner join "act_ge_bytearray" "act_ge_bytearray" ON "act_ge_bytearray"."deployment_id_" = "act_re_procdef"."deployment_id_" AND "act_ge_bytearray"."name_" = "act_re_procdef"."resource_name_"
 where "procedure"."locked" = false and "procedure"."type" = 1 order by "procedure"."id" asc
     `);
-    console.log("Результат запроса из таблицы :", procedureResult.rows);
+    console.log('Результат запроса из таблицы :', procedureResult.rows);
 
     res.send(procedureResult.rows);
   } catch (error) {
-    console.error("Ошибка при получении данных из таблицы :", error);
-    res.status(500).send("Внутренняя ошибка сервера");
+    console.error('Ошибка при получении данных из таблицы :', error);
+    res.status(500).send('Внутренняя ошибка сервера');
   }
 });
-app.get("/api/bpmnMezvedCatalog", async (req, res) => {
+app.get('/api/bpmnMezvedCatalog', async (req, res) => {
   try {
     const procedureResult = await pool.query(`
     select "procedure"."id", "procedure"."name", "procedure"."status", "procedure_process_definition"."processdefinitionkey"
@@ -125,12 +125,12 @@ ON "procedure_process_definition"."processdefinitionkey" = "arp"."key_" AND "act
 inner join "act_ge_bytearray" "act_ge_bytearray" ON "act_ge_bytearray"."deployment_id_" = "act_re_procdef"."deployment_id_" AND "act_ge_bytearray"."name_" = "act_re_procdef"."resource_name_"
 where "procedure"."locked" = false and "procedure"."type" = 1 order by "procedure"."id" asc
     `);
-    console.log("Результат запроса из таблицы :", procedureResult.rows);
+    console.log('Результат запроса из таблицы :', procedureResult.rows);
 
     res.send(procedureResult.rows);
   } catch (error) {
-    console.error("Ошибка при получении данных из таблицы :", error);
-    res.status(500).send("Внутренняя ошибка сервера");
+    console.error('Ошибка при получении данных из таблицы :', error);
+    res.status(500).send('Внутренняя ошибка сервера');
   }
 });
 

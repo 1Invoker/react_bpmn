@@ -13,6 +13,10 @@
   display: flex;
   justify-content: space-between;
 }
+.gosuslugi__button-tab{
+  display: flex;
+  align-items: center;
+}
 .gosuslugi_table-container{
   border: 1px solid #ccc;
   margin-top: 20px;

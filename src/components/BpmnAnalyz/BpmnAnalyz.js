@@ -337,53 +337,47 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
             }
             label="Отображать услуги с не активными межведомственными запросами"
           />
-          <Grid container spacing={2}>
-            <Grid item>
-              <Button
-                className="apply_button"
-                variant="outlined"
-                sx={{
-                  bgcolor: '#F5F7FA',
-                  borderRadius: 20,
-                  color: 'black',
-                  borderColor: 'white',
-                  marginLeft: '650px',
-                  marginY: 2,
-                }}
-              >
-                Применить
-              </Button>
-            </Grid>
-            <Grid item>
-              <Button
-                className="reset_button"
-                variant="outlined"
-                sx={{
-                  bgcolor: '#F5F7FA',
-                  borderRadius: 20,
-                  color: 'black',
-                  borderColor: 'white',
-                  marginY: 2,
-                }}
-              >
-                Сбросить
-              </Button>
-            </Grid>
-            <Grid item>
-              <IconButton
-                className="download_button"
-                color="primary"
-                sx={{
-                  bgcolor: '#F5F7FA',
-                  marginY: 2,
-                  color: '#000000',
-                }}
-                aria-label="add to shopping cart"
-              >
-                <SaveAltIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
+          <div className="gosuslugi__button-tab">
+            <Button
+              className="apply_button"
+              variant="outlined"
+              sx={{
+                bgcolor: '#F5F7FA',
+                borderRadius: 20,
+                color: 'black',
+                borderColor: 'white',
+                marginLeft: '300px',
+                marginY: 2,
+              }}
+            >
+              Применить
+            </Button>
+            <Button
+              className="reset_button"
+              variant="outlined"
+              sx={{
+                bgcolor: '#F5F7FA',
+                borderRadius: 20,
+                color: 'black',
+                borderColor: 'white',
+                marginY: 2,
+              }}
+            >
+              Сбросить
+            </Button>
+            <IconButton
+              className="download_button"
+              color="primary"
+              sx={{
+                bgcolor: '#F5F7FA',
+                marginY: 2,
+                color: '#000000',
+              }}
+              aria-label="add to shopping cart"
+            >
+              <SaveAltIcon />
+            </IconButton>
+          </div>
         </div>
       </div>
       <TableContainer className="gosuslugi_table-container">
