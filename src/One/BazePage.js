@@ -4,7 +4,7 @@ import BpmnDiagram from '../components/BpmnDiagram/BpmnDiagram';
 import BpmnAnalyz from '../components/BpmnAnalyz/BpmnAnalyz';
 import './BazePage.css';
 import Button from '@mui/material/Button';
-import BpmnDataLocked from '../Analyz/BpmnDataLocked';
+import BpmnDataLocked from '../Indicator/BpmnDataLocked';
 import { useSelector } from 'react-redux';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import MySvgIcon from '../components/UI/icon/AnalyzerBpmnIcon';

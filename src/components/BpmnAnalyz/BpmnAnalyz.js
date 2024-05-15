@@ -381,16 +381,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         </div>
       </div>
       <TableContainer className="gosuslugi_table-container">
-        <Table
-          sx={{
-            backgroundColor: '#D6D9DC',
-            borderTopLeftRadius: '40px',
-            borderTopRightRadius: '40px',
-            borderBottomLeftRadius: '40px',
-            borderBottomRightRadius: '40px',
-            borderBottom: '11px solid #ffffff',
-          }}
-        >
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>
@@ -430,14 +421,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               .map((xsdXml, index) => (
                 <TableRow
                   key={index}
-                  sx={{
-                    '&:hover': {
-                      backgroundColor: '#f5f5f5',
-                    },
-                    borderRadius: '20px',
-                    background: '#F5F7FA',
-                    borderBottom: '11px solid #ffffff',
-                  }}
                   onClick={() => {
                     dispatch(
                       selectFile({

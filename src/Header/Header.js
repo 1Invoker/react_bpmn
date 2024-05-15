@@ -15,7 +15,7 @@ const Header = () => {
                 <MySvgIcon />
               </span>
               <span className="header-logo__text">Analyzer BPMN</span>
-              <a className="header-logo__link" href="/"></a>
+              <a className="header-logo__link"></a>
             </div>
           </li>
           <li className="header-list__item">
