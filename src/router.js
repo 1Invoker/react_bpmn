@@ -3,7 +3,7 @@ import { Routes as ReactRoutes, Route } from 'react-router-dom';
 import BazePage from './One/BazePage';
 import BpmnAnalyzPage from './components/BpmnAnalyzPage/BpmnAnalyzPage';
 import Home from './Home/Home';
-import BpmnList from './BpmnList/BpmnList';
+import BpmnList from './components/BpmnList/BpmnList';
 
 const Routes = () => {
   return (

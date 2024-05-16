@@ -3,11 +3,8 @@ import XsdReader from '../components/XsdReader';
 import BpmnDiagram from '../components/BpmnDiagram/BpmnDiagram';
 import BpmnAnalyz from '../components/BpmnAnalyz/BpmnAnalyz';
 import './BazePage.css';
-import Button from '@mui/material/Button';
 import BpmnDataLocked from '../Indicator/BpmnDataLocked';
 import { useSelector } from 'react-redux';
-import ViewInArIcon from '@mui/icons-material/ViewInAr';
-import MySvgIcon from '../components/UI/icon/AnalyzerBpmnIcon';
 
 const BazePage = ({ router }) => {
   const files = useSelector(state => state.file.files);
@@ -39,8 +36,9 @@ const BazePage = ({ router }) => {
         setbpmnAdministrative(data);
         console.log('Данные из /api/bpmnAdministrative:', data);
       })
-      .catch(error =>
-        console.error('Ошибка при получении данных BPMN:', error),
+      .catch(
+        error => console.error('Ошибка при получении данных BPMN:', error),
+        // setbpmnAdministrative(files),
       );
   }, []);
   useEffect(() => {
@@ -86,15 +84,6 @@ const BazePage = ({ router }) => {
   return (
     <router>
       <div className="One">
-        {/* <Button
-          className="analyzer-button"
-          variant="contained"
-          color="primary"
-          startIcon={<MySvgIcon />}
-          onClick={handleConverterClick}
-        >
-          Analyzer BPMN
-        </Button> */}
         <div className="container">
           <div className="column">
             <XsdReader

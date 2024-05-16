@@ -22,9 +22,9 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import { InputAdornment } from '@mui/material';
-import { selectFiles } from '../Redux/fileSlice';
+import { selectFiles } from '../../Redux/fileSlice';
 import './BpmnList.css';
-import TabIndicator from '../components/UI/icon/TabIndicator.svg';
+import TabIndicator from '../UI/icon/TabIndicator.svg';
 
 const BpmnList = () => {
   const dispatch = useDispatch();
