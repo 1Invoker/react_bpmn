@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Grid, Button } from '@mui/material';
+import { Button } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Table from '@mui/material/Table';
@@ -10,10 +10,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TextField from '@mui/material/TextField';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import DeleteIcon from '@mui/icons-material/Delete';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { FormControl, InputLabel } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
@@ -31,6 +31,8 @@ import TablePagination from '@mui/material/TablePagination';
 import './BpmnAnalyz.css';
 import { InputAdornment } from '@mui/material';
 import TabIndicator from '../UI/icon/TabIndicator.svg';
+import SaveIcon from '../UI/icon/SaveIcon.svg';
+import ThreeVertDots from '../UI/icon/ThreeVertDots';
 
 export const Indicator = ({ locked }) => {
   const indicatorClassName = locked ? 'indicator red' : 'indicator green';
@@ -55,6 +57,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const selectedFile = useSelector(selectSelectedFile);
   const [selectedCalledElement, setSelectedCalledElement] = useState('');
   const [showLockedOnly, setShowLockedOnly] = useState(false);
+  const [showStatusColumn, setShowStatusColumn] = useState(false);
+  const [containerWidth, setContainerWidth] = useState(1176);
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
@@ -219,8 +223,13 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
     setPage(0);
   };
 
+  const toggleStatusColumn = () => {
+    setShowStatusColumn(prevState => !prevState);
+    setContainerWidth(prevWidth => (prevWidth === 1176 ? 1500 : 1176));
+  };
+
   return (
-    <div className="gosuslugi">
+    <div className="gosuslugi" style={{ width: `${containerWidth}px` }}>
       <div className="gosuslugi__filter">
         <TextField
           type="text"
@@ -348,6 +357,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 borderColor: 'white',
                 marginLeft: '300px',
                 marginY: 2,
+                textTransform: 'capitalize',
               }}
             >
               Применить
@@ -361,6 +371,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 color: 'black',
                 borderColor: 'white',
                 marginY: 2,
+                textTransform: 'capitalize',
               }}
             >
               Сбросить
@@ -375,7 +386,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               }}
               aria-label="add to shopping cart"
             >
-              <SaveAltIcon />
+              <img src={SaveIcon} alt="SaveIcon" className="icon-image" />
             </IconButton>
           </div>
         </div>
@@ -396,16 +407,22 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                 />
               </TableCell>
               <TableCell>Код</TableCell>
-              <TableCell>Название файла</TableCell>
+              <TableCell>Наименование услуги</TableCell>
               <TableCell>Версия СМЭВ</TableCell>
               <TableCell></TableCell>
-              <TableCell>Process Name</TableCell>
-              <TableCell>
-                Статус и наименование межведомственного запроса
-              </TableCell>
+              {showStatusColumn && (
+                <TableCell>
+                  Статус и наименование межведомственного запроса
+                </TableCell>
+              )}
+              <TableCell>Срок оказания</TableCell>
+
               <TableCell>Дата создания</TableCell>
               <TableCell>Дата изменения</TableCell>
               {/* <TableCell>Удалить</TableCell> */}
+              <TableCell>
+                <ThreeVertDots onClick={toggleStatusColumn} />
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -437,17 +454,18 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   <TableCell></TableCell>
                   <TableCell style={{ cursor: 'pointer' }}>
                     <div onClick={() => handleActiv(xsdXml.fileName)}>
-                      {xsdXml.fileName}
+                      {xsdXml.processName}
                     </div>
                   </TableCell>
                   <TableCell>{xsdXml.version}</TableCell>
                   <TableCell>
                     <Indicator locked={xsdXml.locked} />
                   </TableCell>
-                  <TableCell>{xsdXml.processName}</TableCell>
+                  {showStatusColumn && <TableCell></TableCell>}
                   <TableCell></TableCell>
                   <TableCell>{xsdXml.dateCreated}</TableCell>
                   <TableCell>{xsdXml.dateUpDated}</TableCell>
+                  <TableCell></TableCell>
                 </TableRow>
               ))}
           </TableBody>

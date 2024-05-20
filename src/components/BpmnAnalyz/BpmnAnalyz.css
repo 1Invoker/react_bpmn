@@ -26,7 +26,18 @@
   padding: 10px 10px;
   margin-left: -10px;
 } */
+.download_button {
+  width: 63px;
+  height: 40px;
+  padding: 5px;
+  border-radius: 40%;
+}
 
+.icon-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .gosuslugi_table-container {
   margin-top: 15px;
 }

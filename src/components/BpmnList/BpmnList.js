@@ -20,11 +20,12 @@ import {
   TablePagination,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import SaveIcon from '../UI/icon/SaveIcon.svg';
 import { InputAdornment } from '@mui/material';
 import { selectFiles } from '../../Redux/fileSlice';
 import './BpmnList.css';
 import TabIndicator from '../UI/icon/TabIndicator.svg';
+import ThreeVertDots from '../UI/icon/ThreeVertDots';
 
 const BpmnList = () => {
   const dispatch = useDispatch();
@@ -33,6 +34,7 @@ const BpmnList = () => {
   const [showLockedOnly, setShowLockedOnly] = useState(false);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [showStatusColumn, setShowStatusColumn] = useState(false);
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
@@ -76,6 +78,7 @@ const BpmnList = () => {
         <TableCell>{file.processName}</TableCell>
         <TableCell>{file.calledElement}</TableCell>
         <TableCell>{file.dateUpDated}</TableCell>
+        <TableCell></TableCell>
       </TableRow>
     ));
   };
@@ -83,6 +86,10 @@ const BpmnList = () => {
   const Indicator = ({ locked }) => {
     const indicatorClassName = locked ? 'indicator red' : 'indicator green';
     return <div className={indicatorClassName}></div>;
+  };
+
+  const toggleStatusColumn = () => {
+    setShowStatusColumn(prevState => !prevState);
   };
 
   return (
@@ -217,6 +224,7 @@ const BpmnList = () => {
                   borderColor: 'white',
                   marginLeft: '850px',
                   marginY: 2,
+                  textTransform: 'capitalize',
                 }}
               >
                 Применить
@@ -232,6 +240,7 @@ const BpmnList = () => {
                   color: 'black',
                   borderColor: 'white',
                   marginY: 2,
+                  textTransform: 'capitalize',
                 }}
               >
                 Сбросить
@@ -248,7 +257,7 @@ const BpmnList = () => {
                 }}
                 aria-label="add to shopping cart"
               >
-                <SaveAltIcon />
+                <img src={SaveIcon} alt="SaveIcon" className="icon-image" />
               </IconButton>
             </Grid>
           </Grid>
@@ -274,6 +283,9 @@ const BpmnList = () => {
                   <TableCell>Версия СМЭВ</TableCell>
                   <TableCell>Тип процедуры</TableCell>
                   <TableCell>Дата обновления</TableCell>
+                  <TableCell>
+                    <ThreeVertDots onClick={toggleStatusColumn} />
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>{renderFileRows()}</TableBody>
