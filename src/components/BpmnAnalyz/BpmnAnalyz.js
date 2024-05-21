@@ -1,43 +1,53 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
+import {
+  Button,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  IconButton,
+  FormControlLabel,
+  FormControl,
+  InputLabel,
+  Checkbox,
+  InputAdornment,
+  TablePagination,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import DeleteIcon from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import { FormControl, InputLabel } from '@mui/material';
-import Checkbox from '@mui/material/Checkbox';
+import Menu from '@mui/material/Menu';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
 import '../BpmnAnalyz/BpmnAnalyz.css';
 import {
   addFile,
-  removeFile,
   selectFile,
-  unselectFile,
   selectFiles,
   selectSelectedFile,
 } from '../../Redux/fileSlice';
-import TablePagination from '@mui/material/TablePagination';
-import './BpmnAnalyz.css';
-import { InputAdornment } from '@mui/material';
 import TabIndicator from '../UI/icon/TabIndicator.svg';
 import SaveIcon from '../UI/icon/SaveIcon.svg';
 import ThreeVertDots from '../UI/icon/ThreeVertDots';
 
 export const Indicator = ({ locked }) => {
   const indicatorClassName = locked ? 'indicator red' : 'indicator green';
-
   return <div className={indicatorClassName}></div>;
+};
+
+const columnNames = {
+  code: 'Код',
+  processName: 'Наименование услуги',
+  dateCreated: 'Дата создания',
+  dateUpDated: 'Дата изменения',
+  status: '',
+  servicePeriod: 'Срок оказания услуги',
+  calledElement: 'Статус и наименование межведомственного запроса',
+  version: 'Версия СМЭВ',
 };
 
 const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
@@ -59,6 +69,30 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const [showLockedOnly, setShowLockedOnly] = useState(false);
   const [showStatusColumn, setShowStatusColumn] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1176);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [visibleColumns, setVisibleColumns] = useState([
+    'processName',
+    'dateCreated',
+    'dateUpDated',
+  ]);
+
+  const handleMenuOpen = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleColumnToggle = column => {
+    setVisibleColumns(prevVisibleColumns => {
+      if (prevVisibleColumns.includes(column)) {
+        return prevVisibleColumns.filter(col => col !== column);
+      } else {
+        return [...prevVisibleColumns, column];
+      }
+    });
+  };
 
   useEffect(() => {
     const analyzeSmevVersions = () => {
@@ -104,10 +138,12 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
       setSmevVersions(versions);
       setFilteredSmevVersions(filteredSmevVersions);
     };
+
     const extractDateCreated = xml => {
       const matches = xml.match(/"datecreated":"([^"]+)"/);
       return matches && matches[1] ? matches[1] : '';
     };
+
     const extractdateUpDated = xml => {
       const matches = xml.match(/"dateupdated":"([^"]+)"/);
       return matches && matches[1] ? matches[1] : '';
@@ -143,12 +179,13 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   } catch (error) {
     console.error('Ошибка при парсинге BPMN данных:', error);
   }
+
   const toggleShowLockedOnly = () => {
     setShowLockedOnly(prevState => !prevState); // Переключение состояния фильтрации
   };
+
   let filteredData = parsedData;
   if (showLockedOnly) {
-    // Фильтрация только для заблокированных записей, если флаг установлен
     filteredData = parsedData.filter(data => data.locked === true);
   }
 
@@ -195,15 +232,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
     setSelectedFileName(fileName);
     setIsBpmnDiagramOpen(true);
   };
-
-  // const handleRemoveFile = fileName => {
-  //   dispatch(removeFile(fileName));
-
-  //   // Обновляем локальный составленный список
-  //   setFilteredSmevVersions(prevVersions =>
-  //     prevVersions.filter(xsdXml => xsdXml.fileName !== fileName),
-  //   );
-  // };
 
   const handleFileUpload = newFile => {
     dispatch(addFile(newFile));
@@ -406,22 +434,64 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   }}
                 />
               </TableCell>
-              <TableCell>Код</TableCell>
-              <TableCell>Наименование услуги</TableCell>
-              <TableCell>Версия СМЭВ</TableCell>
-              <TableCell></TableCell>
-              {showStatusColumn && (
-                <TableCell>
-                  Статус и наименование межведомственного запроса
-                </TableCell>
+              {visibleColumns.includes('code') && (
+                <TableCell>{columnNames['code']}</TableCell>
               )}
-              <TableCell>Срок оказания</TableCell>
-
-              <TableCell>Дата создания</TableCell>
-              <TableCell>Дата изменения</TableCell>
-              {/* <TableCell>Удалить</TableCell> */}
+              {visibleColumns.includes('processName') && (
+                <TableCell>{columnNames['processName']}</TableCell>
+              )}
+              {visibleColumns.includes('version') && (
+                <TableCell>{columnNames['version']}</TableCell>
+              )}
+              {visibleColumns.includes('status') && (
+                <TableCell>{columnNames['status']}</TableCell>
+              )}
+              {visibleColumns.includes('calledElement') && (
+                <TableCell>{columnNames['calledElement']}</TableCell>
+              )}
+              {visibleColumns.includes('servicePeriod')&&(
+                <TableCell>{columnNames['servicePeriod']}</TableCell>
+              )}
+              {visibleColumns.includes('dateCreated') && (
+                <TableCell>{columnNames['dateCreated']}</TableCell>
+              )}
+              {visibleColumns.includes('dateUpDated') && (
+                <TableCell>{columnNames['dateUpDated']}</TableCell>
+              )}
               <TableCell>
-                <ThreeVertDots onClick={toggleStatusColumn} />
+                <IconButton
+                  color="primary"
+                  aria-label="settings"
+                  aria-controls="settings-menu"
+                  aria-haspopup="true"
+                  onClick={handleMenuOpen}
+                >
+                  <ThreeVertDots />
+                </IconButton>
+                <Menu
+                  id="settings-menu"
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                >
+                  <MenuItem disabled>
+                    Выберите столбцы для отображения:
+                  </MenuItem>
+                  {Object.keys(columnNames).map(column => (
+                    <MenuItem key={column}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={visibleColumns.includes(column)}
+                            onChange={() => handleColumnToggle(column)}
+                          />
+                        }
+                        label={columnNames[column]}
+                      />
+                    </MenuItem>
+                  ))}
+                </Menu>
               </TableCell>
             </TableRow>
           </TableHead>
@@ -451,20 +521,34 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   <TableCell>
                     <Indicator locked={xsdXml.locked} />
                   </TableCell>
-                  <TableCell></TableCell>
-                  <TableCell style={{ cursor: 'pointer' }}>
-                    <div onClick={() => handleActiv(xsdXml.fileName)}>
-                      {xsdXml.processName}
-                    </div>
-                  </TableCell>
-                  <TableCell>{xsdXml.version}</TableCell>
-                  <TableCell>
-                    <Indicator locked={xsdXml.locked} />
-                  </TableCell>
-                  {showStatusColumn && <TableCell></TableCell>}
-                  <TableCell></TableCell>
-                  <TableCell>{xsdXml.dateCreated}</TableCell>
-                  <TableCell>{xsdXml.dateUpDated}</TableCell>
+                  {visibleColumns.includes('code') && <TableCell></TableCell>}
+                  {visibleColumns.includes('processName') && (
+                    <TableCell style={{ cursor: 'pointer' }}>
+                      <div onClick={() => handleActiv(xsdXml.fileName)}>
+                        {xsdXml.processName}
+                      </div>
+                    </TableCell>
+                  )}
+                  {visibleColumns.includes('version') && (
+                    <TableCell>{xsdXml.version}</TableCell>
+                  )}
+                  {visibleColumns.includes('status') && (
+                    <TableCell>
+                      <Indicator locked={xsdXml.locked} />
+                    </TableCell>
+                  )}
+                  {visibleColumns.includes('calledElement') && (
+                    <TableCell>{xsdXml.calledElement}</TableCell>
+                  )}
+                  {visibleColumns.includes('servicePeriod')&&(
+                    <TableCell></TableCell>
+                  )}
+                  {visibleColumns.includes('dateCreated') && (
+                    <TableCell>{xsdXml.dateCreated}</TableCell>
+                  )}
+                  {visibleColumns.includes('dateUpDated') && (
+                    <TableCell>{xsdXml.dateUpDated}</TableCell>
+                  )}
                   <TableCell></TableCell>
                 </TableRow>
               ))}
