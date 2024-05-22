@@ -67,9 +67,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const selectedFile = useSelector(selectSelectedFile);
   const [selectedCalledElement, setSelectedCalledElement] = useState('');
   const [showLockedOnly, setShowLockedOnly] = useState(false);
-  const [showStatusColumn, setShowStatusColumn] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1176);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [statusColumnToggled, setStatusColumnToggled] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([
     'processName',
     'dateCreated',
@@ -86,11 +86,24 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
 
   const handleColumnToggle = column => {
     setVisibleColumns(prevVisibleColumns => {
+      let newVisibleColumns;
       if (prevVisibleColumns.includes(column)) {
-        return prevVisibleColumns.filter(col => col !== column);
+        newVisibleColumns = prevVisibleColumns.filter(col => col !== column);
       } else {
-        return [...prevVisibleColumns, column];
+        newVisibleColumns = [...prevVisibleColumns, column];
       }
+      // Подсчитываем количество выбранных столбцов
+      const selectedColumnCount = newVisibleColumns.length;
+
+      // Проверяем, что количество выбранных столбцов больше или равно трех
+      if (selectedColumnCount >= 3 && !statusColumnToggled) {
+        toggleStatusColumn(); // Вызываем функцию toggleStatusColumn
+        setStatusColumnToggled(true); // Устанавливаем состояние, что статусный столбец был переключен
+      } else if (selectedColumnCount < 3 && statusColumnToggled) {
+        setStatusColumnToggled(false); // Сбрасываем состояние, если количество выбранных столбцов стало меньше трех
+      }
+
+      return newVisibleColumns;
     });
   };
 
@@ -252,7 +265,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   };
 
   const toggleStatusColumn = () => {
-    setShowStatusColumn(prevState => !prevState);
     setContainerWidth(prevWidth => (prevWidth === 1176 ? 1500 : 1176));
   };
 
@@ -465,6 +477,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   aria-controls="settings-menu"
                   aria-haspopup="true"
                   onClick={handleMenuOpen}
+                  style={{ float: 'right' }}
                 >
                   <ThreeVertDots />
                 </IconButton>
