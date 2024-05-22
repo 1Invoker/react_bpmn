@@ -449,7 +449,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               {visibleColumns.includes('calledElement') && (
                 <TableCell>{columnNames['calledElement']}</TableCell>
               )}
-              {visibleColumns.includes('servicePeriod')&&(
+              {visibleColumns.includes('servicePeriod') && (
                 <TableCell>{columnNames['servicePeriod']}</TableCell>
               )}
               {visibleColumns.includes('dateCreated') && (
@@ -540,7 +540,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   {visibleColumns.includes('calledElement') && (
                     <TableCell>{xsdXml.calledElement}</TableCell>
                   )}
-                  {visibleColumns.includes('servicePeriod')&&(
+                  {visibleColumns.includes('servicePeriod') && (
                     <TableCell></TableCell>
                   )}
                   {visibleColumns.includes('dateCreated') && (
