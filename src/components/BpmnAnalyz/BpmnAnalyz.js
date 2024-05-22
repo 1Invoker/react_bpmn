@@ -92,15 +92,14 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
       } else {
         newVisibleColumns = [...prevVisibleColumns, column];
       }
-      // Подсчитываем количество выбранных столбцов
       const selectedColumnCount = newVisibleColumns.length;
 
-      // Проверяем, что количество выбранных столбцов больше или равно трех
-      if (selectedColumnCount >= 3 && !statusColumnToggled) {
-        toggleStatusColumn(); // Вызываем функцию toggleStatusColumn
-        setStatusColumnToggled(true); // Устанавливаем состояние, что статусный столбец был переключен
-      } else if (selectedColumnCount < 3 && statusColumnToggled) {
-        setStatusColumnToggled(false); // Сбрасываем состояние, если количество выбранных столбцов стало меньше трех
+      if (selectedColumnCount > 3 && !statusColumnToggled) {
+        toggleStatusColumn();
+        setStatusColumnToggled(true);
+      } else if (selectedColumnCount <= 3 && statusColumnToggled) {
+        toggleStatusColumn();
+        setStatusColumnToggled(false);
       }
 
       return newVisibleColumns;
