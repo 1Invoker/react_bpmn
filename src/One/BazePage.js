@@ -9,6 +9,12 @@ import { useSelector } from 'react-redux';
 const BazePage = ({ router }) => {
   const files = useSelector(state => state.file.files);
   console.log('Содержимое store:', files);
+  const filesJSON = JSON.stringify(files);
+  console.log('Содержимое store в формате JSON:', filesJSON);
+  const xmlArray = Object.values(files).map(file => file.xml);
+  console.log('xmlArray', xmlArray);
+  const bpmn1 = xmlArray[0];
+  console.log('bpmn1', bpmn1);
 
   const [xsdXmls, setXsdXmls] = useState([]);
   const [selectedXml, setSelectedXml] = useState('');
@@ -38,7 +44,7 @@ const BazePage = ({ router }) => {
       })
       .catch(
         error => console.error('Ошибка при получении данных BPMN:', error),
-        // setbpmnAdministrative(files),
+        // setbpmnAdministrative(filesJSON),
       );
   }, []);
   useEffect(() => {

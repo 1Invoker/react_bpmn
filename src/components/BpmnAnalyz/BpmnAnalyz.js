@@ -112,7 +112,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         fileName: xsdXml.fileName,
         version: extractSmevVersion(xsdXml.xml),
         processName: extractProcessName(xsdXml.xml),
-        isGreen: isLocked(xsdXml.fileName),
+        // isGreen: isLocked(xsdXml.fileName),
         calledElement: extractCalledElement(xsdXml.xml),
         locked: xsdXml.locked,
         dateCreated: extractDateCreated(bpmnAdministrative),
@@ -171,9 +171,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
       return matches && matches[1] ? matches[1] : 'Unknown Process Name';
     };
 
-    const isLocked = fileName => {
-      return fileName.length % 2 === 0;
-    };
+    // const isLocked = fileName => {
+    //   return fileName.length % 2 === 0;
+    // };
 
     analyzeSmevVersions();
   }, [
