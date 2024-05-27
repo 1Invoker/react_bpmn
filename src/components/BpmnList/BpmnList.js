@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Grid,
@@ -18,6 +18,7 @@ import {
   InputLabel,
   Checkbox,
   TablePagination,
+  Menu,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '../UI/icon/SaveIcon.svg';
@@ -27,6 +28,15 @@ import './BpmnList.css';
 import TabIndicator from '../UI/icon/TabIndicator.svg';
 import ThreeVertDots from '../UI/icon/ThreeVertDots';
 
+
+const columnNames = {
+  code: 'Код',
+  processName: 'Наименование услуги',
+  version: 'Версия СМЭВ',
+  calledElement: 'Тип процедуры',
+  dateUpDated: 'Дата обновления',
+};
+
 const BpmnList = () => {
   const dispatch = useDispatch();
   const files = useSelector(selectFiles);
@@ -35,6 +45,14 @@ const BpmnList = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [showStatusColumn, setShowStatusColumn] = useState(false);
+  const [visibleColumns, setVisibleColumns] = useState([
+    'code',
+    'processName',
+    'version',
+    'calledElement',
+    'dateUpDated',
+  ]);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
@@ -53,11 +71,31 @@ const BpmnList = () => {
     setPage(0);
   };
 
+  const handleColumnToggle = column => {
+    setVisibleColumns(prevVisibleColumns => {
+      if (prevVisibleColumns.includes(column)) {
+        return prevVisibleColumns.filter(col => col !== column);
+      } else {
+        return [...prevVisibleColumns, column];
+      }
+    });
+  };
+
+  const handleMenuOpen = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const renderFileRows = () => {
     if (!files || !Array.isArray(files)) {
       return (
         <TableRow>
-          <TableCell colSpan={1}>Нет доступных данных</TableCell>
+          <TableCell colSpan={visibleColumns.length}>
+            Нет доступных данных
+          </TableCell>
         </TableRow>
       );
     }
@@ -73,11 +111,21 @@ const BpmnList = () => {
         <TableCell>
           <Indicator locked={file.locked} />
         </TableCell>
-        <TableCell style={{ cursor: 'pointer' }}>{file.fileName}</TableCell>
-        <TableCell>{file.version}</TableCell>
-        <TableCell>{file.processName}</TableCell>
-        <TableCell>{file.calledElement}</TableCell>
-        <TableCell>{file.dateUpDated}</TableCell>
+        {visibleColumns.includes('code') && (
+          <TableCell>{file.fileName}</TableCell>
+        )}
+        {visibleColumns.includes('processName') && (
+          <TableCell>{file.processName}</TableCell>
+        )}
+        {visibleColumns.includes('version') && (
+          <TableCell>{file.version}</TableCell>
+        )}
+        {visibleColumns.includes('calledElement') && (
+          <TableCell>{file.calledElement}</TableCell>
+        )}
+        {visibleColumns.includes('dateUpDated') && (
+          <TableCell>{file.dateUpDated}</TableCell>
+        )}
         <TableCell></TableCell>
       </TableRow>
     ));
@@ -87,11 +135,9 @@ const BpmnList = () => {
     const indicatorClassName = locked ? 'indicator red' : 'indicator green';
     return <div className={indicatorClassName}></div>;
   };
-
   const toggleStatusColumn = () => {
     setShowStatusColumn(prevState => !prevState);
   };
-
   return (
     <div className="mezved">
       <div className="mezved__bpmn">
@@ -255,7 +301,6 @@ const BpmnList = () => {
                   marginY: 2,
                   color: '#000000',
                 }}
-                aria-label="add to shopping cart"
               >
                 <img src={SaveIcon} alt="SaveIcon" className="icon-image" />
               </IconButton>
@@ -278,13 +323,47 @@ const BpmnList = () => {
                       }}
                     />
                   </TableCell>
-                  <TableCell>Код</TableCell>
-                  <TableCell>Наименование</TableCell>
-                  <TableCell>Версия СМЭВ</TableCell>
-                  <TableCell>Тип процедуры</TableCell>
-                  <TableCell>Дата обновления</TableCell>
+                  {visibleColumns.includes('code') && (
+                    <TableCell>Код</TableCell>
+                  )}
+                  {visibleColumns.includes('processName') && (
+                    <TableCell>Наименование</TableCell>
+                  )}
+                  {visibleColumns.includes('version') && (
+                    <TableCell>Версия СМЭВ</TableCell>
+                  )}
+                  {visibleColumns.includes('calledElement') && (
+                    <TableCell>Тип процедуры</TableCell>
+                  )}
+                  {visibleColumns.includes('dateUpDated') && (
+                    <TableCell>Дата обновления</TableCell>
+                  )}
                   <TableCell>
-                    <ThreeVertDots onClick={toggleStatusColumn} />
+                    <IconButton
+                      aria-controls="column-menu"
+                      aria-haspopup="true"
+                      onClick={handleMenuOpen}
+                      style={{ float: 'right' }}
+                    >
+                      <ThreeVertDots />
+                    </IconButton>
+                    <Menu
+                      id="column-menu"
+                      anchorEl={anchorEl}
+                      keepMounted
+                      open={Boolean(anchorEl)}
+                      onClose={handleMenuClose}
+                    >
+                      {Object.keys(columnNames).map(column => (
+                        <MenuItem
+                          key={column}
+                          onClick={() => handleColumnToggle(column)}
+                        >
+                          <Checkbox checked={visibleColumns.includes(column)} />
+                          {columnNames[column]}
+                        </MenuItem>
+                      ))}
+                    </Menu>
                   </TableCell>
                 </TableRow>
               </TableHead>

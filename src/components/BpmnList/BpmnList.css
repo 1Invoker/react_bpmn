@@ -56,3 +56,8 @@
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px;
 }
+.mezved_tab td:hover{
+    background-color: #e6e6e6;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    cursor: pointer;
+}
