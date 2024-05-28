@@ -29,7 +29,7 @@
 
 .mezved_tab th {
     background-color: #D6D9DC;
-    color: #fff;
+    color: #000000;
 }
 
 .mezved_tab thead th:first-child {
@@ -56,8 +56,15 @@
     border-top-right-radius: 30px;
     border-bottom-right-radius: 30px;
 }
-.mezved_tab td:hover{
+.mezved_tab tr:hover{
     background-color: #e6e6e6;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
     cursor: pointer;
+    border-radius: 30px;
 }
+.mezved_tab thead tr:hover {
+    background-color: transparent;
+    box-shadow: none;
+    cursor: default;
+    border-radius: 0;
+  }

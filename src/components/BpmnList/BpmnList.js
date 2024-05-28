@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Grid,
@@ -19,15 +19,18 @@ import {
   Checkbox,
   TablePagination,
   Menu,
+  InputAdornment,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '../UI/icon/SaveIcon.svg';
-import { InputAdornment } from '@mui/material';
 import { selectFiles } from '../../Redux/fileSlice';
 import './BpmnList.css';
 import TabIndicator from '../UI/icon/TabIndicator.svg';
 import ThreeVertDots from '../UI/icon/ThreeVertDots';
-
+import XsdReader from '../../components/XsdReader';
+import BpmnDiagram from '../../components/BpmnDiagram/BpmnDiagram';
+import useXsdReader from '../../hooks/useXsdReader';
+import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';
 
 const columnNames = {
   code: 'Код',
@@ -40,6 +43,9 @@ const columnNames = {
 const BpmnList = () => {
   const dispatch = useDispatch();
   const files = useSelector(selectFiles);
+  const [sortOrder, setSortOrder] = useState('asc');
+  const [selectedSmevVersion, setSelectedSmevVersion] = useState('');
+  const [selectedCalledElement, setSelectedCalledElement] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [showLockedOnly, setShowLockedOnly] = useState(false);
   const [page, setPage] = useState(0);
@@ -53,6 +59,42 @@ const BpmnList = () => {
     'dateUpDated',
   ]);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState('');
+  const [xsdXmls, setXsdXmls] = useState([]);
+  const [selectedXml, setSelectedXml] = useState('');
+
+  const handleXmlChange = (xml, fileName) => {
+    parseXsd(xml);
+    setXsdXmls(prevXmls => [...prevXmls, { xml, fileName }]);
+  };
+  const [bpmnAdministrative, setBpmnAdministrative] = useState(files);
+  const filesJSON = JSON.stringify(files);
+  useEffect(() => {
+    setBpmnAdministrative(filesJSON);
+    console.log('bpmnAdministrative', bpmnAdministrative);
+  }, [filesJSON]);
+
+  const { parseXsd } = useXsdReader({ onXmlChange: handleXmlChange });
+  const { smevVersions, filteredSmevVersions } = useAnalyzeSmevVersions(
+    xsdXmls,
+    bpmnAdministrative,
+    {
+      sortOrder,
+      selectedSmevVersion,
+      selectedCalledElement,
+      searchTerm,
+      showLockedOnly,
+    },
+  );
+
+  const handleFileClick = file => {
+    const xmlData = xsdXmls.find(xsdXml => xsdXml.fileName === file.fileName);
+    if (xmlData) {
+      setSelectedXml(xmlData.xml);
+      setIsBpmnDiagramOpen(true);
+    }
+  };
 
   const handleSearch = event => {
     setSearchTerm(event.target.value);
@@ -107,7 +149,7 @@ const BpmnList = () => {
     const endIndex = startIndex + rowsPerPage;
 
     return sortedData.slice(startIndex, endIndex).map((file, index) => (
-      <TableRow key={index}>
+      <TableRow key={index} onClick={() => handleFileClick(file)}>
         <TableCell>
           <Indicator locked={file.locked} />
         </TableCell>
@@ -135,9 +177,11 @@ const BpmnList = () => {
     const indicatorClassName = locked ? 'indicator red' : 'indicator green';
     return <div className={indicatorClassName}></div>;
   };
+
   const toggleStatusColumn = () => {
     setShowStatusColumn(prevState => !prevState);
   };
+
   return (
     <div className="mezved">
       <div className="mezved__bpmn">
@@ -381,6 +425,12 @@ const BpmnList = () => {
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </div>
+        {isBpmnDiagramOpen && (
+          <BpmnDiagram
+            xml={selectedXml}
+            onClose={() => setIsBpmnDiagramOpen(false)}
+          />
+        )}
       </div>
     </div>
   );
