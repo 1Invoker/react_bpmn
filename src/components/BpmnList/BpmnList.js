@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   Grid,
@@ -31,6 +31,7 @@ import XsdReader from '../XsdReader/XsdReader';
 import BpmnDiagram from '../../components/BpmnDiagram/BpmnDiagram';
 import useXsdReader from '../../hooks/useXsdReader';
 import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';
+import useXsdReaderStore from '../Xsd/useXsdReaderStore';
 
 const columnNames = {
   code: 'Код',
@@ -42,7 +43,7 @@ const columnNames = {
 
 const BpmnList = () => {
   const dispatch = useDispatch();
-  const files = useSelector(selectFiles);
+  const files = useSelector(state => state.file.files);
   const [sortOrder, setSortOrder] = useState('asc');
   const [selectedSmevVersion, setSelectedSmevVersion] = useState('');
   const [selectedCalledElement, setSelectedCalledElement] = useState('');
@@ -60,40 +61,42 @@ const BpmnList = () => {
   ]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
-  const [selectedFileName, setSelectedFileName] = useState('');
   const [xsdXmls, setXsdXmls] = useState([]);
   const [selectedXml, setSelectedXml] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
 
-  const handleXmlChange = (xml, fileName) => {
-    parseXsd(xml);
-    setXsdXmls(prevXmls => [...prevXmls, { xml, fileName }]);
-  };
-  const [bpmnAdministrative, setBpmnAdministrative] = useState(files);
-  const filesJSON = JSON.stringify(files);
+  const handleXmlChange = useCallback((xsdXml, fileName) => {
+    // console.log('xsdXml:', xsdXml);
+    // console.log('File name:', fileName);
+  }, []);
   useEffect(() => {
-    setBpmnAdministrative(filesJSON);
-    console.log('bpmnAdministrative', bpmnAdministrative);
-  }, [filesJSON]);
+    parseXsd(files);
+  }, []);
+  // const [bpmnAdministrative, setBpmnAdministrative] = useState(files);
+  // const filesJSON = JSON.stringify(files);
+  // useEffect(() => {
+  //   setBpmnAdministrative(filesJSON);
+  //   console.log('bpmnAdministrative', bpmnAdministrative);
+  // }, [filesJSON]);
 
-  const { parseXsd } = useXsdReader({ onXmlChange: handleXmlChange });
-  const { smevVersions, filteredSmevVersions } = useAnalyzeSmevVersions(
-    xsdXmls,
-    bpmnAdministrative,
-    {
-      sortOrder,
-      selectedSmevVersion,
-      selectedCalledElement,
-      searchTerm,
-      showLockedOnly,
-    },
-  );
+  const { parseXsd, xsdTexts } = useXsdReaderStore({
+    onXmlChange: handleXmlChange,
+  });
 
-  const handleFileClick = file => {
-    const xmlData = xsdXmls.find(xsdXml => xsdXml.fileName === file.fileName);
-    if (xmlData) {
-      setSelectedXml(xmlData.xml);
-      setIsBpmnDiagramOpen(true);
-    }
+  // const { smevVersions, filteredSmevVersions } = useAnalyzeSmevVersions(
+  //   xsdXmls,
+  //   bpmnAdministrative,
+  //   {
+  //     sortOrder,
+  //     selectedSmevVersion,
+  //     selectedCalledElement,
+  //     searchTerm,
+  //     showLockedOnly,
+  //   },
+  // );
+
+  const handleFileClick = (fileName, xsdXml) => {
+    setSelectedFile({ fileName, xsdXml });
   };
 
   const handleSearch = event => {
@@ -132,7 +135,7 @@ const BpmnList = () => {
   };
 
   const renderFileRows = () => {
-    if (!files || !Array.isArray(files)) {
+    if (!xsdTexts || !Array.isArray(xsdTexts)) {
       return (
         <TableRow>
           <TableCell colSpan={visibleColumns.length}>
@@ -141,7 +144,7 @@ const BpmnList = () => {
         </TableRow>
       );
     }
-    const sortedData = [...files].sort((a, b) =>
+    const sortedData = [...xsdTexts].sort((a, b) =>
       a.fileName.localeCompare(b.fileName),
     );
 
@@ -149,7 +152,10 @@ const BpmnList = () => {
     const endIndex = startIndex + rowsPerPage;
 
     return sortedData.slice(startIndex, endIndex).map((file, index) => (
-      <TableRow key={index} onClick={() => handleFileClick(file)}>
+      <TableRow
+        key={index}
+        onClick={() => handleFileClick(file.fileName, file.xsdXml)}
+      >
         <TableCell>
           <Indicator locked={file.locked} />
         </TableCell>
@@ -418,16 +424,17 @@ const BpmnList = () => {
             rowsPerPageOptions={[5, 10, 25]}
             labelRowsPerPage="Строк на странице:"
             component="div"
-            count={files.length}
+            count={xsdTexts.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </div>
-        {isBpmnDiagramOpen && (
+        {selectedFile && (
           <BpmnDiagram
-            xml={selectedXml}
+            xml={selectedFile.xsdXml}
+            filename={selectedFile.fileName}
             onClose={() => setIsBpmnDiagramOpen(false)}
           />
         )}
