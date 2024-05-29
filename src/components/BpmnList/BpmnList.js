@@ -27,7 +27,7 @@ import { selectFiles } from '../../Redux/fileSlice';
 import './BpmnList.css';
 import TabIndicator from '../UI/icon/TabIndicator.svg';
 import ThreeVertDots from '../UI/icon/ThreeVertDots';
-import XsdReader from '../../components/XsdReader';
+import XsdReader from '../XsdReader/XsdReader';
 import BpmnDiagram from '../../components/BpmnDiagram/BpmnDiagram';
 import useXsdReader from '../../hooks/useXsdReader';
 import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';

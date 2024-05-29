@@ -3,7 +3,7 @@ import xmljs from 'xml-js';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useDispatch } from 'react-redux';
-import { addFile, selectFile } from '../Redux/fileSlice';
+import { addFile, selectFile } from '../../Redux/fileSlice.js';
 import { useSelector } from 'react-redux';
 import './XsdReader.css';
 import ButtonXsdReader from './ButtonXsdReader.jsx';

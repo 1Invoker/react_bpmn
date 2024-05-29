@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import xmljs from 'xml-js';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
-import ButtonXsdReader from '../ButtonXsdReader';
+import ButtonXsdReader from '../../components/XsdReader/ButtonXsdReader';
 import { selectSelectedFile, addFile, selectFile } from '../../Redux/fileSlice';
 
 const BpmnAnalyzPage = () => {

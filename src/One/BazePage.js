@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import XsdReader from '../components/XsdReader';
+import XsdReader from '../components/XsdReader/XsdReader';
 import BpmnDiagram from '../components/BpmnDiagram/BpmnDiagram';
 import BpmnAnalyz from '../components/BpmnAnalyz/BpmnAnalyz';
 import './BazePage.css';
