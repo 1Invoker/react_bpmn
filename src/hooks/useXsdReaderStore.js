@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import xmljs from 'xml-js';
 import { useDispatch } from 'react-redux';
-import { addFile, selectFile } from '../../Redux/fileSlice';
+import { addFile, selectFile } from '../Redux/fileSlice';
 
 const useXsdReaderStore = ({ onXmlChange }) => {
   const [xsdTexts, setXsdTexts] = useState([]);

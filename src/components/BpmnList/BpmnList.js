@@ -31,7 +31,7 @@ import XsdReader from '../XsdReader/XsdReader';
 import BpmnDiagram from '../../components/BpmnDiagram/BpmnDiagram';
 import useXsdReader from '../../hooks/useXsdReader';
 import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';
-import useXsdReaderStore from '../Xsd/useXsdReaderStore';
+import useXsdReaderStore from '../../hooks/useXsdReaderStore';
 
 const columnNames = {
   code: 'Код',

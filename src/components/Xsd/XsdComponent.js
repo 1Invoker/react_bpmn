@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import useXsdReaderStore from './useXsdReaderStore';
+import useXsdReaderStore from '../../hooks/useXsdReaderStore';
 import { selectFiles } from '../../Redux/fileSlice';
 import BpmnDiagram from '../BpmnDiagram/BpmnDiagram';
 
