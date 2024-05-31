@@ -5,6 +5,7 @@ const fileSlice = createSlice({
   initialState: {
     files: [],
     selectedFile: null,
+    xsdXmls: [],
   },
   reducers: {
     addFile: (state, action) => {
@@ -17,7 +18,6 @@ const fileSlice = createSlice({
       );
     },
     selectFile: (state, action) => {
-      // Обновление данных XML при выборе файла
       state.selectedFile = {
         fileName: action.payload.fileName,
         xml: action.payload.xml,
@@ -26,12 +26,16 @@ const fileSlice = createSlice({
     unselectFile: state => {
       state.selectedFile = null;
     },
+    setXsdXmls: (state, action) => {
+      state.xsdXmls = action.payload;
+    },
   },
 });
 
-export const { addFile, removeFile, selectFile, unselectFile } =
+export const { addFile, removeFile, selectFile, unselectFile, setXsdXmls } =
   fileSlice.actions;
 export const selectFiles = state => state.file.files;
 export const selectSelectedFile = state => state.file.selectedFile;
+export const selectXsdXmls = state => state.file.xsdXmls;
 
 export default fileSlice.reducer;

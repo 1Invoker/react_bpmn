@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '../UI/icon/SaveIcon.svg';
-import { selectFiles } from '../../Redux/fileSlice';
+import { selectFiles,selectXsdXmls, setXsdXmls } from '../../Redux/fileSlice';
 import './BpmnList.css';
 import TabIndicator from '../UI/icon/TabIndicator.svg';
 import ThreeVertDots from '../UI/icon/ThreeVertDots';
@@ -44,6 +44,8 @@ const columnNames = {
 const BpmnList = () => {
   const dispatch = useDispatch();
   const files = useSelector(state => state.file.files);
+  const xsdXmls = useSelector(selectXsdXmls);
+  // console.log(xsdXmls);
   const [sortOrder, setSortOrder] = useState('asc');
   const [selectedSmevVersion, setSelectedSmevVersion] = useState('');
   const [selectedCalledElement, setSelectedCalledElement] = useState('');
@@ -61,7 +63,6 @@ const BpmnList = () => {
   ]);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
-  const [xsdXmls, setXsdXmls] = useState([]);
   const [selectedXml, setSelectedXml] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
 
