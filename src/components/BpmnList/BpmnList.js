@@ -32,7 +32,7 @@ import BpmnDiagram from '../../components/BpmnDiagram/BpmnDiagram';
 import useXsdReader from '../../hooks/useXsdReader';
 import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';
 import useXsdReaderStore from '../../hooks/useXsdReaderStore';
-
+import useBpmnData from '../../hooks/useBpmnData';
 const columnNames = {
   code: 'Код',
   processName: 'Наименование услуги',
@@ -65,6 +65,11 @@ const BpmnList = () => {
   const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
   const [selectedXml, setSelectedXml] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
+  // const [smevVersions, setSmevVersions] = useState([]);
+  // const [filteredSmevVersions, setFilteredSmevVersions] = useState([]);
+  const [arr, setArr] = useState([]);
+  const { bpmnData, bpmnAdministrative, bpmnMezved, bpmnMezvedCatalog } =
+    useBpmnData();
 
   const handleXmlChange = useCallback((xsdXml, fileName) => {
     // console.log('xsdXml:', xsdXml);
@@ -72,29 +77,25 @@ const BpmnList = () => {
   }, []);
   useEffect(() => {
     parseXsd(files);
+    setArr(files);
+    console.log(arr);
   }, []);
-  // const [bpmnAdministrative, setBpmnAdministrative] = useState(files);
-  // const filesJSON = JSON.stringify(files);
-  // useEffect(() => {
-  //   setBpmnAdministrative(filesJSON);
-  //   console.log('bpmnAdministrative', bpmnAdministrative);
-  // }, [filesJSON]);
 
   const { parseXsd, xsdTexts } = useXsdReaderStore({
     onXmlChange: handleXmlChange,
   });
 
-  // const { smevVersions, filteredSmevVersions } = useAnalyzeSmevVersions(
-  //   xsdXmls,
-  //   bpmnAdministrative,
-  //   {
-  //     sortOrder,
-  //     selectedSmevVersion,
-  //     selectedCalledElement,
-  //     searchTerm,
-  //     showLockedOnly,
-  //   },
-  // );
+  const { smevVersions, filteredSmevVersions } = useAnalyzeSmevVersions(
+    xsdXmls,
+    bpmnAdministrative,
+    {
+      sortOrder,
+      selectedSmevVersion,
+      selectedCalledElement,
+      searchTerm,
+      showLockedOnly,
+    },
+  );
 
   const handleFileClick = (fileName, xsdXml) => {
     setSelectedFile({ fileName, xsdXml });
