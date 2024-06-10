@@ -60,7 +60,7 @@ app.get('/api/bpmnData', async (req, res) => {
 app.get('/api/bpmnAdministrative', async (req, res) => {
   try {
     const procedureResult = await pool.query(`
-    select "procedure"."id", "procedure"."name",
+    select "procedure"."id", "procedure"."name", "procedure"."typeprocedure",
 "procedure"."datecreated", "procedure"."dateupdated", "procedure"."status", "procedure"."registercode", 
 convert_from("act_ge_bytearray"."bytes_", 'UTF8') as "xml"
 from "procedure" 
