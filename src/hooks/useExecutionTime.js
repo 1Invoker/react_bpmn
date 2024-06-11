@@ -1,9 +1,9 @@
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const useExecutionTime = (xsdXml) => {
+const useExecutionTime = xsdXml => {
   const [executionTime, setExecutionTime] = useState(null);
 
-  const extractExecutionTime = (xsdXml) => {
+  const extractExecutionTime = xsdXml => {
     const matches = xsdXml.match(
       /<activiti:formProperty id="[^"]+" name="([^"]+)" expression="(\d+)\/(\d+)"/,
     );

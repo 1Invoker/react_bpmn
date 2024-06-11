@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '../UI/icon/SaveIcon.svg';
-import { selectFiles,selectXsdXmls, setXsdXmls } from '../../Redux/fileSlice';
+import { selectFiles, selectXsdXmls, setXsdXmls } from '../../Redux/fileSlice';
 import './BpmnList.css';
 import TabIndicator from '../UI/icon/TabIndicator.svg';
 import ThreeVertDots from '../UI/icon/ThreeVertDots';
@@ -33,6 +33,7 @@ import useXsdReader from '../../hooks/useXsdReader';
 import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';
 import useXsdReaderStore from '../../hooks/useXsdReaderStore';
 import useBpmnData from '../../hooks/useBpmnData';
+import { useTypeprocedure } from '../../hooks/useTypeprocedure';
 const columnNames = {
   code: 'Код',
   processName: 'Наименование услуги',
@@ -152,6 +153,7 @@ const BpmnList = () => {
 
     const startIndex = page * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
+    const typeProcedures = getTypeProcedures();
 
     return sortedData.slice(startIndex, endIndex).map((file, index) => (
       <TableRow
@@ -171,7 +173,7 @@ const BpmnList = () => {
           <TableCell>{file.version}</TableCell>
         )}
         {visibleColumns.includes('calledElement') && (
-          <TableCell>{file.calledElement}</TableCell>
+          <TableCell>{typeProcedures[index]}-сведения</TableCell>
         )}
         {visibleColumns.includes('dateUpDated') && (
           <TableCell>{file.dateUpDated}</TableCell>
@@ -189,6 +191,16 @@ const BpmnList = () => {
   const toggleStatusColumn = () => {
     setShowStatusColumn(prevState => !prevState);
   };
+  const { data, error, getTypeProcedures } = useTypeprocedure();
+
+  useEffect(() => {
+    if (data.length > 0) {
+      console.log('Type Procedures:', getTypeProcedures());
+    }
+    if (error) {
+      console.error('Error fetching data:', error);
+    }
+  }, [data, error, getTypeProcedures]);
 
   return (
     <div className="mezved">

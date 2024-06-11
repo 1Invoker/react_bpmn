@@ -7,11 +7,16 @@ export const useTypeprocedure = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const apiUrl =
+        (process.env.REACT_APP_API_URL || '') + '/api/bpmnAdministrative';
+      console.log('Requesting data from:', apiUrl);
+
       try {
-        const response = await axios.get('/api/bpmnAdministrative');
+        const response = await axios.get(apiUrl);
         setData(response.data);
       } catch (err) {
         setError(err);
+        console.error('Error fetching data:', err);
       }
     };
 
