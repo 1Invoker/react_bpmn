@@ -35,6 +35,7 @@ import SaveIcon from '../UI/icon/SaveIcon.svg';
 import ThreeVertDots from '../UI/icon/ThreeVertDots';
 import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';
 import useExecutionTime from '../../hooks/useExecutionTime';
+import { useRegCode } from '../../hooks/useRegCode';
 
 export const Indicator = ({ locked }) => {
   const indicatorClassName = locked ? 'indicator red' : 'indicator green';
@@ -190,6 +191,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
     setContainerWidth(prevWidth => (prevWidth === 1176 ? 1500 : 1176));
   };
   const { executionTimes } = useExecutionTime();
+  const { data, errorReg, getRegCodes } = useRegCode();
+  const typeRegCode = getRegCodes();
 
   return (
     <div className="gosuslugi" style={{ width: `${containerWidth}px` }}>
@@ -458,7 +461,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   <TableCell>
                     <Indicator locked={xsdXml.locked} />
                   </TableCell>
-                  {visibleColumns.includes('code') && <TableCell></TableCell>}
+                  {visibleColumns.includes('code') && (
+                    <TableCell>{typeRegCode[index]}</TableCell>
+                  )}
                   {visibleColumns.includes('processName') && (
                     <TableCell style={{ cursor: 'pointer' }}>
                       <div onClick={() => handleActiv(xsdXml.fileName)}>

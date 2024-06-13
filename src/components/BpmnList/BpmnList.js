@@ -34,6 +34,7 @@ import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';
 import useXsdReaderStore from '../../hooks/useXsdReaderStore';
 import useBpmnData from '../../hooks/useBpmnData';
 import { useTypeprocedure } from '../../hooks/useTypeprocedure';
+import { useRegCode } from '../../hooks/useRegCode';
 const columnNames = {
   code: 'Код',
   processName: 'Наименование услуги',
@@ -164,10 +165,10 @@ const BpmnList = () => {
           <Indicator locked={file.locked} />
         </TableCell>
         {visibleColumns.includes('code') && (
-          <TableCell>{file.fileName}</TableCell>
+          <TableCell>{typeRegCode[index]}</TableCell>
         )}
         {visibleColumns.includes('processName') && (
-          <TableCell>{file.processName}</TableCell>
+          <TableCell>{file.fileName}</TableCell>
         )}
         {visibleColumns.includes('version') && (
           <TableCell>{file.version}</TableCell>
@@ -201,6 +202,8 @@ const BpmnList = () => {
       console.error('Error fetching data:', error);
     }
   }, [data, error, getTypeProcedures]);
+  const { errorReg, getRegCodes } = useRegCode();
+  const typeRegCode = getRegCodes();
 
   return (
     <div className="mezved">
