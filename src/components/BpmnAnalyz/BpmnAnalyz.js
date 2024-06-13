@@ -34,6 +34,7 @@ import TabIndicator from '../UI/icon/TabIndicator.svg';
 import SaveIcon from '../UI/icon/SaveIcon.svg';
 import ThreeVertDots from '../UI/icon/ThreeVertDots';
 import { useAnalyzeSmevVersions } from '../../hooks/useAnalyzeSmevVersions';
+import useExecutionTime from '../../hooks/useExecutionTime';
 
 export const Indicator = ({ locked }) => {
   const indicatorClassName = locked ? 'indicator red' : 'indicator green';
@@ -188,6 +189,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const toggleStatusColumn = () => {
     setContainerWidth(prevWidth => (prevWidth === 1176 ? 1500 : 1176));
   };
+  const { executionTimes } = useExecutionTime();
 
   return (
     <div className="gosuslugi" style={{ width: `${containerWidth}px` }}>
@@ -476,7 +478,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                     <TableCell>{xsdXml.calledElement}</TableCell>
                   )}
                   {visibleColumns.includes('servicePeriod') && (
-                    <TableCell></TableCell>
+                    <TableCell>
+                      {executionTimes[index]?.executionTime || 'Отсутствует'}
+                    </TableCell>
                   )}
                   {visibleColumns.includes('dateCreated') && (
                     <TableCell>{xsdXml.dateCreated}</TableCell>
