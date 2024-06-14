@@ -191,7 +191,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
     setContainerWidth(prevWidth => (prevWidth === 1176 ? 1500 : 1176));
   };
   const { executionTimes } = useExecutionTime();
-  const { data, errorReg, getRegCodes } = useRegCode();
+  const { data, getRegCodes } = useRegCode();
   const typeRegCode = getRegCodes();
 
   return (

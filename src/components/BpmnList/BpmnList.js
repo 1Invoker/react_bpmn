@@ -202,7 +202,7 @@ const BpmnList = () => {
       console.error('Error fetching data:', error);
     }
   }, [data, error, getTypeProcedures]);
-  const { errorReg, getRegCodes } = useRegCode();
+  const { getRegCodes } = useRegCode();
   const typeRegCode = getRegCodes();
 
   return (

@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const useRegCode = () => {
   const [data, setData] = useState([]);
-  const [errorReg, setError] = useState(null);
+  const [errorReg, setErrorReg] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,8 +15,7 @@ export const useRegCode = () => {
         const response = await axios.get(apiUrl);
         setData(response.data);
       } catch (err) {
-        setError(err);
-        console.errorReg('Error fetching data:', err);
+        setErrorReg(err);
       }
     };
 
