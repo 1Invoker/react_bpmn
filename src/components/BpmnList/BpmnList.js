@@ -46,7 +46,7 @@ const columnNames = {
 const BpmnList = () => {
   const dispatch = useDispatch();
   const files = useSelector(state => state.file.files);
-  const xsdXmls = useSelector(selectXsdXmls);
+  const xsdXmls = useSelector(state => state.file.files);
   // console.log(xsdXmls);
   const [sortOrder, setSortOrder] = useState('asc');
   const [selectedSmevVersion, setSelectedSmevVersion] = useState('');
