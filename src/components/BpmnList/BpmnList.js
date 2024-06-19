@@ -138,6 +138,9 @@ const BpmnList = () => {
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
+  const handleSelectVersion = version => {
+    setSelectedSmevVersion(version);
+  };
 
   const renderFileRows = () => {
     if (!xsdTexts || !Array.isArray(xsdTexts)) {
@@ -241,7 +244,8 @@ const BpmnList = () => {
               <Select
                 labelId="demo-simple-select-standard-label"
                 id="demo-simple-select-standard"
-                value={''}
+                value={selectedSmevVersion}
+                onChange={event => handleSelectVersion(event.target.value)}
                 label="Версия СМЭВ:"
               >
                 <MenuItem value="">
