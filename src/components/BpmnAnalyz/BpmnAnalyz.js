@@ -84,7 +84,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const handleMenuOpen = event => {
     setAnchorEl(event.currentTarget);
   };
-  const handleCodeSearch = (event) => {
+  const handleCodeSearch = event => {
     setSearchCode(event.target.value);
   };
 
@@ -519,6 +519,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         onClose={() => setIsBpmnDiagramOpen(false)}
         aria-labelledby="modal-title"
         aria-describedby="modal-description"
+        sx={{
+          overflowY: 'auto',
+        }}
       >
         <div className="modal-container">
           <div className="modal-header">
