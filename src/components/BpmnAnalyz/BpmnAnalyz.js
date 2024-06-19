@@ -19,6 +19,8 @@ import {
   InputAdornment,
   TablePagination,
 } from '@mui/material';
+import Modal from '@mui/material/Modal';
+import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
@@ -56,7 +58,7 @@ const columnNames = {
 const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const [smevVersions, setSmevVersions] = useState([]);
   const [sortOrder, setSortOrder] = useState('asc');
-  const [selectedSmevVersion, setSelectedSmevVersion] = useState('');
+  const [selectedSmevVersion, setSelectedSmevVersion] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFileName, setSelectedFileName] = useState('');
   const [isBpmnDiagramOpen, setIsBpmnDiagramOpen] = useState(false);
@@ -64,6 +66,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const dispatch = useDispatch();
   const [showInactive, setShowInactive] = useState(false);
+  const [searchCode, setSearchCode] = useState('');
 
   const files = useSelector(selectFiles);
   const selectedFile = useSelector(selectSelectedFile);
@@ -80,6 +83,9 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
 
   const handleMenuOpen = event => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleCodeSearch = (event) => {
+    setSearchCode(event.target.value);
   };
 
   const handleMenuClose = () => {
@@ -231,9 +237,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               onChange={e => handleSelectVersion(e.target.value)}
               label="Версия СМЭВ:"
             >
-              <MenuItem value="">
-                <em>Версия СМЭВ:</em>
-              </MenuItem>
+              <MenuItem value=""></MenuItem>
               <MenuItem value="all">Все версии</MenuItem>
               <MenuItem value="smev2">SMEV2</MenuItem>
               <MenuItem value="smev3">SMEV3</MenuItem>
@@ -509,12 +513,35 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
-      {isBpmnDiagramOpen && (
-        <BpmnDiagram
-          xml={getXmlDataForFile(selectedFileName)}
-          onCalledElementChange={handleCalledElementChange}
-        />
-      )}
+      <Modal
+        open={isBpmnDiagramOpen}
+        onClose={() => setIsBpmnDiagramOpen(false)}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <div className="modal-container">
+          <div className="modal-header">
+            <IconButton
+              aria-label="close"
+              onClick={() => setIsBpmnDiagramOpen(false)}
+              sx={{
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                color: 'inherit',
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+          <div className="modal-body">
+            <BpmnDiagram
+              xml={getXmlDataForFile(selectedFileName)}
+              onCalledElementChange={handleCalledElementChange}
+            />
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -21,6 +21,8 @@ import {
   Menu,
   InputAdornment,
 } from '@mui/material';
+import { Modal } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
 import SaveIcon from '../UI/icon/SaveIcon.svg';
 import { selectFiles, selectXsdXmls, setXsdXmls } from '../../Redux/fileSlice';
@@ -101,6 +103,7 @@ const BpmnList = () => {
 
   const handleFileClick = (fileName, xsdXml) => {
     setSelectedFile({ fileName, xsdXml });
+    setIsBpmnDiagramOpen(true);
   };
 
   const handleSearch = event => {
@@ -449,11 +452,36 @@ const BpmnList = () => {
           />
         </div>
         {selectedFile && (
-          <BpmnDiagram
-            xml={selectedFile.xsdXml}
-            filename={selectedFile.fileName}
+          <Modal
+            open={isBpmnDiagramOpen}
             onClose={() => setIsBpmnDiagramOpen(false)}
-          />
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+          >
+            <div className="modal-container">
+              <div className="modal-header">
+                <IconButton
+                  aria-label="close"
+                  onClick={() => setIsBpmnDiagramOpen(false)}
+                  sx={{
+                    position: 'absolute',
+                    top: 10,
+                    right: 10,
+                    color: 'inherit',
+                  }}
+                >
+                  <CloseIcon />
+                </IconButton>
+              </div>
+              <div className="modal-body">
+                <BpmnDiagram
+                  xml={selectedFile.xsdXml}
+                  filename={selectedFile.fileName}
+                  onClose={() => setIsBpmnDiagramOpen(false)}
+                />
+              </div>
+            </div>
+          </Modal>
         )}
       </div>
     </div>
