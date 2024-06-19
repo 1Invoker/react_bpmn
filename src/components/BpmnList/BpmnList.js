@@ -59,9 +59,7 @@ const BpmnList = () => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [showStatusColumn, setShowStatusColumn] = useState(false);
   const [visibleColumns, setVisibleColumns] = useState([
-    'code',
     'processName',
-    'version',
     'calledElement',
     'dateUpDated',
   ]);

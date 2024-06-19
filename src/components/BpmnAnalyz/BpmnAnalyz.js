@@ -289,8 +289,8 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               label="Код"
               variant="standard"
               type="text"
-              value={searchTerm}
-              onChange={handleSearch}
+              value={searchCode}
+              onChange={handleCodeSearch}
               placeholder="Код"
             />
           </label>
@@ -443,6 +443,7 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               .filter(xsdXml => {
                 // Применяем фильтрацию к обоим массивам данных
                 return (
+                  xsdXml.fileName.includes(searchCode) &&
                   xsdXml.fileName.includes(searchTerm) && // Фильтрация по поисковому термину
                   (showLockedOnly ? xsdXml.locked === true : true) // Фильтрация по locked, если выбрана опция показать только заблокированные
                 );
