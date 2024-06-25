@@ -49,7 +49,6 @@ const columnNames = {
   processName: 'Наименование услуги',
   dateCreated: 'Дата создания',
   dateUpDated: 'Дата изменения',
-  status: '',
   servicePeriod: 'Срок оказания услуги',
   calledElement: 'Статус и наименование межведомственного запроса',
   version: 'Версия СМЭВ',
@@ -385,9 +384,6 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
               {visibleColumns.includes('version') && (
                 <TableCell>{columnNames['version']}</TableCell>
               )}
-              {visibleColumns.includes('status') && (
-                <TableCell>{columnNames['status']}</TableCell>
-              )}
               {visibleColumns.includes('calledElement') && (
                 <TableCell>{columnNames['calledElement']}</TableCell>
               )}
@@ -479,13 +475,11 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
                   {visibleColumns.includes('version') && (
                     <TableCell>{xsdXml.version}</TableCell>
                   )}
-                  {visibleColumns.includes('status') && (
+                  {visibleColumns.includes('calledElement') && (
                     <TableCell>
                       <Indicator locked={xsdXml.locked} />
+                      {xsdXml.calledElement}
                     </TableCell>
-                  )}
-                  {visibleColumns.includes('calledElement') && (
-                    <TableCell>{xsdXml.calledElement}</TableCell>
                   )}
                   {visibleColumns.includes('servicePeriod') && (
                     <TableCell>
