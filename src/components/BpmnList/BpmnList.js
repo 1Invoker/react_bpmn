@@ -51,7 +51,7 @@ const BpmnList = () => {
   const xsdXmls = useSelector(state => state.file.files);
   // console.log(xsdXmls);
   const [sortOrder, setSortOrder] = useState('asc');
-  const [selectedSmevVersion, setSelectedSmevVersion] = useState('');
+  const [selectedSmevVersion, setSelectedSmevVersion] = useState('all');
   const [selectedCalledElement, setSelectedCalledElement] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [showLockedOnly, setShowLockedOnly] = useState(false);
@@ -70,6 +70,7 @@ const BpmnList = () => {
   // const [smevVersions, setSmevVersions] = useState([]);
   // const [filteredSmevVersions, setFilteredSmevVersions] = useState([]);
   const [arr, setArr] = useState([]);
+  const [searchCode, setSearchCode] = useState('');
   const { bpmnData, bpmnAdministrative, bpmnMezved, bpmnMezvedCatalog } =
     useBpmnData();
 
@@ -141,6 +142,9 @@ const BpmnList = () => {
   const handleSelectVersion = version => {
     setSelectedSmevVersion(version);
   };
+  const handleSearchCode = event => {
+    setSearchCode(event.target.value);
+  };
 
   const renderFileRows = () => {
     if (!xsdTexts || !Array.isArray(xsdTexts)) {
@@ -152,7 +156,7 @@ const BpmnList = () => {
         </TableRow>
       );
     }
-    const sortedData = [...xsdTexts].sort((a, b) =>
+    const sortedData = [...filteredSmevVersions].sort((a, b) =>
       a.fileName.localeCompare(b.fileName),
     );
 
@@ -160,32 +164,37 @@ const BpmnList = () => {
     const endIndex = startIndex + rowsPerPage;
     const typeProcedures = getTypeProcedures();
 
-    return sortedData.slice(startIndex, endIndex).map((file, index) => (
-      <TableRow
-        key={index}
-        onClick={() => handleFileClick(file.fileName, file.xsdXml)}
-      >
-        <TableCell>
-          <Indicator locked={file.locked} />
-        </TableCell>
-        {visibleColumns.includes('code') && (
-          <TableCell>{typeRegCode[index]}</TableCell>
-        )}
-        {visibleColumns.includes('processName') && (
-          <TableCell>{file.fileName}</TableCell>
-        )}
-        {visibleColumns.includes('version') && (
-          <TableCell>{file.version}</TableCell>
-        )}
-        {visibleColumns.includes('calledElement') && (
-          <TableCell>{typeProcedures[index]}-сведения</TableCell>
-        )}
-        {visibleColumns.includes('dateUpDated') && (
-          <TableCell>{file.dateUpDated}</TableCell>
-        )}
-        <TableCell></TableCell>
-      </TableRow>
-    ));
+    return sortedData
+      .filter(file => {
+        return searchCode === '' || typeRegCode.includes(searchCode);
+      })
+      .slice(startIndex, endIndex)
+      .map((file, index) => (
+        <TableRow
+          key={index}
+          onClick={() => handleFileClick(file.fileName, file.xsdXml)}
+        >
+          <TableCell>
+            <Indicator locked={file.locked} />
+          </TableCell>
+          {visibleColumns.includes('code') && (
+            <TableCell>{typeRegCode[index]}</TableCell>
+          )}
+          {visibleColumns.includes('processName') && (
+            <TableCell>{file.fileName}</TableCell>
+          )}
+          {visibleColumns.includes('version') && (
+            <TableCell>{file.version}</TableCell>
+          )}
+          {visibleColumns.includes('calledElement') && (
+            <TableCell>{typeProcedures[index]}-сведения</TableCell>
+          )}
+          {visibleColumns.includes('dateUpDated') && (
+            <TableCell>{file.dateUpDated}</TableCell>
+          )}
+          <TableCell></TableCell>
+        </TableRow>
+      ));
   };
 
   const Indicator = ({ locked }) => {
@@ -278,14 +287,13 @@ const BpmnList = () => {
 
           <div className="filter__item">
             <TextField
-              style={{
-                marginTop: '7px',
-              }}
+              style={{ marginTop: '7px' }}
               id="standard-basic"
               label="Код"
               variant="standard"
               type="text"
-              value={''}
+              value={searchCode}
+              onChange={handleSearchCode}
               placeholder="Код"
             />
           </div>
