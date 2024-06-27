@@ -71,6 +71,7 @@ const BpmnList = () => {
   // const [filteredSmevVersions, setFilteredSmevVersions] = useState([]);
   const [arr, setArr] = useState([]);
   const [searchCode, setSearchCode] = useState('');
+  const [selectedProcedureType, setSelectedProcedureType] = useState('');
   const { bpmnData, bpmnAdministrative, bpmnMezved, bpmnMezvedCatalog } =
     useBpmnData();
 
@@ -145,6 +146,9 @@ const BpmnList = () => {
   const handleSearchCode = event => {
     setSearchCode(event.target.value);
   };
+  const handleSelectProcedureType = event => {
+    setSelectedProcedureType(event.target.value);
+  };
 
   const renderFileRows = () => {
     if (!xsdTexts || !Array.isArray(xsdTexts)) {
@@ -158,15 +162,19 @@ const BpmnList = () => {
     }
     const sortedData = [...filteredSmevVersions].sort((a, b) =>
       a.fileName.localeCompare(b.fileName),
-    );
+    ); //xsdTexts вместо filteredSmevVersions иначе не отображается BpmnDiagram для кликнутого файла в таб, а с ним не работает фильтр по СМЭВ
 
     const startIndex = page * rowsPerPage;
     const endIndex = startIndex + rowsPerPage;
     const typeProcedures = getTypeProcedures();
 
     return sortedData
-      .filter(file => {
-        return searchCode === '' || typeRegCode.includes(searchCode);
+      .filter((file, index) => {
+        return (
+          (selectedProcedureType === '' ||
+            typeProcedures[index] === selectedProcedureType) &&
+          (searchCode === '' || typeRegCode[index]?.startsWith(searchCode))
+        );
       })
       .slice(startIndex, endIndex)
       .map((file, index) => (
@@ -300,21 +308,21 @@ const BpmnList = () => {
 
           <div className="filter__item">
             <FormControl variant="standard" sx={{ m: 1, width: 223 }}>
-              <InputLabel id="demo-simple-select-standard-label">
+              <InputLabel id="procedure-type-select-label">
                 Тип процедуры
               </InputLabel>
               <Select
-                labelId="demo-simple-select-standard-label"
-                id="demo-simple-select-standard"
-                value={''}
+                labelId="procedure-type-select-label"
+                id="procedure-type-select"
+                value={selectedProcedureType}
+                onChange={handleSelectProcedureType}
                 label="Тип процедуры"
               >
                 <MenuItem value="">
-                  <em>Тип процедуры</em>
+                  <em>Все типы процедур</em>
                 </MenuItem>
-                <MenuItem value="all">Все версии</MenuItem>
-                <MenuItem value="smev2">СМЭВ2</MenuItem>
-                <MenuItem value="smev3">СМЭВ3</MenuItem>
+                <MenuItem value="G">G-сведения</MenuItem>
+                <MenuItem value="P">P-сведения</MenuItem>
               </Select>
             </FormControl>
           </div>
