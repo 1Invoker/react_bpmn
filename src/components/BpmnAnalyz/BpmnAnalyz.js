@@ -436,12 +436,13 @@ const BpmnAnalyz = ({ xsdXmls, onFileSelect, bpmnAdministrative }) => {
           </TableHead>
           <TableBody>
             {filteredSmevVersions
-              .filter(xsdXml => {
+              .filter((xsdXml, index) => {
                 // Применяем фильтрацию к обоим массивам данных
                 return (
-                  xsdXml.fileName.includes(searchCode) &&
                   xsdXml.fileName.includes(searchTerm) && // Фильтрация по поисковому термину
-                  (showLockedOnly ? xsdXml.locked === true : true) // Фильтрация по locked, если выбрана опция показать только заблокированные
+                  (showLockedOnly ? xsdXml.locked === true : true) && // Фильтрация по locked, если выбрана опция показать только заблокированные
+                  (searchCode === '' ||
+                    typeRegCode[index]?.startsWith(searchCode))
                 );
               })
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
