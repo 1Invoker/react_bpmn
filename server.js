@@ -58,6 +58,8 @@ app.get('/api/bpmnData', async (req, res) => {
 });
 
 app.get('/api/bpmnAdministrative', async (req, res) => {
+  // const limit = parseInt(req.query.limit, 10) || 10;
+  // const offset = parseInt(req.query.offset, 10) || 0;
   try {
     const procedureResult = await pool.query(`
     select "procedure"."id", "procedure"."name", "procedure"."typeprocedure",
@@ -75,6 +77,8 @@ ON "procedure_process_definition"."processdefinitionkey" = "arp"."key_" AND "act
 inner join "act_ge_bytearray" "act_ge_bytearray" ON "act_ge_bytearray"."deployment_id_" = "act_re_procdef"."deployment_id_" AND "act_ge_bytearray"."name_" = "act_re_procdef"."resource_name_"
 where "procedure"."locked" = false and "procedure"."type" = 0 order by "procedure"."id" asc LIMIT 50
     `);
+    // LIMIT $1 OFFSET $2
+    // `, [limit, offset]);
     console.log('Результат запроса из таблицы :', procedureResult.rows);
 
     res.send(procedureResult.rows);
